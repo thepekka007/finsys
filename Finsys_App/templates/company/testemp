@@ -40,7 +40,7 @@
     <div class="card radius-15">
      
         <div class=" card-body">
-            <form action="{% url 'employee_loan_save' %}" method="post" enctype="multipart/form-data">
+            <form action="{% url 'employee_save' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <center> <h2>New Employee’s Loan </h2></center><br><br><br>
                 <div class="row" style="margin-left: 120px; margin-right: 120px;">
@@ -70,36 +70,45 @@
                    
                         <tr >
                             <div class="form-group" >
-                                    <td><Label>Employee ID</Label></td>
-                                    <td><input placeholder="Employee id" required name="empid" id="empiid" type="number" class="form-control"></td>
+                                    <td><Label>Salary</Label></td>
+                                    <td><input placeholder="Employee Salary" required name="salary" id="salaryid" type="number" class="form-control"></td>
                             </div>
                         </tr>
                     </div>
                     <div class="col">
                         <tr>
-                            
                             <div class="form-group" >
                                 <td><Label>Employee Email</Label></td>
-                                   <td><input placeholder="Employee Email" required name="empemail" id="empemailid" type="email" class="form-control"></td>
+                                   <td><input placeholder="Employee Email" required name="empemail" id="empemailid" type="text" class="form-control"></td>
                             </div>
                         </tr>
                         <tr >
-                            <div class="form-group" >
-                                <td><Label>Salary</Label></td>
-                                <td><input placeholder="Employee Salary" required name="salary" id="salaryid" type="number" class="form-control"></td>
-                        </div>
-                        
-                        </tr>
-                    </div>
-                </div>
-                <div class="row" style="margin-left: 120px; margin-right: 120px;">
-                    <div class="col">
-                        <tr>
-                             <div class="form-group" > 
+                            <div class="form-group" > 
                                 <td><Label>Joining Date</Label></td>
                                 <td>
                                     <td><input placeholder="Joining Date" required name="Joining_Date" id="JoiningDate" type="date" class="form-control"></td>
                               
+                                </td>
+                            </div>
+                        </tr>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-left: 120px; margin-right: 120px;">
+                    <div class="col">
+                        <tr>
+                            <div class="form-group">
+                                <td>
+                                    <label>Loan Amount </label>
+                                </td>
+                                <td style=" position: relative;">
+                                    <div style="display: flex;">
+                                        <td><input placeholder="Enter Loan Amount" required name="loan_amount" id="loan_amount" type="number" class="form-control"></td>
+                                       
+                                    </div>
+                               
+                                    
+                                    
                                 </td>
                             </div>
                         </tr>
@@ -114,23 +123,16 @@
                     </div>
                     <div class="col">
                         <tr>
-                            
-                            <div class="form-group" >
-                                <td><Label>Laon Amount</Label></td>
-                                   <td><input placeholder="Enter Loan Amount" required name="loan_amount" id="loan_amount" type="number" class="form-control"></td>
-                            </div>
-                        </tr>
-                        <tr >
                             <div class="form-group">
                                 <td>
                                     <label> Loan Duration</label>
                                 </td>
                                 <td style=" position: relative;">
                                     <div style="display: flex;">
-                                        <select  class="form-control" name="loanduration" id="loanduration" onchange="calculateExpiryDate()" style="width: 93%;">
-                                            <option value="1 YEAR">1 Year</option>
-                                            <option value="6 MONTHS">6 Months                                    </option>
-                                            <option value="3 MONTHS">3 Months</option>
+                                        <select  class="form-control" name="loanduration" id="loanduration" style="width: 93%;">
+                                            <option value="1 Year">1 Year</option>
+                                            <option value="6 Months">6 Months                                    </option>
+                                            <option value="3 Months">3 Months</option>
                                     </select>    
                                         <button data-toggle="modal" data-target="#loamodal" class="btn btn-outline-secondary text-grey mb-2 ml-1">+</button>   
                                     
@@ -146,201 +148,161 @@
                                     
                                 </td>
                             </div>
-                        
-                        </tr>
-                    </div>
-                </div>
-                <div class="row" style="margin-left: 120px; margin-right: 120px;">
-                    <div class="col">
-                        <tr>
-                             <div class="form-group" > 
-                                <td><Label>Expiry Date</Label></td>
-                                <td>
-                                    <td><input placeholder="expdate" required name="expdate" id="expdateid" type="date" class="form-control"></td>
-                              
-                                </td>
-                            </div>
-                        </tr>
-
-                   
-                        <tr > 
-                            <div class="form-group" >
-                                    <td><Label>Payment Type </Label></td>
-                                    <td>  <select name="select_payment" id="select_payment" onclick="show_fields()"  class="form-control "  >
-                                        <option value="no_option" style="background-color: #294f76;">select</option>
-                                        <option value="Cash" style="background-color: #294f76;">Cash</option>
-                                        <option value="Cheque" style="background-color: #294f76;">Cheque</option>
-                                        <option value="UPI" style="background-color: #294f76;">UPI</option>
-                                        {% for i in banks %}
-                                        <option value="{{ i.name }}">{{ i.name }}</option>
-                                        {% endfor %}
-                                    </select> </td>
-                            </div>
-                        </tr>
-                    </div>
-                    <div class="col">
-                        <tr>
-                            
-                            <div class="form-group" >
-                         </div>
+                       
                         </tr>
                         <tr >
-                            <div class="form-group"  >
-                       
-                        </div>
-                        <br><br>    <br>
                             <div class="form-group" > 
-                                <td><Label id="cheque_no_label" style="display: none;">Cheque Number</Label></td>
-                                <td>
-                                    <td><input placeholder="Cheque Number"  style="display: none;" name="cheque_no" id="cheque_no" type="text" class="form-control"></td>
-                              
-                                </td>
-                            </div>
-                            <div class="form-group" > 
-                                <td><Label id="upi_id_label" style="display: none;">UPI ID</Label></td>
-                                <td>
-                                    <td><input placeholder=" upi_id_label"  style="display: none;" name="upi_id" id="upi_id" type="text" class="form-control"></td>
-                              
-                                </td>
-                            </div>
-                            <div class="form-group" > 
-                                <td><Label id="acc_no_label" style="display: none;">Ac/Number</Label></td>
-                                <td>
-                                    <td><input placeholder=" upi_id_label"  style="display: none;" name="acc_no" id="acc_no" type="text" class="form-control"></td>
+                               
+                                    <td><Label> Expiry Date</Label></td>
+                                   <td><input placeholder="expdate" required name="expdate" id="expdateid" type="date" class="form-control"></td>
+                                    
                               
                                 </td>
                             </div>
                         </tr>
                     </div>
                 </div>
+                <div class="row" style="margin-left: 120px; margin-right: 120px;">
+                    <div class="col">
+                        <tr>
+                            <div class="form-group">
+                                <td>
+                                    <label>Payment Type </label>
+                                </td>
+                                <td style=" position: relative;">
+                                    <div style="display: flex;">
+                                        <td>    <select name="select_payment" id="select_payment" onclick="show_fields()"  class="form-control text-dark" style="margin-left: 8px;">
+                                            <option value="no_option">select</option>
+                                            <option value="Cash">Cash</option>
+                                            <option value="Cheque">Cheque</option>
+                                            <option value="UPI">UPI</option>
+                                            {% for i in banks %}
+                                            <option value="{{ i.name }}">{{ i.name }}</option>
+                                            {% endfor %}
+                                        </select>  </td>
+                                       
+                                    </div>
+                               
+                                    
+                                    
+                                </td>
+                            </div>
+                        </tr>
 
-          
-
-      
+                        <div class="row">
+                            <div class="col-md-3">
+                              <label  id="cheque_no_label" style="display: none;" >Cheque Number</label>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                              <input type="number" class="form-control text-dark  " style="display: none;" name="cheque_no" id="cheque_no" style="color: #000;margin-left: 8px;" >
+                            </div>
+                          </div>
+                  
+                          <div class="row">
+                            <div class="col-md-3">
+                              <label for="validationCustom02" id="upi_id_label" style="display: none;" name="credit_note_no">UPI ID</label>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                              <input type="text" class="form-control text-dark" style="display: none;margin-left: 8px;" name="upi_id" id="upi_id"  >
+                            </div>
+                          </div>
+                  
+                          <div class="row">
+                            <div class="col-md-3">
+                              <label for="validationCustom02" id="acc_no_label"  style="display: none;" >Ac/Number</label>
+                            </div>
+                            <div class="col-md-6 mt-3 ">
+                              <input type="text" class="form-control text-dark" id="acc_no" name="acc_no" style="display: none;margin-left: 8px;"  >
+                            </div>
+                          </div>
+                        <tr >
+                            <!-- <div class="form-group" >
+                                    <td><Label>Loan Date</Label></td>
+                                    <td><input placeholder="loan Date" required name="loan_Date" id="loan_date" type="date" class="form-control"></td>
+                            </div> -->
+                        </tr>
+                    </div>
+                    <div class="col">
+                        <tr>
+                            <div class="form-group">
+                                <td>
+                                    <label> Loan Duration</label>
+                                </td>
+                                <td style=" position: relative;">
+                                    <div style="display: flex;">
+                                        <select  class="form-control" name="loanduration" id="loanduration" style="width: 93%;">
+                                            <option value="1 Year">1 Year</option>
+                                            <option value="6 Months">6 Months                                    </option>
+                                            <option value="3 Months">3 Months</option>
+                                    </select>    
+                                        <button data-toggle="modal" data-target="#loamodal" class="btn btn-outline-secondary text-grey mb-2 ml-1">+</button>   
+                                    
+                                    </div>
+                               
+                                    <script>
+                                        $(document).ready(function() {
+                                            // Initialize select2
+                                            $('#loanduration').select2();
+                                        })
+                                    
+                                    </script>
+                                    
+                                </td>
+                            </div>
+                       
+                        </tr>
+                        <tr >
+                            <!-- <div class="form-group" > 
+                               
+                                    <td><Label> Expiry Date</Label></td>
+                                   <td><input placeholder="expdate" required name="expdate" id="expdateid" type="date" class="form-control"></td>
+                                    
+                              
+                                </td>
+                            </div> -->
+                        </tr>
+                    </div>
+                </div>
                             
                 <div class="row" style="margin-left: 120px; margin-right: 120px;">
                     <div class="col">
                         <tr>
-                            <div class="row m-4 ml-5 pt-4">   
-                          
-                                    <label><b>Monthly Cutting :</b></label>&nbsp;&nbsp;
+                            <div class="form-group">
+                                <td>
+                                    <label>Monthly Cutting: </label>   <td>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; <input type="radio" name="inamount" value="inamount" onclick="toggleSelects()" >In Amount &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;</td>
+                                    <td><input type="radio" name="Percentage" value="percentage" onclick="toggleSelects()">In Percentage</td>
+                                </td>
+                                <input type="radio" name="percentage" value="percentage" onclick="toggleSelects()" >In Percentage &nbsp; &nbsp;
+                                <input type="radio" name="inamount" value="inamount" onclick="toggleSelects()">In Amount
                                     
-                                    <div class="form-check form-check-inline ml-3" >
-                                        <input class="form-check-input" type="radio" id="no" name="cutingamount"
-                                        onchange="toggleDivVisibility(this.value)" value="No" >
-                                        <label class="form-check-label">In Percentage</label>
-                                        
-                                    </div>
-                                    <div class="form-check form-check-inline ml-3">
-                                     
-                                            <input class="form-check-input" type="radio" id="yes" name="cutingamount"
-                                            onchange="toggleDivVisibility(this.value)" value="Yes" required>
-                                        <label class="form-check-label"> In Amount</label>
-                                    </div>
-                                <!-- </div> -->
-                                <script>
-                                    function toggleDivVisibility(value) {
-                                        var cuttingPercentageDiv = document.getElementById('cuttingPercentage');
-                                        var CutingamountDiv = document.getElementById('Cutingamount');
-                                
-                                        cuttingPercentageDiv.style.display = value === 'No' ? 'block' : 'none';
-                                        CutingamountDiv.style.display = value === 'Yes' ? 'block' : 'none';
-                                    }
-                                </script>
-                                
+                             
                             </div>
-                    
-                                    <div class="desc m-4 ml-5 pt-4" id="cuttingPercentage" style="display: none;">
-                                        <div class="card-title mt-3">
-                                            <h5 class="mb-0">Monthly Cutting in Percentage</h5>
-                                        </div>
-                                        <hr>
-                                        <div class="row mt-3">
-                                            <div class="col-3 col-md-4">
-                                                <label class="col-form-label">Monthly Cutting (%)</label>
-                                                <input type="number" oninput="convert()" class="form-control" id="per" name="cuttingPercentage"
-                                                 placeholder="In Percentage"style="background-color: #2f516f; color: white;" min="0" value="0" >
-                                            </div>     
-                                            <div class="col-3 col-md-4">
-                                                
-                                                <label class="col-form-label">Amount</label>
-                                                <input type="number"  class="form-control" id="cp" name="pamount"
-                                                    placeholder="amount"style="background-color: #2f516f; color: white; width:50%;"  min="0" readonly >    
-                                                
-                                  
-                                                
-                                                <div id="messag"></div>
-        
-                                            </div>
-                                        </div>        
-                                    </div>
-                   
-                                <div class="desc m-4 ml-5 pt-4" id="Cutingamount" style="display: none;">
-                                    <div class="card-title mt-3">
-                                        <h5 class="mb-0">Monthly Cutting in Amount</h5>
-                                    </div>
-                                    <hr>
-                                    <div class="row mt-3">
-                                        <div class="col-3 col-md-4">
-                                            <label class="col-form-label">Monthly Cutting (INR)</label>
-            
-                                            <input type="number" oninput="validatecutamount()" class="form-control" id="amount" name="amount5"
-                                                placeholder="In Amount" style="background-color: #2f516f; color: white; " ><br>
-                                            <div class="text-danger m-2" id="effectivefrom"></div>
-                                            <div id="message"></div>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                               
-                            </div>    
+                           
+      <div class="row" id="hsn_div" style="display: none;">
+        <div class="col-md-3">
+          <label id="hsn_label" for="hsn_code" >HSN</label>
+        </div>
+        <div class="col-md-6  mt-3">&nbsp;
+          <input type="text" id="hsn_code" name="hsn_code" class="form-control text-dark bg-light " placeholder="6-digit number" style="margin-left: 10px;" >
+        </div>
+      </div>
+      <div class="row" id="sac_div" style="display:flex;">
+        <div class="col-md-3 col-lg-3 ">
+          <label id="sac_label" for="sac">SAC</label>
+        </div>
+        <div class="col-md-6  mt-3">&nbsp;
+          <input type="text" id="sac" name="sac" class="form-control text-dark bg-light" placeholder="6-digit number"  style="margin-left: 10px;">
+        </div>
+      </div>
                         </tr>     
 
-                        <div class="col">
-                            <tr>
-                                <div class="form-group">
-                                    <td>
-                           
-                                        
-                                    </td>
-                                </div>
-                            </tr>
-                            </div>
-                            </div>
-                            
-                        <div class="col" style="margin-left: 120px; margin-right: 20%;width: 50%;">
-
-                            <tr>
-                                <div class="form-group">
-                                    <td>
-                                        <label>Note</label>
-                                    </td>
-                                    <td style=" position: relative;">
-                                        <div style="display: flex;">
-                                        
-                                   </div>
-                                   
-                                   <textarea class="form-control" id="" name="Note" placeholder="Note"
-                                   style="height: 190px;"></textarea>
-                               <input type="file" name="file" style="margin-top: 10px; width: 70%;">
-                                        
-                                    </td>
-                                </div>
-                            </tr>
-    </div>
-                       <br>
-    <div class="col-md-3 mt-3" style="margin-left: 35%; margin-right: 20%;">
-        <center><button type="submit" class="btn btn-outline-info rounded-pill  text-grey " style="width: 60%;">
-            Submit
-        </button></center>
-    </div>
             </form>
         </div>
     </div>
 </div>
 
 
-<!-- emp detais -->
+
 <script>
     $(document).ready(function() {
       // Initialize select2
@@ -360,7 +322,6 @@
             dataemail = response.email;
             salary = response.salary;
             jdate = response.jdate;
-            empid = response.empid;
            console.log(salary)
           
             if (dataemail !== 'null' && dataemail.trim() !== '') 
@@ -379,14 +340,8 @@
                        
                         $("#JoiningDate").val(jdate);
                     } 
-            if (empid !== 'null' ) 
-                    {
-                       
-                        $("#empiid").val(empid);
-                    } 
+                 
                 }
-                
-                
                 
          
         });
@@ -886,7 +841,7 @@
     <div class="modal-dialog modal-xl">
       <div class="modal-content" style="background: #2f516f;border-radius: 20px;">
         <div class="modal-header" style="background: #2f516f;">
-          <h5 class="m-3 text-uppercase" id="shareBillEmailLabel" style="color: #eeeaea;">Add  TERM</h5>
+          <h5 class="m-3 text-uppercase" id="shareBillEmailLabel" style="color: #eeeaea;">Add </h5>
           <button type="button" class="close" style="width: 30px;" data-dismiss="modal" aria-label="Close"><span
               aria-hidden="true">&times;</span></button>
         </div>
@@ -894,38 +849,17 @@
           <div class="card p-3 m-3" style="background-color: #213b52">
           
        <div id="error-message-container" style="color: chocolate;"></div>
-       <form action="" method="post"  autocomplete="off" id="modalItem">
-        {% csrf_token %}
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="col-md-5 p-2">
-                        <label  for="">Duration</label>
-                        <input type="number"  id="duration" name="duration" class="form-control" placeholder="Number">
-
-                    </div>
-                    
-                    <div class="col-md-5 p-2">
-                        <label for="">Term</label>
-                        <input type="text" id="term" name="term" class="form-control" placeholder="Year / Month" oninput="this.value = this.value.toUpperCase()">
-
-                    </div>
-                </div>
-            </div>
-
-            
-            <div class="row">
-                <div class="col-md-4"></div>
-                <div class="col-md-4">
-                    <button class="btn btn-outline-info rounded-pill text-grey w-100 mt-3 mb-3"
-                          <button class="btn btn-outline-info rounded-pill w-100 text-light" data-dismiss="modal" type="submit" id="itemSave">SUBMIT</button>
-                    </button>
-                </div>
-                <div class="col-md-4"></div>
-            </div>
-
-        </div>
-    </form>
+            <form action="" class="needs-validation" novalidate autocomplete="off" id="unitform">
+              {% csrf_token %}
+     
+              <h1 class="text-dark"></h1>
+        
+              <label class="text-dark" for="unit"><b>Unit Name</b></label>
+              <input type="text" class="form-control text-white"  placeholder="Enter unit" id="unitName" name="unit_name" required>
+              <p class="text-white">eg:KL,PCS,BOX,LTR</p>
+        
+              <button type="submit"  id="UnitSave2" class="btn submit text-white" style="border-color: #ced4da;">Add</button>
+          </form>
   
   
       </div>
@@ -1340,105 +1274,28 @@
   }
 
 
-   
+  function toggleSelects() {
+        var radio = document.querySelector('input[name="expense_type"]:checked');
+        var select1_div = document.getElementById("hsn_div");
+        var select2_div = document.getElementById("sac_div");
+        var select1_label = document.getElementById("hsn_label");
+        var select2_label = document.getElementById("sac_label");
+    
+        if (radio.value === "goods") {
+          select1_div.style.display = "flex";
+          select2_div.style.display = "none";
+          select1_label.setAttribute("for", "sac");
+          select2_label.setAttribute("for", "hsn_code");
+          document.getElementById("hsn_code").name = "sac";
+          document.getElementById("sac").name = "hsn_code";
+        } else {
+          select1_div.style.display = "none";
+          select2_div.style.display = "flex";
+          select1_label.setAttribute("for", "hsn_code");
+          select2_label.setAttribute("for", "sac");
+          document.getElementById("hsn_code").name = "hsn_code";
+          document.getElementById("sac").name = "sac";
+        }
+      }
 </script>
-
-
-<!-- conver script for % -->
-
-    <script>
-                 function convert(){
-            let per = document.getElementById("per");
-            let pervalue = per.value;
-            let salary = document.getElementById("salaryid").value;
-            let sal = document.getElementById("salaryid")
-            const amount =document.getElementById('loan_amount');
-            
-            const cutamount=Math.floor((per.value/100)*sal.value);
-            const messageElement = document.getElementById("messag"); 
-            console.log(pervalue)
-            console.log(salary)
-            console.log(cutamount)
-            
-            document.getElementById("cp").value=cutamount;
-            
-            if (cutamount<= salary){
-                document.getElementById("cp").innerText=cutamount;
-                document.getElementById("cp").style.border="4px solid green"
-                document.getElementById("cu").style.border="4px solid green"
-                messageElement.innerText = "Amount Eligible for Loan.";
-            }
-            else {
-                document.getElementById("cp").innerText=cutamount;
-                document.getElementById("cp").style.border="4px solid red"
-                document.getElementById("cu").style.border="4px solid red"
-                messageElement.innerText = "Amount cannot exceed the salary.";
-            }
-            
-            
-        }
-        function validatecutamount(){
-            const loamt = document.getElementById("amount").value;   
-            let salary = document.getElementById("salaryid").value;   
-            const messageElement = document.getElementById("message"); 
-            if (Number(salary) >= loamt){
-                document.getElementById("amount").style.border="4px solid green";
-                messageElement.innerText = "Amount Eligible for Loan.";
-            }
-            else {
-                document.getElementById("amount").style.border="3px solid red";
-                messageElement.innerText = "Amount cannot exceed the salary.";
-            }
-
-        }
-            </script>
-
-
-<!-- Expiry date  -->
-<script>
-    function calculateExpiryDate() {
-     let loanDurationValue = document.getElementById("loanduration").value;
-     let loanDurationParts = loanDurationValue.split(" ");
-     let loanDuration = parseInt(loanDurationParts[0]);
-     let loanDurationTerm = loanDurationParts[1];
-     const joinDate = new Date(document.getElementById("loan_date").value);
-     console.log(loanDurationTerm);
-     console.log(loanDurationValue);
- 
-     if (!isNaN(loanDuration) && joinDate instanceof Date && !isNaN(joinDate)) {
-         const expiryDate = new Date(joinDate);
- 
-         // Determine if the duration term is in "YEAR" and multiply by 12
-         if (loanDurationTerm === "YEAR") {
-             loanDuration *= 12;
-         }
- 
-         // Calculate the expiry date directly
-         expiryDate.setMonth(expiryDate.getMonth() + loanDuration);
- 
-         const formattedExpiryDate = formatDate(expiryDate);
-         document.getElementById("expdateid").value = formattedExpiryDate;
-     } else {
-         // Handle invalid input or errors
-         document.getElementById("expdateid").value = "";
-     }
- }
-     
- 
-     function formatDate(date) {
-         const year = date.getFullYear();
-         const month = (date.getMonth() + 1).toString().padStart(2, '0');
-         const day = (date.getDate()+1).toString().padStart(2, '0');
-         return `${year}-${month}-${day}`;
-     }
- 
-     // Initialize expiry date when the page loads
-     calculateExpiryDate();
- </script>
- 
- <script>
- $(document).ready(function () {
-      calculateExpiryDate();
- });
- </script>
 {% endblock %}

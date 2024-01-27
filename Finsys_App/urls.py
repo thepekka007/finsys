@@ -93,4 +93,10 @@ urlpatterns = [
        path('employee_loan_list',views.employee_loan_list,name="employee_loan_list"),
        path('employee_loan_create_page',views.employee_loan_create_page,name="employee_loan_create_page"),
         path('employeedata', views.employeedata, name='employeedata'),
+        path('employee_loan_save', views.employee_loan_save, name='employee_loan_save'),
+
+            # path('emploanoverview/<int:pk>',views.emploanoverview,name='emploanoverview'),
+        
+
+        
 ]

@@ -72,17 +72,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for d in data1 %}
+                        {% for d in loan %}
                         <tr>
                             <td  style="text-align: center;">{{d.id}}</td>
-                            <td style="text-align: center;"><a href="">{{d.Login_Id.First_name}} {{d.Login_Id.Last_name}} </a></td>
-                            <td  style="text-align: center;">{{d.Login_Id.User_name}}</td>
-                            <td  style="text-align: center;">{{d.Email}}</td>
-                            <td style="text-align: center;">{{d.contact}}</td>
-                            <td style="text-align: center;"></td>
-                            <td style="text-align: center;"></td>
-                            <td style="text-align: center;"></td>
-                            <td style="text-align: center;"></td>
+                            <td style="text-align: center;"><a href=""> {{d.loan_date}}</a></td>
+                            <td  style="text-align: center;">{{d.login_details.First_name}} {{d.login_details.Last_name}}</td>
+                            <td  style="text-align: center;">{{d.employeeid}}</td>
+                            <td style="text-align: center;">{{d.employee_email}}</td>
+                            <td style="text-align: center;">{{d.expiry_date}}</td>
+                            <td style="text-align: center;">{{d.loan_amount}}</td>
+                            <td style="text-align: center;">{{d.loan_amount}}</td>
+                            <td style="text-align: center;">{{d.status}}</td>
                             
                             
                         </tr>

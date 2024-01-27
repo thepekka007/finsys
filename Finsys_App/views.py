@@ -1771,14 +1771,16 @@ def employee_loan_list(request):
         com = Fin_Company_Details.objects.get(Login_Id = sid)
         allmodules = Fin_Modules_List.objects.get(company_id = com.id)
         employee = Employee.objects.filter(company_id=com.id)
+        loan = Loan.objects.filter(company_id=com.id)
     elif login.User_Type == 'Staff' :
         staf = Fin_Staff_Details.objects.get(Login_Id = sid)
         allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id_id)
         employee = Employee.objects.filter(company_id=staf.company_id_id)
+        loan = Loan.objects.filter(company_id=com.id)
     else:
         distributor = Fin_Distributors_Details.objects.get(Login_Id = sid)
 
-    return render(request,'company/Employee_loan_list.html',{'employee':employee,'allmodules':allmodules})
+    return render(request,'company/Employee_loan_list.html',{'employee':employee,'allmodules':allmodules,'loan':loan})
 
 
 def employee_loan_create_page(request):
@@ -1807,7 +1809,7 @@ def employeedata(request):
         com = Fin_Company_Details.objects.get(Login_Id = sid)
         customer_id = request.GET.get('id')
         cust = Employee.objects.get(id=customer_id,company_id=com.id)
-        data7 = {'email': cust.employee_mail,'salary':cust.salary_amount,'jdate':cust.date_of_joining}
+        data7 = {'email': cust.employee_mail,'salary':cust.salary_amount,'jdate':cust.date_of_joining,'empid':cust.employee_number}
         return JsonResponse(data7)
 
       
@@ -1815,6 +1817,81 @@ def employeedata(request):
     elif login.User_Type == 'Staff' :
         staf = Fin_Staff_Details.objects.get(Login_Id = sid)
         cust = Employee.objects.get(id=customer_id,company_id=staf.company_id_id)
-        data7 = {'email': cust.employee_mail,'salary':cust.salary_amount,'jdate':cust.date_of_joining}
+        data7 = {'email': cust.employee_mail,'salary':cust.salary_amount,'jdate':cust.date_of_joining,'empid':cust.employee_number}
         return JsonResponse(data7)
+
+
+
+
+
+def employee_loan_save(request):
+
+    if request.method == 'POST':
+
+
+        employeename = request.POST['employee']
+        empid = request.POST['empid']
+        empemail = request.POST['empemail']
+        salary = request.POST['salary']
+        Joining_Date = request.POST['Joining_Date']
+
+        loan_Date = request.POST['loan_Date']
+        loan_amount = request.POST['loan_amount']
+
+        expdate = request.POST['expdate'].capitalize()
+        select_payment = request.POST['select_payment']
+        cheque_no = request.POST['cheque_no']
+        upi_id = request.POST['upi_id']
+        acc_no = request.POST['acc_no']
+        cuttingPercentage = request.POST['cuttingPercentage']
+        amount1 = request.POST['pamount']
+        amount2 = request.POST['amount5']
+        if amount1 != '':
+            amount=amount1
+        elif amount2 != '':
+            amount=amount2
+
+
+
+        Note = request.POST['Note']
+     
+        file = request.FILES.get('File', None)
+        if file:
+            file = request.FILES['File']
+        else:
+            file=''
+        
+        sid = request.session['s_id']
+        employee = Fin_Login_Details.objects.get(id=sid)
+        companykey =  Fin_Company_Details.objects.get(Login_Id_id=sid)
+        emp=Employee.objects.get(id=employeename)
+        
+        if employee.User_Type == 'Company':
+                
+
+                new = Loan(employee=emp,employeeid=empid,employee_email=empemail,salary=salary,join_date=Joining_Date,loan_date=loan_Date,loan_amount=loan_amount,
+                           expiry_date=expdate,payment_method=select_payment,cheque_number=cheque_no,upi_id=upi_id,bank_account=acc_no,monthly_cutting_percentage=cuttingPercentage,
+                           monthly_cutting_amount=amount,note=Note,attach_file=file,company=companykey,login_details=employee,balance=amount)
+                new.save()
+
+                com = Loan.objects.get(id=new.id)
+                history = Employee_Loan_History(company = companykey,login_details=employee,employee_loan =com,date = date.today(),action = 'Created')
+                history.save()
+        
+        elif employee.User_Type == 'Staff':
+                
+
+                new =  Employee(employee=emp,employeeid=empid,employee_email=empemail,salary=salary,join_date=Joining_Date,loan_date=loan_Date,loan_amount=loan_amount,
+                           expiry_date=expdate,payment_method=select_payment,cheque_number=cheque_no,upi_id=upi_id,bank_account=acc_no,monthly_cutting_percentage=cuttingPercentage,
+                           monthly_cutting_amount=amount,note=Note,attach_file=file,company=companykey,login_details=employee,balance=amount)
+                
+                new.save()
+                com = Loan.objects.get(id=new.id)
+                history = Employee_Loan_History(company = companykey,login_details=employee,employee_loan = com,date = date.today(),action = 'Created')
+                history.save()
+
+   
+        return redirect(employee_loan_list)
+    
+
 
