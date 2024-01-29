@@ -95,7 +95,8 @@ urlpatterns = [
         path('employeedata', views.employeedata, name='employeedata'),
         path('employee_loan_save', views.employee_loan_save, name='employee_loan_save'),
 
-            # path('emploanoverview/<int:pk>',views.emploanoverview,name='emploanoverview'),
+            path('emploanoverview/<int:pk>',views.emploanoverview,name='emploanoverview'),
+            path('emploanedit/<int:pk>',views.emploanedit,name='emploanedit'),
         
 
         

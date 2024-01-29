@@ -253,7 +253,9 @@ class Loan(models.Model):
     payment_method = models.CharField(max_length=255,null=True,blank=True)
     cheque_number = models.CharField(max_length=255,null=True,blank=True)
     upi_id = models.CharField(max_length=255,null=True,blank=True)
+    
     bank_account = models.CharField(max_length=255,null=True,blank=True)
+    monthly_cutting= models.CharField(max_length=255,null=True,blank=True)
     monthly_cutting_percentage = models.IntegerField(null=True,blank=True)
     monthly_cutting_amount = models.IntegerField(null=True,blank=True)
     note = models.CharField(max_length=255,null=True,blank=True)
@@ -272,4 +274,30 @@ class Employee_Loan_History(models.Model):
     date = models.DateField(null=True,blank=True)
     action = models.CharField(max_length=255,null=True,blank=True)
 
+class Employee_Additional_Loan(models.Model):
+    balance_loan=models.IntegerField(null=True,blank=True)
+    new_loan=models.IntegerField(null=True,blank=True)
+    total_loan=models.IntegerField(null=True,blank=True)
+    payment_method=models.CharField(max_length=255,null=True,blank=True)
+    cheque_number = models.CharField(max_length=255,null=True,blank=True)
+    upi_id = models.CharField(max_length=255,null=True,blank=True)
+    bank_account = models.CharField(max_length=255,null=True,blank=True)
 
+    company = models.ForeignKey(Fin_Company_Details,on_delete=models.CASCADE,null=True,blank=True)
+    login_details = models.ForeignKey(Fin_Login_Details,on_delete=models.CASCADE,null=True,blank=True)
+    employee_loan = models.ForeignKey(Loan,on_delete=models.CASCADE,blank=True,null=True)
+
+class Employee_Loan_Repayment(models.Model):
+    employee = models.ForeignKey(Employee,on_delete=models.CASCADE,null=True,blank=True)
+    principle_amount=models.IntegerField(null=True,blank=True)
+    new_loan=models.IntegerField(null=True,blank=True)
+    interest_amount=models.IntegerField(null=True,blank=True)
+    payment_date = models.DateField(null=True,blank=True)
+    payment_method=models.CharField(max_length=255,null=True,blank=True)
+    total_amount=models.IntegerField(null=True,blank=True)
+    cheque_number = models.CharField(max_length=255,null=True,blank=True)
+    upi_id = models.CharField(max_length=255,null=True,blank=True)
+    bank_account = models.CharField(max_length=255,null=True,blank=True)
+    company = models.ForeignKey(Fin_Company_Details,on_delete=models.CASCADE,null=True,blank=True)
+    login_details = models.ForeignKey(Fin_Login_Details,on_delete=models.CASCADE,null=True,blank=True)
+    employee_loan = models.ForeignKey(Loan,on_delete=models.CASCADE,blank=True,null=True)
