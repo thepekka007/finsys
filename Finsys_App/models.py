@@ -301,3 +301,16 @@ class Employee_Loan_Repayment(models.Model):
     company = models.ForeignKey(Fin_Company_Details,on_delete=models.CASCADE,null=True,blank=True)
     login_details = models.ForeignKey(Fin_Login_Details,on_delete=models.CASCADE,null=True,blank=True)
     employee_loan = models.ForeignKey(Loan,on_delete=models.CASCADE,blank=True,null=True)
+    balance = models.IntegerField(null=True,blank=True)
+
+class Employee_Loan_Transactions(models.Model):
+    company = models.ForeignKey(Fin_Company_Details,on_delete=models.CASCADE,null=True,blank=True)
+    login_details = models.ForeignKey(Fin_Login_Details,on_delete=models.CASCADE,null=True,blank=True)
+    employee_loan = models.ForeignKey(Loan,on_delete=models.CASCADE,blank=True,null=True)
+    employee = models.ForeignKey(Employee,on_delete=models.CASCADE,blank=True,null=True)
+    particulars = models.CharField(max_length=255,null=True,blank=True)
+    date = models.DateField(null=True,blank=True)
+    repayment = models.ForeignKey(Employee_Loan_Repayment,on_delete=models.CASCADE,null=True,blank=True)
+    additional = models.ForeignKey(Employee_Additional_Loan,on_delete=models.CASCADE,null=True,blank=True)
+
+ 

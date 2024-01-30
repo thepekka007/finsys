@@ -108,7 +108,7 @@
                         <tr >
                             <div class="form-group" >
                                     <td><Label>Loan Date</Label></td>
-                                    <td><input placeholder="loan Date" required name="loan_Date" id="loan_date" value="{{loan.loan_date}}" type="date" class="form-control"></td>
+                                    <td><input placeholder="loan Date" required name="loan_date" id="loan_date" value="{{loan.loan_date|date:'Y-m-d'}}" type="date" class="form-control"></td>
                             </div>
                         </tr>
                     </div>
@@ -116,7 +116,7 @@
                         <tr>
                             
                             <div class="form-group" >
-                                <td><Label>Laon Amount</Label></td>
+                                <td><Label>Loan Amount</Label></td>
                                    <td><input placeholder="Enter Loan Amount" required name="loan_amount" id="loan_amount" value="{{loan.loan_amount}}" type="number" class="form-control"></td>
                             </div>
                         </tr>
@@ -156,7 +156,7 @@
                              <div class="form-group" > 
                                 <td><Label>Expiry Date</Label></td>
                                 <td>
-                                    <td><input placeholder="expdate" required name="expdate" id="expdateid" type="date" value="{{ loan.expiry_date|date:'Y-m-d' }}" class="form-control"></td>
+                                    <td><input placeholder="expdate" required name="expdate" id="expdateid" type="date" value="{{ loan.expiry_date|date:'Y-m-d'}}" class="form-control"></td>
                               
                                 </td>
                             </div>
@@ -229,23 +229,23 @@
                                     {% if loan.monthly_cutting == 'No' %}
                                         <div class="form-check form-check-inline ml-3" >
                                             <input class="form-check-input" type="radio" id="no" name="cutingamount"
-                                            onchange="show3(this.value)" value="No" required>
+                                            onchange="show3(this.value)" value="Yes" required>
                                             <label class="form-check-label">In Amount</label>
                                         </div>
                                         <div class="form-check form-check-inline ml-3">
                                             <input class="form-check-input" type="radio" id="yes" name="cutingamount" 
-                                            onchange="show4(this.value)" value="Yes"  required checked>
+                                            onchange="show4(this.value)" value="No"  required checked>
                                             <label class="form-check-label">In Percentage</label>
                                         </div>
                                     {% else %}
                                         <div class="form-check form-check-inline ml-3" >
                                             <input class="form-check-input" type="radio" id="no" name="cutingamount"
-                                            onchange="show3(this.value)" value="No" required checked>
+                                            onchange="show3(this.value)" value="Yes" required checked>
                                             <label class="form-check-label">In Amount</label>
                                         </div>
                                         <div class="form-check form-check-inline ml-3">
                                             <input class="form-check-input" type="radio" id="yes" name="cutingamount" 
-                                            onchange="show4(this.value)" value="Yes"  required>
+                                            onchange="show4(this.value)" value="No"  required>
                                             <label class="form-check-label">In Percentage</label>
                                         </div>
                                     {% endif %}
@@ -261,14 +261,14 @@
                                         <div class="row mt-3">
                                             <div class=" col-md-4">
                                                 <label class="col-form-label">Monthly Cutting (%)</label>
-                                                <input type="number" oninput="convert()" class="form-control" id="cu" name="cuttingPercentage"
-                                                 placeholder="In Percentage"style="background-color: #2f516f; color: white;" min="0" value="{{ loan.monthly_cutting_percentage }}" required>
+                                                <input type="number" oninput="convert()" onmouseover="convert()" class="form-control" id="per" name="cuttingPercentage"
+                                                 placeholder="In Percentage"style="background-color: #2f516f; color: white;" min="0" value="{{loan.monthly_cutting_percentage}}" >
                                             </div>     
                                             <div class="col-3 col-md-4">
                                                 
                                                 <label class="col-form-label">Amount</label>
                                                 <input type="number"  class="form-control" id="cp" name="pamount"
-                                                    placeholder="amount"style="background-color: #2f516f; color: white; width:50%;"  min="0" value="{{ loan.monthly_cutting_amount }}" readonly required>    
+                                                placeholder="amount"style="background-color: #2f516f; color: white; width:50%;"  min="0" readonly >    
                                                 
                                                  <!-- <span >Rs:</span>
                                                 <b><span id="cp">Amount</span></b> -->
@@ -389,12 +389,12 @@
                                     <td>
                                         <label>Note</label>
                                     </td>
-                                    <td style=" position: relative;">
+                                    <td style=" position: relative;">   
                                         <div style="display: flex;">
                                         
                                    </div>
                                    
-                                   <textarea class="form-control" id="" name="Note" placeholder="Note"
+                                   <textarea class="form-control" id="" name="Note" value="{{ loan.note }}" placeholder="Note"
                                    style="height: 190px;"></textarea>
                                <input type="file" name="file" style="margin-top: 10px; width: 70%;">
                                         
@@ -1621,43 +1621,43 @@
         document.getElementById("cp").value = 0;
     }
     
-    function convert(){
-            let per = document.getElementById("cu");
-            let pervalue = per.value;
-            let salary = document.getElementById("Salary").value;
+    // function convert(){
+    //         let per = document.getElementById("cu");
+    //         let pervalue = per.value;
+    //         let salary = document.getElementById("Salary").value;
             
-            const amount =document.getElementById('Loan_Amound');
+    //         const amount =document.getElementById('Loan_Amound');
             
-            const cutamount=Math.ceil((per.value/100)*amount.value);
+    //         const cutamount=Math.ceil((per.value/100)*amount.value);
 
-            document.getElementById("cp").value=cutamount;
+    //         document.getElementById("cp").value=cutamount;
             
-            if (salary > cutamount){
-                document.getElementById("cp").value=cutamount;
-                document.getElementById("cp").style.border="4px solid green"
-                document.getElementById("cu").style.border="4px solid green"
+    //         if (salary > cutamount){
+    //             document.getElementById("cp").value=cutamount;
+    //             document.getElementById("cp").style.border="4px solid green"
+    //             document.getElementById("cu").style.border="4px solid green"
 
-            }
-            else {
-                document.getElementById("cp").value=cutamount;
-                document.getElementById("cp").style.border="4px solid red"
-                document.getElementById("cu").style.border="4px solid red"
+    //         }
+    //         else {
+    //             document.getElementById("cp").value=cutamount;
+    //             document.getElementById("cp").style.border="4px solid red"
+    //             document.getElementById("cu").style.border="4px solid red"
 
-            }
+    //         }
             
             
-        }
-        function validatecutamount(){
-            const loamt = document.getElementById("amount").value;   
-            let salary = document.getElementById("Salary").value;    
-            if (Number(salary) >= loamt){
-                document.getElementById("amount").style.border="4px solid green";
-            }
-            else {
-                document.getElementById("amount").style.border="3px solid red";
-            }
+    //     }
+    //     function validatecutamount(){
+    //         const loamt = document.getElementById("amount").value;   
+    //         let salary = document.getElementById("Salary").value;    
+    //         if (Number(salary) >= loamt){
+    //             document.getElementById("amount").style.border="4px solid green";
+    //         }
+    //         else {
+    //             document.getElementById("amount").style.border="3px solid red";
+    //         }
 
-        }
+    //     }
         function convert2(){
             let cutamount = document.getElementById("cp");
             let cutamountvalue = cutamount.value;

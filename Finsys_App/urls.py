@@ -97,6 +97,12 @@ urlpatterns = [
 
             path('emploanoverview/<int:pk>',views.emploanoverview,name='emploanoverview'),
             path('emploanedit/<int:pk>',views.emploanedit,name='emploanedit'),
+            path('emploanrepayment/<int:pk>',views.emploanrepayment,name='emploanrepayment'),
+             path('emploanrepaymentsave/<int:pk>',views.emploanrepaymentsave,name='emploanrepaymentsave'),
+             path('emploanrepaymentedit/<int:pk>',views.emploanrepaymentedit,name='emploanrepaymentedit'),
+             path('emploanaddtional/<int:pk>',views.emploanaddtional,name='emploanaddtional'),
+             path('emploanadditionalsave/<int:pk>',views.emploanadditionalsave,name='emploanadditionalsave'),
+             
         
 
         
