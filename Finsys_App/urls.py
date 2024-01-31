@@ -102,6 +102,7 @@ urlpatterns = [
              path('emploanrepaymentedit/<int:pk>',views.emploanrepaymentedit,name='emploanrepaymentedit'),
              path('emploanaddtional/<int:pk>',views.emploanaddtional,name='emploanaddtional'),
              path('emploanadditionalsave/<int:pk>',views.emploanadditionalsave,name='emploanadditionalsave'),
+             path('emploanadditionedit/<int:pk>',views.emploanadditionedit,name='emploanadditionedit'),
              
         
 

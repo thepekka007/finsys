@@ -1870,7 +1870,7 @@ def employee_loan_save(request):
         if employee.User_Type == 'Company':
                 
 
-                new = Loan(employee=emp,employeeid=empid,employee_email=empemail,salary=salary,join_date=join_date,loan_date=loan_Date,loan_amount=loan_amount,
+                new = Loan(employee=emp,employeeid=empid,employee_email=empemail,salary=salary,join_date=join_date,loan_date=loan_Date,loan_amount=loan_amount,total_loan=loan_amount,
                            expiry_date=expdate,payment_method=select_payment,cheque_number=cheque_no,upi_id=upi_id,bank_account=acc_no,monthly_cutting_percentage=cuttingPercentage,
                            monthly_cutting_amount=amount,note=Note,attach_file=file,company=companykey,login_details=employee,balance=loan_amount,employee_name =emp.title +" " + emp.first_name + " " + emp.last_name,monthly_cutting=cutingamount)
                 new.save()
@@ -1878,13 +1878,13 @@ def employee_loan_save(request):
                 com = Loan.objects.get(id=new.id)
                 history = Employee_Loan_History(company = companykey,login_details=employee,employee_loan =com,date = date.today(),action = 'Created')
                 history.save()
-                trans = Employee_Loan_Transactions(company = companykey,login_details=employee,employee_loan =com,date = date.today(),particulars = 'LOAN ISSUED',employee=emp)
+                trans = Employee_Loan_Transactions(company = companykey,login_details=employee,employee_loan =com,date = date.today(),particulars = 'LOAN ISSUED',employee=emp,balance=loan_amount)
                 trans.save()
         
         elif employee.User_Type == 'Staff':
                 
 
-                new =  Employee(employee=emp,employeeid=empid,employee_email=empemail,salary=salary,join_date=join_date,loan_date=loan_Date,loan_amount=loan_amount,
+                new =  Employee(employee=emp,employeeid=empid,employee_email=empemail,salary=salary,join_date=join_date,loan_date=loan_Date,loan_amount=loan_amount,total_loan=loan_amount,
                            expiry_date=expdate,payment_method=select_payment,cheque_number=cheque_no,upi_id=upi_id,bank_account=acc_no,monthly_cutting_percentage=cuttingPercentage,
                            monthly_cutting_amount=amount,note=Note,attach_file=file,company=companykey,login_details=employee,balance=loan_amount,employee_name =emp.title +" " + emp.first_name + " " + emp.last_name,monthly_cutting=cutingamount)
                 
@@ -1892,7 +1892,7 @@ def employee_loan_save(request):
                 com = Loan.objects.get(id=new.id)
                 history = Employee_Loan_History(company = companykey,login_details=employee,employee_loan = com,date = date.today(),action = 'Created')
                 history.save()
-                trans = Employee_Loan_Transactions(company = companykey,login_details=employee,employee_loan =com,date = date.today(),particulars = 'LOAN ISSUED',employee=emp)
+                trans = Employee_Loan_Transactions(company = companykey,login_details=employee,employee_loan =com,date = date.today(),particulars = 'LOAN ISSUED',employee=emp,balance=loan_amount)
                 trans.save()
 
    
@@ -1955,6 +1955,9 @@ def emploanedit(request, pk):                                                   
     
             b=Employee_Loan_History.objects.get(employee_loan=pk)
             loan = Loan.objects.get(id=pk)
+            c=Employee_Loan_Transactions.objects.get(employee_loan=pk)
+            c.balance=loan_amount=request.POST.get("loan_amount",None)
+            c.save()
    
             b.company=com
             b.login_details=login
@@ -2017,6 +2020,9 @@ def emploanedit(request, pk):                                                   
  
         if request.method=='POST':
             b=Employee_Loan_History.objects.get(employee_loan=pk)
+            c=Employee_Loan_Transactions.objects.get(employee_loan=pk)
+            c.balance=loan_amount=request.POST.get("loan_amount",None)
+            c.save()
             loan = Loan.objects.get(id=pk)
    
             b.company=com
@@ -2119,6 +2125,7 @@ def emploanrepaymentsave(request,pk):
 
         # Perform the subtraction
         balance = loan.balance - principle_amount_int
+        
 
         
         loan.balance=balance
@@ -2140,7 +2147,7 @@ def emploanrepaymentsave(request,pk):
                 com = Employee_Loan_Repayment.objects.get(id=new.id)
                 # history = Employee_Loan_History(company = companykey,login_details=employee,employee_loan =com,date = date.today(),action = 'Created')
                 # history.save()
-                trans = Employee_Loan_Transactions(company = companykey,login_details=employee,employee_loan =loan,date = date.today(),particulars = 'EMI PAID',employee=emp,repayment=com)
+                trans = Employee_Loan_Transactions(company = companykey,login_details=employee,employee_loan =loan,date = date.today(),particulars = 'EMI PAID',employee=emp,repayment=com,balance=balance)
                 trans.save()
         
         elif employee.User_Type == 'Staff':
@@ -2155,7 +2162,7 @@ def emploanrepaymentsave(request,pk):
                 com = Employee_Loan_Repayment.objects.get(id=new.id)
                 # history = Employee_Loan_History(company = companykey,login_details=employee,employee_loan =com,date = date.today(),action = 'Created')
                 # history.save()
-                trans = Employee_Loan_Transactions(company = companykey,login_details=employee,employee_loan =loan,date = date.today(),particulars = 'EMI PAID',employee=emp,repayment=com)
+                trans = Employee_Loan_Transactions(company = companykey,login_details=employee,employee_loan =loan,date = date.today(),particulars = 'EMI PAID',employee=emp,repayment=com,balance=balance)
                 trans.save()
 
    
@@ -2198,6 +2205,9 @@ def emploanrepaymentedit(request, pk):                                          
     
      
             loan1 = Employee_Loan_Repayment.objects.get(id=pk)
+            c=Employee_Loan_Transactions.objects.get(repayment=loan1)
+            loan2 = Loan.objects.get(id=loan_re.employee_loan.id)
+            
    
        
             loan1.login_details=login
@@ -2205,27 +2215,60 @@ def emploanrepaymentedit(request, pk):                                          
          
     
            
-            principle_amount=request.POST.get("principal",None)
-        # Assuming principle_amount is a string, convert it to an integer
-            prevbalance=loan1.balance
-            print(prevbalance)
-            # Assuming prevbalance, loan1.total_amount, and loan1.interest_amount are strings
-            prevbalance = int(prevbalance)
-            loan_total_amount = int(loan1.total_amount)
-            interest_amount = int(loan1.interest_amount)
-            print(prevbalance)
-            currentloan = prevbalance + (loan_total_amount - interest_amount)
-            print(currentloan)
-            principle_amount_int = int(principle_amount)
-            print(principle_amount_int)
-            loan2 = Loan.objects.get(id=loan_re.employee_loan.id)
-            # Perform the subtraction
-            balance1 = currentloan - principle_amount_int
-            print(balance1)
+            
 
-            # Update the loan balance and save
-            loan1.balance=balance1
-            loan2.balance=balance1
+            previous_principle_amount=loan1.principle_amount
+            previous_principle_amount=int(previous_principle_amount) #5000
+
+            principle_amount=request.POST.get("principal",None)
+            principle_amount_new=int(principle_amount)
+            previousbalance=c.balance
+            previousbalance=int(previousbalance)
+
+
+            if previous_principle_amount == principle_amount_new:
+                newbalance=previousbalance
+                c.balance=newbalance
+                loan1.balance=newbalance
+                loan2.balance=newbalance
+            elif previous_principle_amount < principle_amount_new:
+                newprincipleamount=principle_amount_new-previous_principle_amount
+                newbalance=previousbalance-newprincipleamount
+                c.balance=newbalance
+                loan1.balance=newbalance
+                loan2.balance=newbalance
+            elif previous_principle_amount > principle_amount_new:
+                newprincipleamount=previous_principle_amount-principle_amount_new
+                newbalance=previousbalance+newprincipleamount
+                c.balance=newbalance
+                loan1.balance=newbalance
+                loan2.balance=newbalance
+            
+
+
+
+        # Assuming principle_amount is a string, convert it to an integer
+            # prevbalance=c.balance
+            # print(prevbalance)
+            # # Assuming prevbalance, loan1.total_amount, and loan1.interest_amount are strings
+            # prevbalance = int(prevbalance)
+            # loan_total_amount = int(loan1.total_amount)
+            # interest_amount = int(loan1.interest_amount)
+            # print(prevbalance)
+            # currentloan = prevbalance + (loan_total_amount - interest_amount)
+            # print(currentloan)
+            # principle_amount_int = int(principle_amount)
+            # print(principle_amount_int)
+            # loan2 = Loan.objects.get(id=loan_re.employee_loan.id)
+            # # Perform the subtraction
+            # balance1 = currentloan - principle_amount_int
+            # print(balance1)
+
+            # # Update the loan balance and save
+            # loan1.balance=balance1
+            # loan2.balance=balance1
+            # c.balance=balance1
+            # c.save()
 
             loan1.principle_amount=request.POST.get("principal",None)
             loan1.interest_amount=request.POST.get("interest",None)
@@ -2239,6 +2282,7 @@ def emploanrepaymentedit(request, pk):                                          
             loan1.bank_account=request.POST.get("paid_bnk_id",None)
             loan2.save()
             loan1.save()
+            c.save()
 
             return redirect('emploanoverview',loan2.id)
         return render(request, 'company/Employee_loan_repayment_edit.html',context)
@@ -2262,10 +2306,59 @@ def emploanrepaymentedit(request, pk):                                          
         
         
                 loan1 = Employee_Loan_Repayment.objects.get(id=pk)
+                c=Employee_Loan_Transactions.objects.get(repayment=loan1)
+                loan2 = Loan.objects.get(id=loan_re.employee_loan.id)
    
        
                 loan1.login_details=login
                 loan1.company=com
+                previous_principle_amount=loan1.principle_amount
+                previous_principle_amount=int(previous_principle_amount) #5000
+
+                principle_amount=request.POST.get("principal",None)
+                principle_amount_new=int(principle_amount)
+                previousbalance=c.balance
+                previousbalance=int(previousbalance)
+
+
+                if previous_principle_amount == principle_amount_new:
+                    newbalance=previousbalance
+                    c.balance=newbalance
+                    loan1.balance=newbalance
+                    loan2.balance=newbalance
+                elif previous_principle_amount < principle_amount_new:
+                    newprincipleamount=principle_amount_new-previous_principle_amount
+                    newbalance=previousbalance-newprincipleamount
+                    c.balance=newbalance
+                    loan1.balance=newbalance
+                    loan2.balance=newbalance
+                elif previous_principle_amount > principle_amount_new:
+                    newprincipleamount=previous_principle_amount-principle_amount_new
+                    newbalance=previousbalance+newprincipleamount
+                    c.balance=newbalance
+                    loan1.balance=newbalance
+                    loan2.balance=newbalance
+        #         principle_amount=request.POST.get("principal",None)
+        # # Assuming principle_amount is a string, convert it to an integer
+        #         prevbalance=loan1.balance
+        #         print(prevbalance)
+        #         # Assuming prevbalance, loan1.total_amount, and loan1.interest_amount are strings
+        #         prevbalance = int(prevbalance)
+        #         loan_total_amount = int(loan1.total_amount)
+        #         interest_amount = int(loan1.interest_amount)
+        #         print(prevbalance)
+        #         currentloan = prevbalance + (loan_total_amount - interest_amount)
+        #         print(currentloan)
+        #         principle_amount_int = int(principle_amount)
+        #         print(principle_amount_int)
+        #         loan2 = Loan.objects.get(id=loan_re.employee_loan.id)
+        #         # Perform the subtraction
+        #         balance1 = currentloan - principle_amount_int
+        #         print(balance1)
+
+        #         # Update the loan balance and save
+        #         loan1.balance=balance1
+        #         loan2.balance=balance1
             
         
                 loan1.principle_amount=request.POST.get("principal",None)
@@ -2278,18 +2371,19 @@ def emploanrepaymentedit(request, pk):                                          
                 loan1.cheque_number=request.POST.get("paid_cheque_id",None)
                 loan1.upi_id=request.POST.get("paid_upi_id",None)
                 loan1.bank_account=request.POST.get("paid_bnk_id",None)
-                principle_amount=request.POST.get("principal",None)
-            # Assuming principle_amount is a string, convert it to an integer
-                principle_amount_int = int(principle_amount)
-                loan2 = loan1.objects.get(id=loan.employee_loan.id)
-                # Perform the subtraction
-                balance = loan2.loan_amount - principle_amount_int
+            #     principle_amount=request.POST.get("principal",None)
+            # # Assuming principle_amount is a string, convert it to an integer
+            #     principle_amount_int = int(principle_amount)
+            #     loan2 = loan1.objects.get(id=loan.employee_loan.id)
+            #     # Perform the subtraction
+            #     balance = loan2.loan_amount - principle_amount_int
 
-                # Update the loan balance and save
-                loan1.balance=balance
-                loan.balance=balance
+            #     # Update the loan balance and save
+            #     loan1.balance=balance
+            #     loan.balance=balance
                 loan.save()
                 loan1.save()
+                c.save()
 
                 return redirect('emploanoverview',loan2.id)
             return render(request, 'company/Employee_loan_repayment_edit.html',context)
@@ -2341,6 +2435,16 @@ def emploanadditionalsave(request,pk):
         companykey =  Fin_Company_Details.objects.get(Login_Id_id=sid)
         loan=Loan.objects.get(id=pk)
         emp=Employee.objects.get(id=loan.employee.id)
+
+        loan.balance=total_loan
+        print(loan.balance)
+        loan_amount=int(loan.total_loan)
+        print(loan_amount)
+        new=int(new_loan)
+        print(new)
+        loan.total_loan=loan_amount+new
+        print(loan.total_loan)
+        loan.save()
         # Assuming principle_amount is a string, convert it to an integer
       
 
@@ -2352,15 +2456,13 @@ def emploanadditionalsave(request,pk):
 
                 new = Employee_Additional_Loan(company=companykey,login_details=employee,
                                             payment_method=payment_method,total_loan=total_loan,cheque_number=cheque_number,upi_id=upi_id,
-                                              bank_account=bank_account,employee_loan=loan
+                                              bank_account=bank_account,employee_loan=loan,new_loan=new_loan,balance_loan=balance_loan,new_date=payment_date
                                               )
                 new.save()
-              
+                
 
                 com = Employee_Additional_Loan.objects.get(id=new.id)
-                # history = Employee_Loan_History(company = companykey,login_details=employee,employee_loan =com,date = date.today(),action = 'Created')
-                # history.save()
-                trans = Employee_Loan_Transactions(company = companykey,login_details=employee,employee_loan =loan,date = date.today(),particulars = 'ADDITIONAL LOAN',employee=emp,additional=com)
+                trans = Employee_Loan_Transactions(company = companykey,login_details=employee,employee_loan =loan,date = date.today(),particulars = 'ADDITIONAL LOAN',employee=emp,additional=com,balance=total_loan)
                 trans.save()
         
         elif employee.User_Type == 'Staff':
@@ -2368,15 +2470,165 @@ def emploanadditionalsave(request,pk):
 
                 new = Employee_Additional_Loan(company=companykey,login_details=employee,
                                               payment_method=payment_method,total_loan=total_loan,cheque_number=cheque_number,upi_id=upi_id,
-                                              bank_account=bank_account,employee_loan=loan
+                                              bank_account=bank_account,employee_loan=loan,new_loan=new_loan,balance_loan=balance_loan,new_date=payment_date
                                               )
                 new.save()
 
                 com = Employee_Additional_Loan.objects.get(id=new.id)
-                # history = Employee_Loan_History(company = companykey,login_details=employee,employee_loan =com,date = date.today(),action = 'Created')
-                # history.save()
-                trans = Employee_Loan_Transactions(company = companykey,login_details=employee,employee_loan =loan,date = date.today(),particulars = 'ADDITIONAL LOAN',employee=emp,additional=com)
+                trans = Employee_Loan_Transactions(company = companykey,login_details=employee,employee_loan =loan,date = date.today(),particulars = 'ADDITIONAL LOAN',employee=emp,additional=com,balance=total_loan)
                 trans.save()
 
    
         return redirect(emploanoverview,pk)
+
+
+def emploanadditionedit(request, pk):                                                                #new by tinto mt
+  
+    sid = request.session['s_id']
+    login = Fin_Login_Details.objects.get(id=sid)
+
+    
+    # Retrieve the chart of accounts entry
+    # loan = get_object_or_404(Loan, id=pk)
+    
+
+    # Check if 'company_id' is in the session
+
+   
+    if login.User_Type == 'Company':
+      
+     
+        com = Fin_Company_Details.objects.get(Login_Id = sid)
+        allmodules = Fin_Modules_List.objects.get(company_id = com.id)
+        
+        loan_ad = Employee_Additional_Loan.objects.get(id=pk)
+        loan = Loan.objects.get(id=loan_ad.employee_loan.id)
+        # employee = Employee.objects.get(id=loan_ad.employee.id)
+        context = {
+                    'allmodules':allmodules,
+                    'loan':loan,
+                    # 'employee':employee,
+                    'loan_ad':loan_ad
+            }
+       
+    
+        
+        if request.method=='POST':
+        
+    
+     
+            loan1 = Employee_Additional_Loan.objects.get(id=pk)
+            c=Employee_Loan_Transactions.objects.get(additional=loan1)
+   
+       
+            loan1.login_details=login
+            loan1.company=com
+            loan1.employee_loan=loan
+            new_loan_amount=request.POST.get("new",None)
+            new_loan_amount=int(new_loan_amount)
+        # Assuming principle_amount is a string, convert it to an integer
+            prevbalance=loan1.balance_loan
+            print(prevbalance)
+            # Assuming prevbalance, loan1.total_amount, and loan1.interest_amount are strings
+            prevbalance = int(prevbalance)
+        
+            print(prevbalance)
+        
+            prevnewloan=loan1.new_loan
+            prevnewloan=int(prevnewloan)
+
+
+            loan2 = Loan.objects.get(id=loan_ad.employee_loan.id)
+
+            prebalanceinloan=loan2.balance
+            prebalanceinloan=int(prebalanceinloan)
+            print(prebalanceinloan)
+
+            # Perform the subtraction
+            currentbalance1 = prebalanceinloan - prevnewloan
+            print(currentbalance1)
+            actualbalance=currentbalance1+new_loan_amount
+            c.balance=actualbalance
+            c.save()
+            print(actualbalance)
+            
+
+            # Update the loan balance and save
+            
+            loan2.balance=actualbalance
+
+            total_loan=loan2.total_loan
+            total_loan=int(total_loan)
+            prevtotalloan=total_loan-prevnewloan
+            loan2.total_loan=prevtotalloan+new_loan_amount
+
+
+
+            loan1.balance_loan=request.POST.get("remain_loan",None)
+            loan1.new_loan=request.POST.get("new",None)
+            loan1.total_loan=request.POST.get("amount",None)
+            loan1.payment_method=request.POST.get("payment_method",None)
+           
+
+            loan1.new_date=request.POST.get("adjdate",None)
+            loan1.cheque_number=request.POST.get("cheque_id",None)
+            loan1.upi_id=request.POST.get("upi_id",None)
+            loan1.bank_account=request.POST.get("bnk_id",None)
+            loan3 = Loan.objects.get(id=loan_ad.employee_loan.id)
+
+            loan1.save()
+            loan2.save()
+        
+            return redirect('emploanoverview',loan3.id)
+        return render(request, 'company/Employee_loan_additional_edit.html',context)
+    # if login.User_Type == 'Staff':
+    #         com = Fin_Company_Details.objects.get(Login_Id = sid)
+    #         allmodules = Fin_Modules_List.objects.get(company_id = com.id)
+    #         loan = Loan.objects.get(id=pk)
+    #         loan_re = Employee_Loan_Repayment.objects.get(id=pk)
+    #         employee = Employee.objects.get(id=loan_re.employee.id)
+    #         context = {
+    #                     'allmodules':allmodules,
+    #                     'loan':loan,
+    #                     'employee':employee,
+    #                     'loan_re':loan_re
+    #             }
+        
+        
+            
+    #         if request.method=='POST':
+            
+        
+        
+    #             loan1 = Employee_Loan_Repayment.objects.get(id=pk)
+   
+       
+    #             loan1.login_details=login
+    #             loan1.company=com
+            
+        
+    #             loan1.principle_amount=request.POST.get("principal",None)
+    #             loan1.interest_amount=request.POST.get("interest",None)
+    #             loan1.payment_date=request.POST.get("date",None)
+    #             loan1.total_amount=request.POST.get("total",None)
+    #             loan1.principle_amount=request.POST.get("principal",None)
+
+    #             loan1.payment_method=request.POST.get("recieved",None)
+    #             loan1.cheque_number=request.POST.get("paid_cheque_id",None)
+    #             loan1.upi_id=request.POST.get("paid_upi_id",None)
+    #             loan1.bank_account=request.POST.get("paid_bnk_id",None)
+    #             principle_amount=request.POST.get("principal",None)
+    #         # Assuming principle_amount is a string, convert it to an integer
+    #             principle_amount_int = int(principle_amount)
+    #             loan2 = loan1.objects.get(id=loan.employee_loan.id)
+    #             # Perform the subtraction
+    #             balance = loan2.loan_amount - principle_amount_int
+
+    #             # Update the loan balance and save
+    #             loan1.balance=balance
+    #             loan.balance=balance
+    #             loan.save()
+    #             loan1.save()
+
+    #             return redirect('emploanoverview',loan2.id)
+    #         return render(request, 'company/Employee_loan_repayment_edit.html',context)

@@ -592,7 +592,7 @@ footer p {
                             
     
                             <div class="col-md-3 mx-5" style="width: 50%; margin-top: 8px;">
-    <h5>LOAN AMOUNT: {{loan.loan_amount}}</5>
+    <h5>LOAN AMOUNT: {{loan.total_loan}}</5>
                                 
                             </div>
     
@@ -604,7 +604,7 @@ footer p {
     
                         </div>
                         <div class="row">
-                            <div class="col"><h5>ACCOUNT NUMBER: {{loan.account_number}}</h5></div>
+                            <div class="col"><h5> {{loan.account_number}}</h5></div>
                             <div class="col ml-2"></div>
                             <div class="col"><h5 class="ml-5">BALANCE : {{loan.balance}}</h5></div>
 
@@ -635,8 +635,8 @@ footer p {
                                             {% elif i.particulars == 'EMI PAID' %}
                                             <td >{{ i.repayment.principle_amount }}</td>
                                         
-                                            {% elif a.bank_type == 'ADDITIONAL LOAN ISSUED' %}
-                                            <td >{{ a.bank_type }}</td>
+                                            {% elif i.particulars == 'ADDITIONAL LOAN' %}
+                                            <td >{{ i.additional.new_loan }}</td>
 
                                             {% endif %}
                                             <!-- <td >{{ a.loan_desc }}</td> -->
@@ -651,8 +651,8 @@ footer p {
                                             {% elif i.particulars == 'EMI PAID' %}
                                             <td >{{ i.repayment.total_amount }}</td>
                                         
-                                            {% elif a.bank_type == 'ADDITIONAL LOAN ISSUED' %}
-                                            <td >{{ a.bank_type }}</td>
+                                            {% elif i.particulars == 'ADDITIONAL LOAN' %}
+                                            <td >{{  i.additional.new_loan }}</td>
 
                                             {% endif %}
                                             {% if i.particulars == 'LOAN ISSUED' %}
@@ -660,8 +660,8 @@ footer p {
                                             {% elif i.particulars == 'EMI PAID' %}
                                             <td >{{ i.repayment.balance }}</td>
                                         
-                                            {% elif a.bank_type == 'ADDITIONAL LOAN ISSUED' %}
-                                            <td >{{ a.bank_type }}</td>
+                                            {% elif i.particulars == 'ADDITIONAL LOAN' %}
+                                            <td >{{ i.employee_loan.balance }}</td>
 
                                             {% endif %}
                                             
@@ -675,7 +675,7 @@ footer p {
                                                         <a class="dropdown-item" href="{% url 'emploanrepaymentedit' i.repayment.id %}">Edit</a>
 
                                                         {% else %}
-                                                            <a class="dropdown-item" href="">Edit</a>
+                                                            <a class="dropdown-item" href="{% url 'emploanadditionedit' i.additional.id %}">Edit</a>
                                                         {% endif %}
             
                                                         {% if a.bank_type == 'PROCESSING FEE' or a.bank_type == 'OPENING BAL' %}

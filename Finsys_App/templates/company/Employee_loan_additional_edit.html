@@ -8,7 +8,7 @@
     <div class="card radius-15">
         <div class="card-body">
             <div class="container-fluid">
-                <form id="bankForm" method="post" action="{% url 'emploanadditionalsave' loan.id %}" style="margin-left: 10%;margin-right: 10%;">
+                <form id="bankForm" method="post" action="{% url 'emploanadditionedit' loan_ad.id %}" style="margin-left: 10%;margin-right: 10%;">
                     <div class="col-md-12">
                         <center>
                         <h2>Issue Additional Loan </h2>
@@ -29,11 +29,11 @@
                         </div>
                         <div class="row">
                             <div class="col-md-5 p-2">
-                                <input class="form-control" type="number" name="remain_loan" value="{{loan.balance}}" id="remain_loan">
+                                <input class="form-control" type="number" name="remain_loan" value="{{loan_ad.balance_loan}}" id="remain_loan">
                             </div>
                             <div class="col-md-2 p-2"></div>
                             <div class="col-md-5 p-2">
-                                <input class="form-control" type="number" name="new" value="0" id="new" oninput="updateAmount()">
+                                <input class="form-control" type="number" name="new" value="{{loan_ad.new_loan}}" id="new" oninput="updateAmount()">
                             </div>
                         </div>
                         <div class="row">
@@ -51,27 +51,16 @@
                             </div>
                             <div class="col-md-2 p-2"></div>
                             <div class="col-md-5 p-2">
-                                <input class="form-control" type="date" id="adjdate" name="adjdate">
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Get the current date in the format "YYYY-MM-DD"
-    var currentDate = new Date().toISOString().split('T')[0];
-
-    // Set the value of the date input to the current date
-    document.getElementById('adjdate').value = currentDate;
-  });
-</script>
+                                <input class="form-control" type="date" value="{{current_date}}" name="adjdate">
                             </div>
                         </div>
-                        
                         <div class="row">
                             <div class="col-md-5">
                                 <label class="col-form-label">Payment Type</label>
                                 <select class="form-control my-select" id="pay_method" name="payment_method" style="background-color: #43596c;" required>
-                                    <option value="Cash">Cash</option>
-                                    <option value="Cheque">Cheque</option>
-                                    <option value="UPI">UPI</option>
+                                    <option value="Cash"  {% if loan_ad.payment_method == 'Cash' %}Selected{% endif %}>Cash</option>
+                                    <option value="Cheque" {% if loan_ad.payment_method == 'Cheque' %}Selected{% endif %}>Cheque</option>
+                                    <option value="UPI" {% if loan_ad.payment_method == 'UPI' %}Selected{% endif %}>UPI</option>
                                     {% for i in bank %}
                                       <option value="{{i.bankname}}">{{i.bankname}}</option>
                                     {% endfor %}
@@ -81,15 +70,15 @@
                         <div class="row">
                             <div class="col-md-5" style="display:none;"  id="chequediv">
                                 <label class="col-form-label" >Cheque No</label>
-                                <input type="text" class="form-control" name="cheque_id" value="{{rbill.cheque_no}}" id="cheque_id" placeholder="Enter Cheque No">
+                                <input type="text" class="form-control" name="cheque_id" value="{{loan_ad.cheque_number}}" id="cheque_id" placeholder="Enter Cheque No">
                             </div>
                             <div class="col-md-5"  style="display:none;" id="upidiv">
                                 <label class="col-form-label" >UPI ID</label>
-                                <input type="text" class="form-control" name="upi_id" value="{{rbill.upi_no}}" id="upi_id" placeholder="Enter UPI ID">
+                                <input type="text" class="form-control" name="upi_id" value="{{loan_ad.upi_no}}" id="upi_id" placeholder="Enter UPI ID">
                             </div>
                             <div class="col-md-5"  style="display:none;" id="bnkdiv">
                                 <label class="col-form-label" >Bank Account</label>
-                                <input type="text" class="form-control" name="bnk_id" id="bnk_id" style="background-color: #43596c;" readonly>
+                                <input type="text" class="form-control" name="bnk_id" id="bnk_id" style="background-color: #43596c;" value="{{loan_ad.bank_account}}" readonly>
                             </div>
                         </div>
                         <div class="row mb-5">
