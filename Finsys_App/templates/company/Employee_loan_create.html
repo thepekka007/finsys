@@ -42,6 +42,8 @@
         <div class=" card-body">
             <form action="{% url 'employee_loan_save' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
+
+      
             <center> <h2>New Employee’s Loan </h2></center><br><br><br>
                 <div class="row" style="margin-left: 120px; margin-right: 120px;">
                     <div class="col">
@@ -59,6 +61,7 @@
                                             {% endfor %}
                                     </select>    
                                         <button data-toggle="modal" data-target="#empmodal" class="btn btn-outline-secondary text-grey mb-2 ml-1">+</button>   
+                                   
                                     </div>
                                
                                     
@@ -131,6 +134,9 @@
                                             <option value="1 YEAR">1 Year</option>
                                             <option value="6 MONTHS">6 Months                                    </option>
                                             <option value="3 MONTHS">3 Months</option>
+                                            {% for i in term %}
+                                            <option value="{{i.duration}} {{i.term}}">{{i.duration}} &nbsp;{{i.term}}</option>
+                                            {% endfor %}
                                     </select>    
                                         <button data-toggle="modal" data-target="#loamodal" class="btn btn-outline-secondary text-grey mb-2 ml-1">+</button>   
                                     
@@ -411,7 +417,7 @@
           <div class="card p-3 m-3" style="background-color:  #213b52">
           
                         <div id="error-message-container" style="color: chocolate;"></div>
-                        <form action="{% url 'employee_save' %}" method="post" enctype="multipart/form-data">
+                        <form action="" method="post" enctype="multipart/form-data" id="emploandata" >
                             {% csrf_token %}
                        <center> <h2>CREATE EMPLOYEE </h2></center><br>
         
@@ -423,9 +429,9 @@
                                
                                     <tr >
                                         <div class="form-group" >
-                                            <td><Label>Title</Label></td>
+                                           <td><Label>Title</Label></td>
                                             <td>
-                                                <select name="Title" class="form-control"   required>
+                                                <select name="Title" class="form-control" id="title"   required>
                                                     <option value="">--select--</option>
                                                     <option value="Mr">Mr.</option>
                                                     <option value="Mrs">Mrs</option>
@@ -434,17 +440,17 @@
                                                 </select>
                                             </td>
                                         </div>
-                                    </tr>
-                                    <tr >
+                                    </tr> 
+                                     <tr >
                                         <div class="form-group" >
                                             <td><Label>First Name</Label></td>
-                                            <td><input placeholder="First Name" name="First_Name" type="text" class="form-control"></td>
+                                            <td><input placeholder="First Name" name="First_Name" id="fname" type="text" class="form-control"></td>
                                         </div>
                                     </tr>
                                     <tr >
                                         <div class="form-group" >
                                             <td><Label>Last Name</Label></td>
-                                            <td><input placeholder="Last Name" name="Last_Name" type="text" class="form-control"></td>
+                                            <td><input placeholder="Last Name" name="Last_Name" id="lname" type="text" class="form-control"></td>
                                         </div>
                                     </tr>
                                     
@@ -452,13 +458,13 @@
                                 
                             </div>
         
-                            <div class="col-md-4 ">
-                                <!-- <input type="file" name="Image" id="" accept="image/*" style="color: transparent ;cursor:pointer ;padding: 25% 15%;background-image: url('static/assets/images/upload.png');background-repeat: no-repeat;background-size: contain;" > -->
+                            <div class="col-md-4 "> 
+                              <!-- <input type="file" name="Image" id="" accept="image/*" style="color: transparent ;cursor:pointer ;padding: 25% 15%;background-image: url('static/assets/images/upload.png');background-repeat: no-repeat;background-size: contain;" >  -->
                                 <label for="Image" class="ml-5 mt-5" style="cursor:pointer; padding: 20% 35%; background-image: url('static/assets/images/upload.png'); background-repeat: no-repeat; background-size: contain;">
                                     
                                 </label> <br> <span class="ml-5">Upload Image</span>
-                                <input type="file" name="Image" id="Image" accept="image/*" style="display: none;">
-                            </div>
+                                <input type="file" name="Image" id="Image" accept="image/*"  style="display: none;">
+                            </div> 
         
                             
                         </div> <br>
@@ -468,14 +474,14 @@
                                 <tr>
                                     <div class="form-group" >
                                         <td><Label>Alias (optional)</Label></td>
-                                        <td><input placeholder="Alias" name="Alias" type="text" class="form-control"></td>
+                                        <td><input placeholder="Alias" name="Alias" id="alias" type="text" class="form-control"></td>
                                     </div>
                                 </tr>
                                 
                                     <tr >
                                         <div class="form-group" >
                                             <td><Label>Date of Joining</Label></td>
-                                            <td><input placeholder="Joining Date" required name="Joining_Date" id="JoiningDate" type="date" class="form-control"></td>
+                                            <td><input placeholder="Joining Date" id="jdate" required name="Joining_Date" id="JoiningDate" type="date" class="form-control"></td>
                                         </div>
                                     </tr>
                             </div>
@@ -484,7 +490,7 @@
                                         <div class="form-group" >
                                             <td><Label>Salary Date</Label></td>
                                             <td>
-                                                <select class="form-control" name="Salary_Date" id="">
+                                                <select class="form-control"  name="Salary_Date" id="sdate">
                                                     <option value="">--select--</option>
                                                     <option value="1-10">1-10</option>
                                                     <option value="11-15">11-15</option>
@@ -530,13 +536,13 @@
                                     </tr>
                             </div>
                         </div>
-                        
+                       
                         <!-- basic end -->
         
                         
         
                         <!-- ---general------ -->
-                        <br>
+                       <br>
         
                         <center><p><b>General Information</b></p></center>
                         <div class="row">
@@ -547,19 +553,19 @@
                                 <tr>
                                     <div class="form-group col" >
                                         <td><Label>Employee Number</Label></td>
-                                        <td><input placeholder="Employee Number" required name="Employee_Number" type="text" class="form-control"></td>
+                                        <td><input placeholder="Employee Number" id="employee_Number" required name="Employee_Number" type="text" class="form-control"></td>
                                     </div>
                                 </tr>
                                 <tr>
                                     <div class="form-group col" >
                                         <td><Label>Designation</Label></td>
-                                        <td><input placeholder="Designation" name="Designation" type="text" class="form-control"></td>
+                                        <td><input placeholder="Designation" name="Designation" id="Designation" type="text" class="form-control"></td>
                                     </div>
                                 </tr>
                                 <tr>
                                     <div class="form-group col">
                                         <td><Label>Location</Label></td>
-                                        <td><input placeholder="Current Location" name="Location" type="text" class="form-control"></td>
+                                        <td><input placeholder="Current Location" name="Location" id="Location" type="text" class="form-control"></td>
                                     </div>
                                 </tr>
                             </div>
@@ -567,7 +573,7 @@
                                 <tr>
                                     <div class="form-group col" >
                                         <td><Label>Gender</Label></td>
-                                        <td><select class="form-control" name="Gender" required>
+                                        <td><select class="form-control" name="Gender" id="Gender" required>
                                             <option value="">--select--</option>
                                             <option value="Male">Male</option>
                                             <option value="Female">Female</option>
@@ -576,7 +582,7 @@
                                         </td>
                                     </div>
                                 </tr>
-                            
+                           
                                 <tr>
                                     <div class="form-group col" >
                                         <td><Label>Date Of Birth</Label><label style="float: right;margin-right: 50px;" for="">Age </label></td>
@@ -621,19 +627,19 @@
                                 <tr>
                                     <div class="form-group col" >
                                         <td><Label>Contact Number</Label></td>
-                                        <td><input placeholder="Contact Number" required name="Contact_Number" type="text" pattern="^\d{10}$" class="form-control"></td>
+                                        <td><input placeholder="Contact Number" required name="Contact_Number" id="Contact_Number" type="text" pattern="^\d{10}$" class="form-control"></td>
                                     </div>
                                 </tr>
                                 <tr>
                                     <div class="form-group col" >
                                         <td><Label>Emergency Contact Number</Label></td>
-                                        <td><input placeholder="Emergency Contact Number" name="Emergency_Contact" pattern="^\d{10}$" type="text" class="form-control"></td>
+                                        <td><input placeholder="Emergency Contact Number" name="Emergency_Contact" id="Emergency_Contact" pattern="^\d{10}$" type="text" class="form-control"></td>
                                     </div>
                                 </tr>
                                 <tr>
                                     <div class="form-group col" >
                                         <td><Label>Email</Label></td>
-                                        <td><input placeholder="Email" required name="Email" type="email" class="form-control"></td>
+                                        <td><input placeholder="Email" required name="Email" type="email" id="Email" class="form-control"></td>
                                     </div>
                                 </tr>
                             </div>
@@ -643,19 +649,19 @@
                                     <tr>
                                         <div class="form-group col" >
                                             <td><Label>Father's Name / Mother's Name</Label></td>
-                                            <td><input placeholder="Father's Name / Mother's Name" name="Parent" type="text" class="form-control"></td>
+                                            <td><input placeholder="Father's Name / Mother's Name" id="Parent" name="Parent" type="text" class="form-control"></td>
                                         </div>
                                     </tr>
                                     <tr>
                                         <div class="form-group col" >
                                             <td><Label>Spouse's Name</Label></td>
-                                            <td><input placeholder="Spouse's Name" name="Spouse" type="text" class="form-control"></td>
+                                            <td><input placeholder="Spouse's Name" name="Spouse" id="Spouse" type="text" class="form-control"></td>
                                         </div>
                                     </tr>
                                     <tr>
                                         <div class="form-group col" >
                                             <td><Label>File</Label></td>
-                                            <td><input name="File" type="file" class="form-control"></td>
+                                            <td><input name="File" type="file" id="file" class="form-control"></td>
                                         </div>
                                     </tr>
                                 </div>
@@ -669,8 +675,8 @@
                                                     <Label style="font-size: large;">Permanent Address</Label>
                                                     <br><br>
                                                     <div class="row">
-                                                        <div class="col"><Label>Street</Label><input placeholder="street" type="text" name="street" class="form-control" id="perStreet"></div>
-                                                        <div class="col"><Label>City</Label><input placeholder="city" type="text" name="city" class="form-control" id="perCity"></div>
+                                                        <div class="col"><Label>Street</Label><input placeholder="street" type="text" name="street"  class="form-control" id="perStreet"></div>
+                                                        <div class="col"><Label>City</Label><input placeholder="city" type="text" name="city" id="city" class="form-control" id="perCity"></div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col"><Label>State</Label><input placeholder="state" type="text" name="state" class="form-control" id="perState"></div>
@@ -687,11 +693,11 @@
                                                 <div class="form-group col" id="temAddress">
                                                     <br>
                                                     <Label style="font-size: large;">Temporary Address </Label>
-                                                    <label style="float: right;" for=""><input id="addressCheckBox" type="checkbox"> Same as permanent address</label>
+                                                    <label style="float: right;" for=""><input id="addressCheckBox" type="checkbox" id="tempadd"> Same as permanent address</label>
                                                     <br><br>
                                                     <div class="row">
                                                         <div class="col"><Label>Street</Label><input placeholder="street" type="text" name="tempStreet" class="form-control" id="temStreet"></div>
-                                                        <div class="col"><Label>City</Label><input placeholder="city" type="text" name="tempCity" class="form-control" id="temCity"></div>
+                                                        <div class="col"><Label>City</Label><input placeholder="city" type="text" name="temCity" class="form-control" id="temCity"></div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col"><Label>State</Label><input placeholder="state" type="text" name="tempState" class="form-control" id="temState"></div>
@@ -750,15 +756,15 @@
                                                 </tr>
                                                 <tr>
                                                     <td><label for="">IFSC</label></td>
-                                                    <td><input placeholder="SBIN0071242" style="width: 96%;" pattern="^[A-Za-z]{4}0[A-Za-z0-9]{6}$" name="IFSC" type="text" class="form-control ml-4"></td>
+                                                    <td><input placeholder="SBIN0071242" style="width: 96%;" pattern="^[A-Za-z]{4}0[A-Za-z0-9]{6}$" name="IFSC" id="ifsc" type="text" class="form-control ml-4"></td>
                                                 </tr>
                                                 <tr>
                                                     <td><label for="">Name of Bank</label></td>
-                                                    <td><input placeholder="Name Of Bank" style="width: 96%;" name="BankName" type="text" class="form-control ml-4"></td>
+                                                    <td><input placeholder="Name Of Bank" style="width: 96%;" name="BankName" id="bankname" type="text" class="form-control ml-4"></td>
                                                 </tr>
                                                 <tr>
                                                     <td><label for="">Branch Name</label></td>
-                                                    <td><input placeholder="Branch Name" style="width: 96%;" name="BranchName" type="text" class="form-control ml-4"></td>
+                                                    <td><input placeholder="Branch Name" style="width: 96%;" name="BranchName" id="BranchName" type="text" class="form-control ml-4"></td>
                                                 </tr>
                                             
                                             
@@ -767,7 +773,7 @@
                                             <tr>
                                                 <td><label for="">Transaction Type</label></td>
                                                 <td>
-                                                    <select style="width: 96%;" class="form-control ml-4" name="Transaction_Type" >
+                                                    <select style="width: 96%;" class="form-control ml-4" id="transtype" name="Transaction_Type" >
                                                         <option value="">--select--</option>
                                                         <option value="ATM">ATM</option>
                                                         <option value="Cash">Cash</option>
@@ -797,19 +803,19 @@
                                             <div id="TDSpercentage">
                                                 <tr>
                                                     <td><label for="">Enter TDS Percentage</label></td>
-                                                    <td><input placeholder="TDS Percentage" style="width: 96%;" name="TDS_Percentage" type="text" class="form-control ml-4"></td>
+                                                    <td><input placeholder="TDS Percentage" style="width: 96%;" name="TDS_Percentage" id="TDS_Percentage" type="text" class="form-control ml-4"></td>
                                                 </tr>
                                             </div><br>
         
                                             <div id="TDSamount">
                                                 <tr>
                                                     <td><label for="">Enter TDS Amount</label></td>
-                                                    <td><input placeholder="TDS Amount" style="width: 96%;" name="TDS_Amount" type="text" class="form-control ml-4"></td>
+                                                    <td><input placeholder="TDS Amount" style="width: 96%;" name="TDS_Amount" id="TDS_Amount" type="text" class="form-control ml-4"></td>
                                                 </tr>
                                             </div>
                                         </div><br>
                                     
-                                </div>
+                                </div> 
                             
         
                             
@@ -819,7 +825,7 @@
         
         
                         <!------ statutory -------->
-                        <br><br>
+                     <br><br>
                             <center><p><b>Statutory Information</b></p></center><br>
                                 <div class="row">
                                     
@@ -827,7 +833,7 @@
                                         <div >
                                             <tr>
                                                 <td><label for="">Income Tax Number</label></td>
-                                                <td><input placeholder="Income Tax Number"  name="Income_Tax" type="text" class="form-control "></td>
+                                                <td><input placeholder="Income Tax Number"  name="Income_Tax" id="Income_Tax" type="text" class="form-control "></td>
                                             </tr>
                                         </div><br>
                                         <div >
@@ -839,7 +845,7 @@
                                         <div >
                                             <tr>
                                                 <td><label for="">Universal Account Number (UAN)</label></td>
-                                                <td><input placeholder="12 digit number" pattern="\d{12}" maxlength="12" name="UAN" type="text" class="form-control "></td>
+                                                <td><input placeholder="12 digit number" pattern="\d{12}" maxlength="12" name="UAN" id="uan" type="text" class="form-control "></td>
                                             </tr>
                                         </div><br>
                                         
@@ -848,28 +854,29 @@
                                         <div >
                                             <tr>
                                                 <td><label for="">PF Account Number</label></td>
-                                                <td><input placeholder="MH/PUN/1234567/12" name="PF" pattern="[A-Z]{2}/[A-Z0-9]{3}/[0-9]{7}/[0-9]{0,2}" type="text" class="form-control "></td>
+                                                <td><input placeholder="MH/PUN/1234567/12" name="PF" id="pf" pattern="[A-Z]{2}/[A-Z0-9]{3}/[0-9]{7}/[0-9]{0,2}" type="text" class="form-control "></td>
                                             </tr>
                                         </div><br>
                                         <div >
                                             <tr>
                                                 <td><label for="">PAN Number</label></td>
-                                                <td><input placeholder="ABCDE1234F" name="PAN" pattern="[A-Z]{5}[0-9]{4}[A-Z]" maxlength="10" type="text" class="form-control "></td>
+                                                <td><input placeholder="ABCDE1234F" name="PAN" id="pan" pattern="[A-Z]{5}[0-9]{4}[A-Z]" maxlength="10" type="text" class="form-control "></td>
                                             </tr>
                                         </div><br>
                                         <div >
                                             <tr>
                                                 <td><label for="">PR Account Number</label></td>
-                                                <td><input placeholder="12 digit number" pattern="\d{12}" name="PR" type="text" class="form-control "></td>
+                                                <td><input placeholder="12 digit number" pattern="\d{12}" name="PR" id="pr" type="text" class="form-control "></td>
                                             </tr>
                                         </div><br>
                                         
                                     </div>
         
                                 </div><br>
-                            
+                             
                         <!------ statutory end------>
-                        <center><button type="submit"class="btn btn-secondary w-50" >Save</button></center><br>
+                        <center><button type="submit"class="btn btn-secondary w-50"  id="empsave2">Save</button></center><br>
+                        <button type="submit"  id="UnitSave2" class="btn submit text-white" style="border-color: #ced4da;">Add</button>
                     </form>
                     <script>
                         
@@ -894,7 +901,7 @@
           <div class="card p-3 m-3" style="background-color: #213b52">
           
        <div id="error-message-container" style="color: chocolate;"></div>
-       <form action="" method="post"  autocomplete="off" id="modalItem">
+       <form action="" method="post"  autocomplete="off" id="modalloan">
         {% csrf_token %}
         <div class="form-group">
             <div class="row">
@@ -917,9 +924,9 @@
             <div class="row">
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
-                    <button class="btn btn-outline-info rounded-pill text-grey w-100 mt-3 mb-3"
-                          <button class="btn btn-outline-info rounded-pill w-100 text-light" data-dismiss="modal" type="submit" id="itemSave">SUBMIT</button>
-                    </button>
+         
+                          <button class="btn btn-outline-info rounded-pill w-100 text-light" data-dismiss="modal" type="submit" id="termSave">SUBMIT</button>
+                 
                 </div>
                 <div class="col-md-4"></div>
             </div>
@@ -1441,4 +1448,239 @@
       calculateExpiryDate();
  });
  </script>
+
+
+
+
+
+<script>
+
+
+$(document).on("click", "#UnitSave2", function(event) {
+      event.preventDefault(); // Prevent the default form submission
+    
+      $.ajax({
+        type: 'POST',
+        url: "{% url 'addemp' %}",
+        data: {
+            Title: $("#title").val(),
+            First_Name: $("#fname").val(),
+            Last_Name: $("#lname").val(),
+            Image: $("#Image").val(),
+            Joining_Date: $("#jdate").val(),
+            Gender: $("#Gender").val(),
+            
+            Salary_Date: $("#sdate").val(),
+            Salary_Type: $("#salary_type").val(),
+            perhour: $("#amount_perhour").val(),
+            workhour: $("#working_hours").val(),
+            Salary_Amount: $("#salary_amount2").val(),
+            Employee_Number: $("#employee_Number").val(),
+            Designation: $("#Designation").val(),
+            Location: $("#Location").val(),
+            
+            DOB: $("#DOB").val(),
+            Blood: $("#bloodGroupSelect").val(),
+            Contact_Number: $("#Contact_Number").val(),
+            Emergency_Contact: $("#Emergency_Contact").val(),
+            Email: $("#Email").val(),
+            Parent: $("#Parent").val(),
+            Spouse: $("#Spouse").val(),
+            file: $("#file").val(),
+            street: $("#perStreet").val(),
+            city: $("#city").val(),
+            state: $("#perState").val(),
+            pincode: $("#perPincode").val(),
+            country: $("#perCountry").val(),
+            Bank_Details: $("#bankDetails").val(),
+            tds_applicable: $("#TDS").val(),
+
+            Account_Number: $("#accountnumber").val(),
+
+            IFSC: $("#ifsc").val(),
+            BankName: $("#bankname").val(),
+            BranchName: $("#BranchName").val(),
+            Transaction_Type: $("#transtype").val(),
+            TDS_Type: $("#TDStype").val(),
+            TDS_Percentage: $("#TDS_Percentage").val(),
+            TDS_Amount: $("#TDS_Amount").val(),
+            // aadhar: $("#aadhar").val(),
+            Income_Tax: $("#Income_Tax").val(),
+            UAN: $("#uan").val(),
+            PF: $("#pf").val(),
+            PAN: $("#pan").val(),
+            PR: $("#pr").val(),
+            // tempStreet: $("#temStreet").val(),
+            // temCity: $("#temCity").val(),
+            // tempState: $("#temState").val(),
+            // tempPincode: $("#temPincode").val(),
+            // tempCountry: $("#temCountry").val(),
+
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(response) {
+          if (response.message === 'success') {
+            document.getElementById("emploandata").reset();
+            reloadEnit();
+          } else {
+            $("#error-message-container").text("Unit with the same name exists");
+          }
+        },
+      });
+    });
+    
+    
+           function reloadEnit() {
+    
+      $.ajax({
+        url: "{% url 'emp_dropdown' %}",
+        type: "GET",
+        dataType: "json",
+        data: $(this).serialize(),
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+      
+        success: function(data) {
+          var dropdown = $('#employeeid');
+    
+          $.each(data, function(key, value) {
+       
+            dropdown.append($('<option></option>').attr('value', key).text(value[0] + " " + value[1] + " " + value[2]));
+    
+          });
+    
+        },
+     
+      });
+      }
+
+
+    // $(document).on("click", "#UnitSave2", function(event) {
+    //   event.preventDefault(); // Prevent the default form submission
+    
+    //   $.ajax({
+    //     type: 'POST',
+    //     url: "{% url 'addemp' %}",
+    //     data: {
+    //         Title: $("#title").val(),
+    //         // First_Name: $("#fname").val(),
+    //         // Last_Name: $("#lname").val(),
+    //         // Image: $("#Image").val(),
+    //         // Joining_Date: $("#jdate").val(),
+    //         // Salary_Date: $("#sdate").val(),
+    //         // Salary_Type: $("#salary_type").val(),
+    //         // perhour: $("#amount_perhour").val(),
+    //         // workhour: $("#working_hours").val(),
+    //         // Salary_Amount: $("#salary_amount2").val(),
+    //         // Employee_Number: $("#employee_Number").val(),
+
+    //         // Designation: $("#Designation").val(),
+    //         // Location: $("#Location").val(),
+    //         //
+    //         // DOB: $("#DOB").val(),
+    //         // Blood: $("#bloodGroupSelect").val(),
+    //         // Contact_Number: $("#Contact_Number").val(),
+    //         // Emergency_Contact: $("#Emergency_Contact").val(),
+    //         // Email: $("#Email").val(),
+    //         // Parent: $("#Parent").val(),
+    //         // Spouse: $("#Spouse").val(),
+
+    //         
+    //         // Bank_Details: $("#bankDetails").val(),
+    //         // tds_applicable: $("#TDS").val(),
+
+    //         // Account_Number: $("#accountnumber").val(),
+
+    //         // IFSC: $("#ifsc").val(),
+    //         // BankName: $("#bankname").val(),
+    //         // BranchName: $("#BranchName").val(),
+    //         // Transaction_Type: $("#transtype").val(),
+    //         // TDS_Type: $("#TDStype").val(),
+    //         // TDS_Percentage: $("#TDS_Percentage").val(),
+    //         // TDS_Amount: $("#TDS_Amount").val(),
+    //         // aadhar: $("#aadhar").val(),
+    //         // Income_Tax: $("#Income_Tax").val(),
+    //         // UAN: $("#uan").val(),
+    //         // PF: $("#pf").val(),
+    //         // PAN: $("#pan").val(),
+    //         // PR: $("#pr").val(),
+         
+
+
+
+
+
+    //       csrfmiddlewaretoken: '{{ csrf_token }}'
+    //     },
+    //     success: function(response) {
+    //       if (response.message === 'success') {
+    //         document.getElementById("empdata2").reset();
+    //         // reloadUnit();
+    //       } else {
+    //         $("#error-message-container").text("Unit with the same name exists");
+    //       }
+    //     },
+    //   });
+    // });
+    
+    
+    
+     
+      
+      
+   
+      </script>
+
+
+<script>
+        
+    $(document).on("click", "#termSave", function(event) {
+      event.preventDefault(); // Prevent the default form submission
+    
+      $.ajax({
+        type: 'POST',
+        url: "{% url 'add_term' %}",
+        data: {
+          duration: $("#duration").val(),
+          number: $("#term").val(),
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(response) {
+          if (response.message === 'success') {
+            document.getElementById("modalloan").reset();
+            reloadUnit();
+          } else {
+            $("#error-message-container").text("Unit with the same name exists");
+          }
+        },
+      });
+    });
+    
+    
+    
+     
+      
+      
+      function reloadUnit() {
+    
+      $.ajax({
+        url: "{% url 'term_dropdown' %}",
+        type: "GET",
+        dataType: "json",
+        data: $(this).serialize(),
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+      
+        success: function(data) {
+          var dropdown = $('#loanduration');
+    
+          $.each(data, function(key, value) {
+       
+              dropdown.append($('<option></option>').attr('value', key).text(value[0] + " " + value[1]));
+    
+          });
+    
+        },
+     
+      });
+      }
+      </script>
 {% endblock %}

@@ -249,7 +249,7 @@ class Loan(models.Model):
     loan_date = models.DateField(null=True,blank=True)
     loan_amount = models.IntegerField(null=True,blank=True)
     total_loan=models.IntegerField(null=True,blank=True)
-    loan_duration = models.IntegerField(null=True,blank=True)
+    loan_duration = models.CharField(max_length=255,null=True,blank=True)
     expiry_date = models.DateField(null=True,blank=True)
     payment_method = models.CharField(max_length=255,null=True,blank=True)
     cheque_number = models.CharField(max_length=255,null=True,blank=True)
@@ -315,5 +315,11 @@ class Employee_Loan_Transactions(models.Model):
     repayment = models.ForeignKey(Employee_Loan_Repayment,on_delete=models.CASCADE,null=True,blank=True)
     additional = models.ForeignKey(Employee_Additional_Loan,on_delete=models.CASCADE,null=True,blank=True)
     balance= models.IntegerField(null=True,blank=True)
+
+class Loan_Term(models.Model):
+    duration= models.IntegerField(null=True,blank=True)
+    term = models.CharField(max_length=255,null=True,blank=True)
+    company = models.ForeignKey(Fin_Company_Details,on_delete=models.CASCADE,null=True,blank=True)
+    
 
  

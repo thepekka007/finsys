@@ -103,6 +103,11 @@ urlpatterns = [
              path('emploanaddtional/<int:pk>',views.emploanaddtional,name='emploanaddtional'),
              path('emploanadditionalsave/<int:pk>',views.emploanadditionalsave,name='emploanadditionalsave'),
              path('emploanadditionedit/<int:pk>',views.emploanadditionedit,name='emploanadditionedit'),
+
+             path('addemp', views.addemp, name='addemp'),
+            path('add_term', views.add_term, name='add_term'),
+            path('term_dropdown', views.term_dropdown, name='term_dropdown'),
+             path('emp_dropdown', views.emp_dropdown, name='emp_dropdown'),
              
         
 
