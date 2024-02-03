@@ -91,6 +91,13 @@ urlpatterns = [
 #tinto
 
        path('employee_loan_list',views.employee_loan_list,name="employee_loan_list"),
+       path('employee_loan_sort_by_employeename',views.employee_loan_sort_by_employeename,name="employee_loan_sort_by_employeename"),
+       path('employee_loan_sort_by_balance',views.employee_loan_sort_by_balance,name="employee_loan_sort_by_balance"),
+       path('employee_loan_filter_by_active',views.employee_loan_filter_by_active,name="employee_loan_filter_by_active"),
+       path('employee_loan_filter_by_inactive',views.employee_loan_filter_by_inactive,name="employee_loan_filter_by_inactive"),
+
+
+       
        path('employee_loan_create_page',views.employee_loan_create_page,name="employee_loan_create_page"),
         path('employeedata', views.employeedata, name='employeedata'),
         path('employee_loan_save', views.employee_loan_save, name='employee_loan_save'),
@@ -108,6 +115,15 @@ urlpatterns = [
             path('add_term', views.add_term, name='add_term'),
             path('term_dropdown', views.term_dropdown, name='term_dropdown'),
              path('emp_dropdown', views.emp_dropdown, name='emp_dropdown'),
+            path('laon_status_edit/<int:pk>',views.laon_status_edit,name='laon_status_edit'),
+
+             path('add_loan_comment/<int:pk>',views.add_loan_comment,name='add_loan_comment'),
+             path('delete_loan_comment/<int:ph>/<int:pr>',views.delete_loan_comment,name='delete_loan_comment'),
+             path('attach_loan_file/<int:pk>',views.attach_loan_file,name='attach_loan_file'),
+               path('delete_loan/<int:pk>',views.delete_loan,name='delete_loan'),
+                path('shareloanToEmail/<int:pk>',views.shareloanToEmail,name='shareloanToEmail'),
+
+             
              
         
 

@@ -227,6 +227,7 @@ class Employee_History(models.Model):
     company = models.ForeignKey(Fin_Company_Details,on_delete=models.CASCADE,null=True,blank=True)
     login = models.ForeignKey(Fin_Login_Details,on_delete=models.CASCADE,null=True,blank=True)
     employee = models.ForeignKey(Employee,on_delete=models.CASCADE,blank=True,null=True)
+    
     date = models.DateField(null=True,blank=True)
     action = models.CharField(max_length=255,null=True,blank=True)
 class Employee_Blood_Group(models.Model):
@@ -237,6 +238,12 @@ class Employee_Blood_Group(models.Model):
 
 
 # tinto modals
+class Employee_Loan_Term(models.Model):
+    duration= models.IntegerField(null=True,blank=True)
+    term = models.CharField(max_length=255,null=True,blank=True)
+    company = models.ForeignKey(Fin_Company_Details,on_delete=models.CASCADE,null=True,blank=True)
+    
+
     
 
 class Loan(models.Model):
@@ -249,7 +256,7 @@ class Loan(models.Model):
     loan_date = models.DateField(null=True,blank=True)
     loan_amount = models.IntegerField(null=True,blank=True)
     total_loan=models.IntegerField(null=True,blank=True)
-    loan_duration = models.CharField(max_length=255,null=True,blank=True)
+    loan_duration = models.ForeignKey(Employee_Loan_Term,on_delete=models.CASCADE,null=True,blank=True)
     expiry_date = models.DateField(null=True,blank=True)
     payment_method = models.CharField(max_length=255,null=True,blank=True)
     cheque_number = models.CharField(max_length=255,null=True,blank=True)
@@ -316,10 +323,8 @@ class Employee_Loan_Transactions(models.Model):
     additional = models.ForeignKey(Employee_Additional_Loan,on_delete=models.CASCADE,null=True,blank=True)
     balance= models.IntegerField(null=True,blank=True)
 
-class Loan_Term(models.Model):
-    duration= models.IntegerField(null=True,blank=True)
-    term = models.CharField(max_length=255,null=True,blank=True)
-    company = models.ForeignKey(Fin_Company_Details,on_delete=models.CASCADE,null=True,blank=True)
-    
-
- 
+class Employee_loan_comments(models.Model):                                         
+    company=models.ForeignKey(Fin_Company_Details,on_delete=models.CASCADE)
+    logindetails=models.ForeignKey(Fin_Login_Details,on_delete=models.CASCADE)
+    employee_loan=models.ForeignKey(Loan,on_delete=models.CASCADE)
+    comments = models.CharField(max_length=255,null=True,blank=True)

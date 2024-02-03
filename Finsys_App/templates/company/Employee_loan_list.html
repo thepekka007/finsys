@@ -9,6 +9,9 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" /> 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.6/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.js"></script>
 <style>
     table tr:hover{
         background-color: #5a7684;
@@ -28,10 +31,12 @@
                     </a>
                       
                     <div class="dropdown-menu"  id="sort">
-                        <a class="dropdown-item" id="drop1" style="cursor: pointer;" >All</a>
-                            <a class="dropdown-item" id="drop2" style="cursor: pointer;" onclick="sortByColumn(1)">Employee Name
+                        <a class="dropdown-item" id="drop1" style="cursor: pointer;" href="{% url 'employee_loan_list'  %}" >All</a>
+                            <a class="dropdown-item" id="drop2" style="cursor: pointer;" href="{% url 'employee_loan_sort_by_balance' %}">Employee Name
                             </a>
-                        <a class="dropdown-item" id="drop3" style="cursor: pointer;" onclick="sortByColumn(7)">Balance</a>
+                        <a class="dropdown-item" id="drop3" style="cursor: pointer;" href="{% url 'employee_loan_sort_by_employeename' %}">Balance</a>
+                    
+            
                     </div>
                 </div>
 
@@ -42,9 +47,9 @@
                     </a>
                           
                     <div class="dropdown-menu"  id="filter" >
-                        <a class="dropdown-item" style="cursor: pointer;" data-status="All">All</a>
-                        <a class="dropdown-item" style="cursor: pointer;" data-status="Active">Active</a>
-                        <a class="dropdown-item" style="cursor: pointer;" data-status="Inactive">Inactive</a>
+                        <a class="dropdown-item" style="cursor: pointer;" href="{% url 'employee_loan_list'  %}">All</a>
+                        <a class="dropdown-item" style="cursor: pointer;" href="{% url 'employee_loan_filter_by_active'  %}">Active</a>
+                        <a class="dropdown-item" style="cursor: pointer;" href="{% url 'employee_loan_filter_by_inactive'  %}">Inactive</a>
                     </div>
 
                     <a class="btn btn-outline-secondary text-grey" href="{% url 'employee_loan_create_page' %}"><i class="fa fa-plus font-weight-light"></i> New </a>
@@ -56,7 +61,7 @@
             <br><br><br>
 
             <div class="table-responsive">
-                <table class="table table-responsive-md mt-4 table-hover" >
+                <table id="loanTable"  class="table table-responsive-md mt-4 table-hover" >
                     <thead>
                         <tr>
                             <th  style="text-align: center; text-transform: uppercase;"><b>SL NO.</b></th>

@@ -35,7 +35,7 @@
   </style>
 
 
-
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <div class="page-content ">
     <div class="card radius-15">
      
@@ -131,11 +131,11 @@
                                 <td style=" position: relative;">
                                     <div style="display: flex;">
                                         <select  class="form-control" name="loanduration" id="loanduration" onchange="calculateExpiryDate()" style="width: 93%;">
-                                            <option value="1 YEAR">1 Year</option>
-                                            <option value="6 MONTHS">6 Months                                    </option>
-                                            <option value="3 MONTHS">3 Months</option>
+                                            <option value="1 YEAR">1 YEAR</option>
+                                            <option value="6 MONTHS">6 MONTHS                                    </option>
+                                            <option value="3 MONTHS">3 MONTHS</option>
                                             {% for i in term %}
-                                            <option value="{{i.duration}} {{i.term}}">{{i.duration}} &nbsp;{{i.term}}</option>
+                                            <option value={{i.id}}>{{i.duration}} &nbsp;{{i.term}}</option>
                                             {% endfor %}
                                     </select>    
                                         <button data-toggle="modal" data-target="#loamodal" class="btn btn-outline-secondary text-grey mb-2 ml-1">+</button>   
@@ -1683,4 +1683,23 @@ $(document).on("click", "#UnitSave2", function(event) {
       });
       }
       </script>
+      <script>
+        $(document).ready(function() {
+          // Handle click event on the submit button
+          $("#termSave").click(function() {
+            // Close the modal using the Bootstrap modal method
+            $("#loamodal").modal("hide");
+          });
+        });
+      </script>
+            <script>
+                $(document).ready(function() {
+                  // Handle click event on the submit button
+                  $("#UnitSave2").click(function() {
+                    // Close the modal using the Bootstrap modal method
+                    $("#empmodal").modal("hide");
+                  });
+                });
+              </script>
+      
 {% endblock %}
