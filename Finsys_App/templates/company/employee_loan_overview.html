@@ -548,7 +548,7 @@ footer p {
                         <a class="btn btn-outline-info dropdown-toggle   text-grey mt-3 " style="padding: 10px; cursor: pointer; " onclick="Transaction()"> Transaction</a>
                         <a class="btn btn-outline-info dropdown-toggle   text-grey mt-3 " style="padding: 10px; cursor: pointer;" onclick="Overview()"> Overview</a>
 
-                        <a class="btn btn-outline-info dropdown-toggle   text-grey mt-3 " style="padding: 10px; cursor: pointer;" href=""> Statement</a>
+                        <a class="btn btn-outline-info dropdown-toggle   text-grey mt-3 " style="padding: 10px; cursor: pointer;" onclick="Statment()"> Statement</a>
                     </div>
                     <div class="btn-group col-md-2" style="float: right;">
                         <a class=" btn btn-outline-info  text-grey mt-3 " style="padding: 10px; cursor: pointer;" onclick="ExportToExcel('xlsx')">Export To Excel</a>
@@ -1297,20 +1297,119 @@ footer p {
                                         <li style="margin-left: 50px;" ></li>
                                         
                                     </ul>
-
-
+                                   
 
 
                             </center>
+                         
+
                         </div>
 
-
+                        <div class="card radius-15" id="form1" style="display: none;">
+                            <div class="card-body">
+                    
+                             
+                            
+                              
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="row" style="margin-left: 20px;">
+                <div class="col-sm-4">
+                    <label style="text-align:left ">Report period</label><br>
+                    <form id="form_post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        <select class="form-control" id="filterstyle" onclick="filterDate(this)" list="hosting-plan"
+                            type="text">
+                            <option hidden>Select Report Period</option>
+                            <option><span class="bx bx-right-arrow-alt"></span>Custom</option>
+                        </select>
+                </div>
+
+                <div class="col-sm-4" id="frdate" style="display: none;">
+                    <label for="from">From</label>
+                    <input type="date" class="form-control" id="fdate" name="fdate"
+                        style="background-color: #2f516f;color: white;">
+                </div>
+                <div class="col-sm-4" id="todate" style="display: none;">
+                    <label for="from">To</label>
+                    <input type="date" class="form-control" id="ldate" name="ldate"
+                        style="background-color: #2f516f;color: white;">
+                </div>
+            </form>
+                <div class="col-md-3"></div>
+            </div>
+            <br>
         </div>
 
         
+<script>
+        function filterDate(element) {
+        if (element.value == 'Custom') {
+            document.getElementById('frdate').style.display = 'block';
+            document.getElementById('todate').style.display = 'block';
+        } else {
+            document.getElementById('frdate').style.display = 'none';
+            document.getElementById('todate').style.display = 'none';
+        }
+    }
+
+    
+</script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        var $statementRows = $("#tabletobe1 tbody tr");
+        var originalRows = Array.from($statementRows);
+
+        document.getElementById("filterstyle").addEventListener("change", function () {
+            var selectedOption = this.value;
+            toggleDateInputs(selectedOption);
+        });
+
+        document.getElementById("fdate").addEventListener("change", filterByDate);
+        document.getElementById("ldate").addEventListener("change", filterByDate);
+
+        function toggleDateInputs(selectedOption) {
+            if (selectedOption === "Custom") {
+                $("#frdate, #todate").show();
+            } else {
+                $("#frdate, #todate").hide();
+            }
+        }
+
+        function filterByDate() {
+            var startDate = moment(document.getElementById("fdate").value, "YYYY-MM-DD").format("MMM D, YYYY");
+            var startdated = document.getElementById("fdate").value;
+            var endDateInput = document.getElementById("ldate");
+            endDateInput.min = startdated;
+            var endDate = moment(endDateInput.value, "YYYY-MM-DD").format("MMM D, YYYY");
+
+            if (moment(startDate).isValid() && moment(endDate).isValid()) {
+
+                var filteredRows = originalRows.filter(function (row) {
+                    var dateCell = row.querySelector("td:first-child");
+                    var rowDateString = dateCell.textContent;
+                    var rowDate = moment(rowDateString, "MMM D, YYYY");
+
+                    return rowDate.isSameOrAfter(startDate) && rowDate.isSameOrBefore(endDate);
+                });
+
+                $statementRows.hide();
+                $(filteredRows).show();
+            }
+        }
+    });
+
+</script>
+
+
+
 
         
         <div  id="whatToPrint" class="print-only">
@@ -1328,28 +1427,31 @@ footer p {
                                     <p style="text-transform: uppercase;color: #000000;">STATEMENT</p>
                                 </div>
                                 <div class="position-relative">
-                                    <p style=" text-transform: uppercase;color: #000000;">Loan ID. <span>{{loan.account_number }}</span></p>
+                                    <p style=" text-transform: uppercase;color: #000000;">Loan ID. <span>{{loan.employeeid }}</span></p>
                                 </div>
                             </div>
+                            
                         </section>
+                        
             
                         <section class="store-user mt-5">
                             <div class="col-12">
                                 <div class="row bb pb-3">
                                     <div class="col-7">
-                                        <p style=" text-transform: uppercase;color: #000000;">FROM,</p>
-                                        <h5 style=" text-transform: uppercase;color: #000000;">{{cmp1.cname }}</h5>
-                                        <p style=" text-transform: uppercase;color: #000000;" > {{cmp1.caddress}}<br>
-                                            {{cmp1.city}},
-                                            {{cmp1.state}}<br>
-                                            {{cmp1.pincode}}<br>
+                                        <p style=" text-transform: uppercase;color: #000000;">Company Details,</p>
+                                        <p style=" text-transform: uppercase;color: #000000;" > {{loan.company.Company_name}}<br>
+                                        <!-- <h5 style=" color: #000000;">&nbsp;&nbsp;{{loan.company.Company_name }}</h5> -->
+                                        <p style=" text-transform: uppercase;color: #000000;" > {{loan.company..caAddressddress}}
+                                            {{loan.company.City}},
+                                            {{loan.company.State}}<br>
+                                            {{loan.company.Pincode}}<br>
                                         </p>
                                         
                                     </div>
                                     <div class="col-5">
                                         <p style="text-align: center; color: #000000;" >
-                                            To,<br>{{loan.account_name}} <br>
-                                            {{loan.recieced_bank}}<br>
+                                            Employee Details,<br style="padding-left: 50px;">{{loan.employee.title}}&nbsp;{{loan.employee.first_name}}&nbsp; {{loan.employee.last_name}}<br>
+                                            {{loan.employee.street}}<br>{{loan.employee.state}}
                                     
                                             <br>
                                         </p>
@@ -1379,70 +1481,97 @@ footer p {
                         </section>
             
                         <section class="product-area mt-4">
-                            <table class="table table-responsive-md table-hover mt-4" id="tabletobe1">
+                            <table class="table table-responsive-md table-hover mt-4" id="tabletobe1" style="color: #000000;">
                                 <thead>
-                                <tr>
+                                <tr style="color: #000000;" > 
                                    <!-- Inside the <thead> section of your table -->
-                                    <th style="color: #000000;">SL.NO</th>
-                                    <th>
-                            
-                                        <h6 style="color: #000000;"  ><b>DATE</b>
-                                        </h6>
-                                        
-                                    
-                                </th>       
-                                    <th>
-                                        <div class="dropdown">
-                                            <h6 style="color: #000000;"><b>TYPE</b></h6>
-                                         
-                                        </div>
-                                    </th>
-                                    <!-- Inside the <thead> section of your table -->
-                        <!-- <th>
-                            
-                                <h6 class=" text-grey" ><b>NAME</b>
-                                </h6>
-                                
-                            
-                        </th> -->
-            
-                                      
-                        <th style="color: #000000;"><h6 style="color: #000000;"><b>AMOUNT</b></h6></th>
-                        <th style="color: #000000;"><h6 style="color: #000000;"><b>INTEREST</b></h6></th>
-                        <th style="color: #000000;"><h6 style="color: #000000;"><b>TOTAL AMOUNT</b></h6></th>
-                        <th style="display:none;"><h6><b><td></td></b></h6></th>
+                                    <th style="color: #000000;"><h6><b style="color: #000000;">DATE</b></h6></th>
+                                    <th ><h6><b style="color: #000000;"> PARTICULARS </b></h6></th>
+                                    <th style="color: #000000;"><h6><b style="color: #000000;">AMOUNT</b></h6></th>
+                                    <th style="color: #000000;"><h6><b style="color: #000000;">INTEREST</b></h6></th>
+                                    <th style="color: #000000;"><h6><b style="color: #000000;">TOTAL AMOUNT</b></h6></th>
+                                    <th style="color: #000000;"><h6><b style="color: #000000;">BALANCE</b></h6></th>
+                                    <!-- <th  style="display:none;color: #000000;"><h6><b><td></td></b></h6></th> -->
                                     
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    {% for a in loan_tr %}
-                                    {% if a.loan_amount != 0 %}
-                            <tr >   <td  style="text-align: center;color:black;">{{forloop.counter}}</td>           
-                                <td  style="text-align: center;color:black;">{{ a.loan_date }}</td>
-                                {% if a.bank_type == 'PROCESSING FEE' %}
-                                            <td  style="text-align: center;color:black;">{{ a.bank_type }}</td>
-                                            {% elif a.bank_type == 'OPENING BAL' %}
-                                            <td  style="text-align: center;color:black;">{{ a.bank_type }}</td>
-                                            {% elif a.bank_type == 'EMI PAID' %}
-                                            <td  style="text-align: center;color:black;">{{ a.bank_type }}</td>
-                                            {% elif a.bank_type == 'ADDITIONAL LOAN ISSUED' %}
-                                            <td >{{ a.bank_type }}</td>
+                     
+                                    {% for i in trans %}
+                            <tr >   <td style="color: #000000;">{{i.date}}</td> 
+                                          
+                                <td style="color: #000000;">{{ i.particulars }}</td>
+                                {% if i.particulars == 'LOAN ISSUED' %}
+                                            <td style="color: #000000;">{{ i.employee_loan.loan_amount }}</td>
+                                            {% elif i.particulars == 'EMI PAID' %}
+                                            <td style="color: #000000;">{{ i.repayment.principle_amount }}</td>
+                                        
+                                            {% elif i.particulars == 'ADDITIONAL LOAN' %}
+                                            <td style="color: #000000;">{{ i.additional.new_loan }}</td>
+
                                             {% endif %}
                                             <!-- <td >{{ a.loan_desc }}</td> -->
                                             
                                             
                                             
-                                            <td style="text-align: center;color:black;">{{a.loan_amount}}</td>
-                                            <td  style="text-align: center;color:black;">{{a.loan_intrest|default:0}}</td>
-            
-                                            <td  style="text-align: center;color:black;">{{a.total}}</td>
-                          
+                                            <!-- <td>{{a.loan_amount}}</td> -->
+                                            <td style="color: #000000;">{{i.repayment.interest_amount|default:0}}</td>
                                             
+                                            {% if i.particulars == 'LOAN ISSUED' %}
+                                            <td style="color: #000000;">{{ i.employee_loan.loan_amount }}</td>
+                                            {% elif i.particulars == 'EMI PAID' %}
+                                            <td style="color: #000000;" >{{ i.repayment.total_amount }}</td>
+                                        
+                                            {% elif i.particulars == 'ADDITIONAL LOAN' %}
+                                            <td style="color: #000000;">{{  i.additional.new_loan }}</td>
+
+                                            {% endif %}
+                                            {% if i.particulars == 'LOAN ISSUED' %}
+                                            <td style="color: #000000;">{{ i.employee_loan.loan_amount }}</td>
+                                            {% elif i.particulars == 'EMI PAID' %}
+                                            <td style="color: #000000;">{{ i.repayment.balance }}</td>
+                                        
+                                            {% elif i.particulars == 'ADDITIONAL LOAN' %}
+                                            <td style="color: #000000;">{{ i.employee_loan.balance }}</td>
+
+                                            {% endif %}
+                                            
+                                            <!-- <td style="color: #000000;">
+                                                <div class="dropdown">
+                                                    <i class="fa fa-ellipsis-v" style="font-size:24px" data-toggle="dropdown"></i>
+                                                    <div class="dropdown-menu">
+                                                        {% if i.particulars == 'LOAN ISSUED'%}
+                                                            <a class="dropdown-item" href="{% url 'emploanedit' loan.id %}">Edit</a>
+                                                        {% elif i.particulars == 'EMI PAID' %}
+                                                        <a class="dropdown-item" href="{% url 'emploanrepaymentedit' i.repayment.id %}">Edit</a>
+
+                                                        {% else %}
+                                                            <a class="dropdown-item" href="{% url 'emploanadditionedit' i.additional.id %}">Edit</a>
+                                                        {% endif %}
+            
+                                                        {% if a.bank_type == 'PROCESSING FEE' or a.bank_type == 'OPENING BAL' %}
+                                                            <a class="dropdown-item" href="#" onclick="shoAlert('{{ a.bank_type }}')">Deleet</a>
+                                                        {% else %}
+                                                        <a class="dropdown-item delete-item" href="">Delete</a>
+                                                        {% endif %}
+                                                        
+                                                    </div>
+                                                </div>
+                                            </td> -->
+                                            {% endfor %}
                                         </tr>
+                                   
                                           
-                                      
-                                        {% endif %}       
-            {% endfor %}
+                                        <script>
+                                            function showAlert(bankType) {
+                                                alert("You can't edit this transaction with bank type: " + bankType);
+                                            }
+            
+                                            function shoAlert(bankType) {
+                                                alert("You can't delete this transaction with bank type: " + bankType);
+                                            }
+                                        </script>  
+                           
             </tbody>
                                    
             </table>
