@@ -128,11 +128,11 @@
                                 <td style=" position: relative;">
                                     <div style="display: flex;">
                                         <select  class="form-control" name="loanduration" id="loanduration" onchange="calculateExpiryDate()" style="width: 93%;">
-                                            <option value="1 YEAR" {% if loan.loan_duration == "1 YEAR"  %}Selected{% endif %}>1 YEAR</option>
-                                            <option value="6 MONTHS" {% if loan.loan_duration == "6 MONTHS"  %}Selected{% endif %}>6 MONTHS                                    </option>
-                                            <option value="3 MONTHS" {% if loan.loan_duration == "3 MONTHS"  %}Selected{% endif %}>3 MONTHS</option>
+                                            <option value="1 YEAR" {% if loan.loan_duration == "1 YEAR" %}Selected{% endif %}>1 YEAR</option>
+                                            <option value="6 MONTHS" {% if loan.loan_duration   == "6 MONTHS" %}Selected{% endif %}>6 MONTHS                                    </option>
+                                            <option value="3 MONTHS" {% if loan.loan_duration  == "3 MONTHS" %}Selected{% endif %}>3 MONTHS</option>
                                             {% for i in term %}
-                                            <option value="{{i.id}}" {% if loan.loan_duration.id == i.id  %}Selected{% endif %}>{{i.duration}} &nbsp;{{i.term}}</option>
+                                            <option value="{{i.duration}} {{i.term}}" {% if  i.term_name == loan.loan_duration  %}Selected{% endif %}>{{i.duration}} &nbsp;{{i.term}}</option>
                                             {% endfor %}
                                     </select>    
                                         <button data-toggle="modal" data-target="#loamodal" class="btn btn-outline-secondary text-grey mb-2 ml-1">+</button>   
@@ -424,7 +424,8 @@
       $('#employeeid').select2();
   
       // Handle change event for the 'selected' element
-      $(window).on('load', function () {
+    //   $(window).on('load',
+       $(document).on('change', '#employeeid',function () {
         var customer = $('#employeeid').val();
         $.ajax({
           type: "GET",
@@ -469,6 +470,51 @@
         });
       });
     }); 
+    $(window).on('load',function () {
+        var customer = $('#employeeid').val();
+        $.ajax({
+          type: "GET",
+          url: "{% url 'employeedata' %}",
+          data: {
+            id: customer
+          },
+          success: function (response) {
+            // console.log(response.email)
+            dataemail = response.email;
+            salary = response.salary;
+            jdate = response.jdate;
+            empid = response.empid;
+           console.log(salary)
+          
+            if (dataemail !== 'null' && dataemail.trim() !== '') 
+                    {
+                     
+                        $("#empemailid").val(dataemail);
+                    } 
+                
+            if (salary !== 'null' ) 
+                    {
+                       
+                        $("#salaryid").val(salary);
+                    } 
+            if (jdate !== 'null' ) 
+                    {
+                       
+                        $("#JoiningDate").val(jdate);
+                    } 
+            if (empid !== 'null' ) 
+                    {
+                       
+                        $("#empiid").val(empid);
+                    } 
+                }
+                
+                
+                
+         
+        });
+      });
+  
   </script>
 
 

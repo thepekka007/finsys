@@ -135,7 +135,7 @@
                                             <option value="6 MONTHS">6 MONTHS                                    </option>
                                             <option value="3 MONTHS">3 MONTHS</option>
                                             {% for i in term %}
-                                            <option value={{i.id}}>{{i.duration}} &nbsp;{{i.term}}</option>
+                                            <option value="{{i.duration}} {{i.term}}">{{i.duration}} &nbsp;{{i.term}}</option>
                                             {% endfor %}
                                     </select>    
                                         <button data-toggle="modal" data-target="#loamodal" class="btn btn-outline-secondary text-grey mb-2 ml-1">+</button>   

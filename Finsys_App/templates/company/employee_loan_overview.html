@@ -3,6 +3,8 @@
 {% load static %}
 
 <script src="https://rawgit.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 <style>
     .card-registration .select-input.form-control[readonly]:not([disabled]) {
         font-size: 2rem;
@@ -985,7 +987,7 @@ footer p {
                                             </label>
                                         </div>
                                         <div class="col-md-4 ml-5 mt-3">
-                                            <label for="title"><b>: {{ loan.loan_duration.duration }} &nbsp;{{ loan.loan_duration.term }}</b></label>
+                                            <label for="title"><b>: {{ loan.loan_duration}} </b></label>
 
                                         </div>
                                     </div>
@@ -1332,7 +1334,7 @@ footer p {
                                
                                 <a class="btn btn-outline-info  text-grey mt-3"  onclick="exportToPDF3()" style="padding: 10px; cursor: pointer; " role="button" >&nbsp;&nbsp;PDF&nbsp;&nbsp;</a>
 
-                                <button class="btn btn-outline-info  text-grey mt-3 " style="padding: 10px; cursor: pointer; " onclick="printStatement()">Print Statement</button>
+                                <button class="btn btn-outline-info  text-grey mt-3 " style="padding: 10px; cursor: pointer; " onclick="printSelectedArea4()">Print Statement</button>
 
                                 <!-- <a data-toggle="modal"
                                 class=" fa fa-download btn btn-outline-info rounded-pill text-grey mt-3 mb-3"
@@ -1483,26 +1485,27 @@ footer p {
                         
             
                         <section class="store-user mt-5">
+                            
                             <div class="col-12">
                                 <div class="row bb pb-3">
                                     <div class="col-7">
-                                        <p style=" text-transform: uppercase;color: #000000;">Company Details,</p>
-                                        <p style=" text-transform: uppercase;color: #000000;" > {{loan.company.Company_name}}<br>
+                                       <b> <p style=" color: #000000;">Company Details,</p>
+                                        <p style=" color: #000000;" > {{loan.company.Company_name}}<br>
                                         <!-- <h5 style=" color: #000000;">&nbsp;&nbsp;{{loan.company.Company_name }}</h5> -->
-                                        <p style=" text-transform: uppercase;color: #000000;" > {{loan.company..caAddressddress}}
+                                        <p style=" color: #000000;" > {{loan.company..caAddressddress}}
                                             {{loan.company.City}},
                                             {{loan.company.State}}<br>
                                             {{loan.company.Pincode}}<br>
                                         </p>
-                                        
+                                    </b>
                                     </div>
-                                    <div class="col-5">
-                                        <p style="text-align: center; color: #000000;" >
+                                    <div class="col-5 empidd" id="empidd">
+                                        <b> <p style="text-align: right; color: #000000;" class="jj">
                                             Employee Details,<br style="padding-left: 50px;">{{loan.employee.title}}&nbsp;{{loan.employee.first_name}}&nbsp; {{loan.employee.last_name}}<br>
                                             {{loan.employee.street}}<br>{{loan.employee.state}}
                                     
                                             <br>
-                                        </p>
+                                        </p></b> 
                                     </div>
                                 </div>
                                 
@@ -1669,6 +1672,7 @@ footer p {
 
 
 </div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 
 <script>
@@ -1679,6 +1683,48 @@ footer p {
         window.print();
         document.body.innerHTML = originalContent;
     }
+   
+    function printSelectedArea4(area) {
+  var printContents = document.getElementById("whatToPrint").innerHTML;
+  var originalBackgroundColor = document.getElementById("whatToPrint").style.backgroundColor;
+
+  // Open a new window
+  var printWindow = window.open('', '_blank');
+
+  // Write the content and styles to the new window
+  printWindow.document.write('<html><head>');
+  printWindow.document.write('<title>Print</title>');
+
+  // Include stylesheets if needed
+  // Example: printWindow.document.write('<link rel="stylesheet" type="text/css" href="path/to/your/styles.css">');
+
+  printWindow.document.write('<style>');
+  printWindow.document.write('body { margin: 0; padding: 0; background-color: white; }');
+  printWindow.document.write('.printContainer { margin: 20px; background-color: ' + originalBackgroundColor + '; }');
+  printWindow.document.write('<style>#jj { margin-right:222px }</style>');
+  printWindow.document.write('<style>#jj { font-size:50px; } </style>');
+
+  // Add more styles as needed
+
+  // Inline styles toempidd mimic your existing styles
+  printWindow.document.write('#pdf { margin: 5px; }');
+  printWindow.document.write('.ribbon-inner { text-transform: uppercase; color: #000000; }');
+  // Add more inline styles as needed
+
+  printWindow.document.write('</style>');
+
+  printWindow.document.write('</head><body>');
+  printWindow.document.write('<div class="printContainer">' + printContents + '</div>');
+  printWindow.document.write('</body></html>');
+
+  // Close the document of the new window
+  printWindow.document.close();
+
+  // Call the print function in the new window
+  printWindow.print();
+}
+
+
 </script>
     
 
