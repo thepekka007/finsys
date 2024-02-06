@@ -1,3 +1,5 @@
+<!-- CREATED BY TINTO MT -->
+
 {% extends 'company/Fin_base.html' %}
 {% block body %}
 {% load static %}
@@ -40,7 +42,7 @@
     <div class="card radius-15">
      
         <div class=" card-body">
-            <form action="{% url 'emploanedit' loan.id %}" method="post" enctype="multipart/form-data">
+            <form action="{% url 'emploanedit' loan.id %}" method="post" enctype="multipart/form-data" onmouseover="show_fields()">
             {% csrf_token %}
             <center> <h2>Edit Employee’s Loan </h2></center><br><br><br>
                 <div class="row" style="margin-left: 120px; margin-right: 120px;">
@@ -52,8 +54,9 @@
                                 </td>
                                 <td style=" position: relative;">
                                     <div style="display: flex;">
-                                        <select  class="form-control" name="employee" id="employeeid" style="width: 93%;">
+                                        <select  class="form-control" name="employee" id="employeeid" style="width: 93%;" onmouseover="calculateExpiryDate2()">
                                             <option value="">--select Employee--</option>
+                                            
                                             {% for i in employee %}
                                             <option value="{{i.id}}" {% if i.id == loan.employee.id %}Selected{% endif %}>{{i.first_name}}{{i.last_name}}</option>
                                             {% endfor %}
@@ -127,13 +130,13 @@
                                 </td>
                                 <td style=" position: relative;">
                                     <div style="display: flex;">
-                                        <select  class="form-control" name="loanduration" id="loanduration" onchange="calculateExpiryDate()" style="width: 93%;">
-                                            <option value="1 YEAR" {% if loan.loan_duration == "1 YEAR" %}Selected{% endif %}>1 YEAR</option>
-                                            <option value="6 MONTHS" {% if loan.loan_duration   == "6 MONTHS" %}Selected{% endif %}>6 MONTHS                                    </option>
-                                            <option value="3 MONTHS" {% if loan.loan_duration  == "3 MONTHS" %}Selected{% endif %}>3 MONTHS</option>
+                                        <select  class="form-control" name="loanduration" id="loanduration" onchange="calculateExpiryDate2()" style="width: 93%;">
                                             {% for i in term %}
-                                            <option value="{{i.duration}} {{i.term}}" {% if  i.term_name == loan.loan_duration  %}Selected{% endif %}>{{i.duration}} &nbsp;{{i.term}}</option>
+                                            <option value={{i.id}} {% if  i.id == loan.loan_duration.id  %}Selected{% endif %}>{{i.duration}} &nbsp;{{i.term}}</option>
                                             {% endfor %}
+                                            <!-- {% for i in term %}
+                                            <option value="{{i.duration}} {{i.term}}" {% if  i.term_name == loan.loan_duration  %}Selected{% endif %}>{{i.duration}} &nbsp;{{i.term}}</option>
+                                            {% endfor %} -->
                                     </select>    
                                         <button data-toggle="modal" data-target="#loamodal" class="btn btn-outline-secondary text-grey mb-2 ml-1">+</button>   
                                     
@@ -144,7 +147,36 @@
                                             // Initialize select2
                                             $('#loanduration').select2();
                                         })
-                                    
+                                        function calculateExpiryDate2() {
+    var customer = $('#loanduration').val();
+    const joinDate = new Date(document.getElementById("loan_date").value);
+
+    $.ajax({
+        type: "GET",
+        url: "{% url 'termdata' %}",
+        data: {
+            id: customer
+        },
+        success: function (response) {
+            // Assuming response.days is a valid number
+            var days = response.days;
+
+            console.log(days);
+
+            // Calculate the expiry date by adding days to the joinDate
+            var expiryDate = new Date(joinDate.getTime() + days * 24 * 60 * 60 * 1000);
+
+            // Format the expiryDate to ISO format (yyyy-mm-dd)
+            var formattedExpiryDate = expiryDate.toISOString().split('T')[0];
+
+            // Display the formatted expiry date in the expdateid field
+            $("#expdateid").val(formattedExpiryDate);
+        },
+        error: function (error) {
+            console.error("Error fetching term data:", error);
+        }
+    });
+}
                                     </script>
                                     
                                 </td>
@@ -175,7 +207,7 @@
                                         <option value="Cheque" style="background-color: #294f76;"  {% if loan.payment_method == 'Cheque'  %}Selected{% endif %}>Cheque</option>
                                         <option value="UPI" style="background-color: #294f76;"  {% if loan.payment_method == 'UPI'  %}Selected{% endif %}>UPI</option>
                                         {% for i in banks %}
-                                        <option value="{{ i.name }}">{{ i.name }}</option>
+                                        <option value="{{ i.name }}" {% if loan.payment_method == 'Bank'  %}Selected{% endif %}>{{ i.bank_name }} ( {{i.account_number}} )</option>
                                         {% endfor %}
                                     </select> </td>
                             </div>

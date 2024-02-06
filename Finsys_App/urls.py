@@ -88,7 +88,7 @@ urlpatterns = [
     path('employee_blood_group',views.employee_blood_group,name="employee_blood_group"),
 
 
-#tinto
+ #  ----------------------------- TINTO urls LOAN  sTART-----------------------------
 
        path('employee_loan_list',views.employee_loan_list,name="employee_loan_list"),
        path('employee_loan_sort_by_employeename',views.employee_loan_sort_by_employeename,name="employee_loan_sort_by_employeename"),
@@ -123,6 +123,11 @@ urlpatterns = [
                path('delete_loan/<int:pk>',views.delete_loan,name='delete_loan'),
                 path('shareloanToEmail/<int:pk>',views.shareloanToEmail,name='shareloanToEmail'),
 
+                 path('termdata', views.termdata, name='termdata'),
+                 path('bankdata', views.bankdata, name='bankdata'),
+
+
+ #  ----------------------------- TINTO urls LOAN  END-----------------------------
              
              
         

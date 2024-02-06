@@ -1,3 +1,5 @@
+<!-- CREATED BY TINTO MT -->
+
 {% extends 'company/Fin_base.html' %}
 {% block body %}
 {% load static %}
@@ -57,7 +59,7 @@
                                         <select  class="form-control" name="employee" id="employeeid" style="width: 93%;">
                                             <option value="">--select Employee--</option>
                                             {% for i in employee %}
-                                            <option v value="{{i.id}}">{{i.first_name}}{{i.last_name}}</option>
+                                            <option value="{{i.id}}">{{i.first_name}}{{i.last_name}}</option>
                                             {% endfor %}
                                     </select>    
                                         <button data-toggle="modal" data-target="#empmodal" class="btn btn-outline-secondary text-grey mb-2 ml-1">+</button>   
@@ -119,7 +121,7 @@
                         <tr>
                             
                             <div class="form-group" >
-                                <td><Label>Laon Amount</Label></td>
+                                <td><Label>Loan Amount</Label></td>
                                    <td><input placeholder="Enter Loan Amount" required name="loan_amount" id="loan_amount" type="number" class="form-control"></td>
                             </div>
                         </tr>
@@ -130,12 +132,13 @@
                                 </td>
                                 <td style=" position: relative;">
                                     <div style="display: flex;">
-                                        <select  class="form-control" name="loanduration" id="loanduration" onchange="calculateExpiryDate()" style="width: 93%;">
-                                            <option value="1 YEAR">1 YEAR</option>
+                                        
+                                        <select  class="form-control" name="loanduration" id="loanduration" onchange="calculateExpiryDate2()" style="width: 93%;">
+                                            <!-- <option value="1 YEAR">1 YEAR</option>
                                             <option value="6 MONTHS">6 MONTHS                                    </option>
-                                            <option value="3 MONTHS">3 MONTHS</option>
+                                            <option value="3 MONTHS">3 MONTHS</option> -->
                                             {% for i in term %}
-                                            <option value="{{i.duration}} {{i.term}}">{{i.duration}} &nbsp;{{i.term}}</option>
+                                            <option value={{i.id}}>{{i.duration}} &nbsp;{{i.term}}</option>
                                             {% endfor %}
                                     </select>    
                                         <button data-toggle="modal" data-target="#loamodal" class="btn btn-outline-secondary text-grey mb-2 ml-1">+</button>   
@@ -147,7 +150,38 @@
                                             // Initialize select2
                                             $('#loanduration').select2();
                                         })
-                                    
+                                        function calculateExpiryDate2() {
+    var customer = $('#loanduration').val();
+    const joinDate = new Date(document.getElementById("loan_date").value);
+
+    $.ajax({
+        type: "GET",
+        url: "{% url 'termdata' %}",
+        data: {
+            id: customer
+        },
+        success: function (response) {
+            // Assuming response.days is a valid number
+            var days = response.days;
+
+            console.log(days);
+
+            // Calculate the expiry date by adding days to the joinDate
+            var expiryDate = new Date(joinDate.getTime() + days * 24 * 60 * 60 * 1000);
+
+            // Format the expiryDate to ISO format (yyyy-mm-dd)
+            var formattedExpiryDate = expiryDate.toISOString().split('T')[0];
+
+            // Display the formatted expiry date in the expdateid field
+            $("#expdateid").val(formattedExpiryDate);
+        },
+        error: function (error) {
+            console.error("Error fetching term data:", error);
+        }
+    });
+}
+
+
                                     </script>
                                     
                                 </td>
@@ -162,7 +196,7 @@
                              <div class="form-group" > 
                                 <td><Label>Expiry Date</Label></td>
                                 <td>
-                                    <td><input placeholder="expdate" required name="expdate" id="expdateid" type="date" class="form-control"></td>
+                                    <td><input placeholder="expdate" required name="expdate" id="expdateid" type="date" value="{{loan.expiry_date}}" class="form-control"></td>
                               
                                 </td>
                             </div>
@@ -178,12 +212,19 @@
                                         <option value="Cheque" style="background-color: #294f76;">Cheque</option>
                                         <option value="UPI" style="background-color: #294f76;">UPI</option>
                                         {% for i in banks %}
-                                        <option value="{{ i.name }}">{{ i.name }}</option>
+                                        
+                                        <option value="{{ i.id }}" style="background-color: #294f76;">{{ i.bank_name }}( {{i.account_number}} )</option>
                                         {% endfor %}
                                     </select> </td>
                             </div>
                         </tr>
                     </div>
+                    <script>
+               
+                    
+
+
+                    </script>
                     <div class="col">
                         <tr>
                             
@@ -212,6 +253,7 @@
                             <div class="form-group" > 
                                 <td><Label id="acc_no_label" style="display: none;">Ac/Number</Label></td>
                                 <td>
+
                                     <td><input placeholder=" upi_id_label"  style="display: none;" name="acc_no" id="acc_no" type="text" class="form-control"></td>
                               
                                 </td>
@@ -914,7 +956,11 @@
                     
                     <div class="col-md-5 p-2">
                         <label for="">Term</label>
-                        <input type="text" id="term" name="term" class="form-control" placeholder="Year / Month" oninput="this.value = this.value.toUpperCase()">
+                        <select class="form-control" id="term" name="term">
+                            <option value="MONTH" >MONTH</option>
+                            <option value="YEAR" >YEAR</option>
+                        </select>
+                        <!-- <input type="text" id="term" name="term" class="form-control" placeholder="Year / Month" oninput="this.value = this.value.toUpperCase()"> -->
 
                     </div>
                 </div>
@@ -1343,8 +1389,32 @@
           document.getElementById('cheque_no').style.display='none';
           document.getElementById('upi_id_label').style.display='none';
           document.getElementById('upi_id').style.display='none';
+
+         
+                    var customer = $('#select_payment').val();
+            
+
+                    $.ajax({
+                    type: "GET",
+                    url: "{% url 'bankdata' %}",
+                    data: {
+                    id: customer
+                    },
+                    success: function (response) {
+                    // Assuming response.days is a valid number
+                    var acc = response.acc;
+                    var name = response.name;
+
+                    console.log(acc);
+
+                    // Display the formatted expiry date in the expdateid field
+                    $("#acc_no").val(acc);
+                 
+                    }
+                    });
+                    }
       }
-  }
+
 
 
    
@@ -1521,6 +1591,7 @@ $(document).on("click", "#UnitSave2", function(event) {
         success: function(response) {
           if (response.message === 'success') {
             document.getElementById("emploandata").reset();
+            console.log("success1")
             reloadEnit();
           } else {
             $("#error-message-container").text("Unit with the same name exists");
@@ -1540,6 +1611,7 @@ $(document).on("click", "#UnitSave2", function(event) {
         csrfmiddlewaretoken: '{{ csrf_token }}',
       
         success: function(data) {
+            console.log("success2")
           var dropdown = $('#employeeid');
     
           $.each(data, function(key, value) {
@@ -1641,15 +1713,16 @@ $(document).on("click", "#UnitSave2", function(event) {
         url: "{% url 'add_term' %}",
         data: {
           duration: $("#duration").val(),
-          number: $("#term").val(),
+          term: $("#term").val(),
           csrfmiddlewaretoken: '{{ csrf_token }}'
         },
         success: function(response) {
           if (response.message === 'success') {
             document.getElementById("modalloan").reset();
             reloadUnit();
+            console.log("success")
           } else {
-            $("#error-message-container").text("Unit with the same name exists");
+            $("#error-message-container").text("term with the same name exists");
           }
         },
       });
@@ -1666,10 +1739,12 @@ $(document).on("click", "#UnitSave2", function(event) {
         url: "{% url 'term_dropdown' %}",
         type: "GET",
         dataType: "json",
+        
         data: $(this).serialize(),
         csrfmiddlewaretoken: '{{ csrf_token }}',
       
         success: function(data) {
+            console.log("success")
           var dropdown = $('#loanduration');
     
           $.each(data, function(key, value) {
@@ -1702,4 +1777,7 @@ $(document).on("click", "#UnitSave2", function(event) {
                 });
               </script>
       
+
+  
+         
 {% endblock %}
