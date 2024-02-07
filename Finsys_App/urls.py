@@ -126,6 +126,10 @@ urlpatterns = [
                  path('termdata', views.termdata, name='termdata'),
                  path('bankdata', views.bankdata, name='bankdata'),
 
+                  path('get_repayment_data',views.get_repayment_data,name='get_repayment_data'),
+
+path('get_addition_data',views.get_addition_data,name='get_addition_data'),
+
 
  #  ----------------------------- TINTO urls LOAN  END-----------------------------
              

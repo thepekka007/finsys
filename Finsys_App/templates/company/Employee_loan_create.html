@@ -117,6 +117,15 @@
                             </div>
                         </tr>
                     </div>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                          // Get the current date in the format "YYYY-MM-DD"
+                          var currentDate = new Date().toISOString().split('T')[0];
+                      
+                          // Set the value of the date input to the current date
+                          document.getElementById('loan_date').value = currentDate;
+                        });
+                      </script>
                     <div class="col">
                         <tr>
                             
@@ -211,10 +220,12 @@
                                         <option value="Cash" style="background-color: #294f76;">Cash</option>
                                         <option value="Cheque" style="background-color: #294f76;">Cheque</option>
                                         <option value="UPI" style="background-color: #294f76;">UPI</option>
-                                        {% for i in banks %}
-                                        
-                                        <option value="{{ i.id }}" style="background-color: #294f76;">{{ i.bank_name }}( {{i.account_number}} )</option>
-                                        {% endfor %}
+                                     {% for i in banks %}
+    <option value="{{ i.id }}" style="background-color: #294f76;">
+        {{ i.bank_name }} ( ********  {{ "*"|stringformat:"<"|rjust:12 }}{{ i.account_number|slice:"-4:" }})
+    </option>
+{% endfor %}
+
                                     </select> </td>
                             </div>
                         </tr>

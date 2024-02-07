@@ -700,16 +700,19 @@ footer p {
                                                     <div class="dropdown-menu">
                                                         {% if i.particulars == 'LOAN ISSUED'%}
                                                             <a class="dropdown-item" href="{% url 'emploanedit' loan.id %}">Edit</a>
+                                                            <a class="dropdown-item delete-item" data-toggle="modal" data-target="#history" data-toggle="tooltip">History</a>
                                                         {% elif i.particulars == 'EMI PAID' %}
                                                         <a class="dropdown-item" href="{% url 'emploanrepaymentedit' i.repayment.id %}">Edit</a>
-
+                                                        <a class="dropdown-item delete-item" data-toggle="modal" data-target="#history2" data-repayment-id="{{ i.id }}" data-toggle="tooltip">History</a>
                                                         {% else %}
                                                             <a class="dropdown-item" href="{% url 'emploanadditionedit' i.additional.id %}">Edit</a>
+                                                            <a class="dropdown-item delete-item" data-toggle="modal" data-target="#history3" data-additional-id="{{ i.id }}" data-toggle="tooltip">History</a>
                                                         {% endif %}
             
                                                         {% if a.bank_type == 'PROCESSING FEE' or a.bank_type == 'OPENING BAL' %}
                                                             <a class="dropdown-item" href="#" onclick="shoAlert('{{ a.bank_type }}')">Deleet</a>
                                                         {% else %}
+                                                      
                                                         <a class="dropdown-item delete-item" href="">Delete</a>
                                                         {% endif %}
                                                         
@@ -718,16 +721,83 @@ footer p {
                                             </td>
                                             {% endfor %}
                                         </tr>
-                                   
-                                          
                                         <script>
-                                            function showAlert(bankType) {
-                                                alert("You can't edit this transaction with bank type: " + bankType);
-                                            }
+$('.delete-item').click(function () {
+    var repaymentId = $(this).data('repayment-id');
+
+    $.ajax({
+        url: "{% url 'get_repayment_data' %}",
+        data: {
+            repaymentId2: repaymentId
+        },
+        type: "GET",
+        dataType: "json",
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+
+        success: function (data) {
+            console.log("success2");
+
+            // Clear existing table rows
+            $('#repay1 tbody').empty();
+
+            // Update the table with the received data
+            $.each(data, function (index, value) {
+                var newRow = "<tr>" +
+                    // "<td>" + (index + 1) + "</td>" +
+                    "<td>" + value[0] + "</td>" +
+                    "<td>" + value[1] + "</td>" +
+                    "<td>" + value[2] + "</td>" +
+                    "</tr>";
+
+                $('#repay1 tbody').append(newRow);
+            });
+        },
+    });
+});
+
+
+$('.delete-item').click(function () {
+    var additionalId = $(this).data('additional-id');
+
+    $.ajax({
+        url: "{% url 'get_addition_data' %}",
+        data: {
+            additionalId2: additionalId
+        },
+        type: "GET",
+        dataType: "json",
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+
+        success: function (data) {
+            console.log("success2");
+
+            // Clear existing table rows
+            $('#repay1 tbody').empty();
+
+            // Update the table with the received data
+            $.each(data, function (index, value) {
+                var newRow = "<tr>" +
+                    // "<td>" + (index + 1) + "</td>" +
+                    "<td>" + value[0] + "</td>" +
+                    "<td>" + value[1] + "</td>" +
+                    "<td>" + value[2] + "</td>" +
+                    "</tr>";
+
+                $('#repay1 tbody').append(newRow);
+            });
+        },
+    });
+});
+ 
+                //                         </script>
+                //                         <script>
+                //                             function showAlert(bankType) {
+                //                                 alert("You can't edit this transaction with bank type: " + bankType);
+                //                             }
             
-                                            function shoAlert(bankType) {
-                                                alert("You can't delete this transaction with bank type: " + bankType);
-                                            }
+                //                             function shoAlert(bankType) {
+                //                                 alert("You can't delete this transaction with bank type: " + bankType);
+                                            
                                         </script>  
                            
             </tbody>
@@ -927,9 +997,9 @@ footer p {
                         <div class="col-lg-8">
                             <div class="p-5">
 
-                                <center>
-                                    <h1 class="fw-bold mb-0 text-black">{{loan.account_name}}</h1>
-                                </center>                 
+                              
+                                    <h5 class="fw-bold mb-0 text-black">{{filtered_data.login_details.First_name}}&nbsp;{{filtered_data.login_details.Last_name}} &nbsp;{{filtered_data.date}}( {{filtered_data.action}} )</h5>
+                                                 
 
                                 <hr class="my-4">
 
@@ -2228,4 +2298,95 @@ $.ajax({
       </div>
     </div>
   </div>
+  <div class="modal" id="history2" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Repayment History</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+               <table class="table text-light table-borderless " id="repay1" style="margin:3px;width: 100%;">
+                  <thead>
+                    <tr>
+                   
+                      <th style="background-color: 2f516f;">
+                        Date
+                      </th>
+                      <th style="background-color: 2f516f;">
+                        Action
+                      </th>
+                      <th style="background-color: 2f516f;"> 
+                        By
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                       
+                      </tr>    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                       
+                      </tr>
+                  </tbody>
+                </table>
+          
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="history3" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Additional History</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+               <table class="table text-light table-borderless " id="repay1" style="margin:3px;width: 100%;">
+                  <thead>
+                    <tr>
+                    
+                      <th style="background-color: 2f516f;">
+                        Date
+                      </th>
+                      <th style="background-color: 2f516f;">
+                        Action
+                      </th>
+                      <th style="background-color: 2f516f;"> 
+                        By
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                     
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                       
+                      </tr>
+                  </tbody>
+                </table>
+          
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

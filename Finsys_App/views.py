@@ -1882,6 +1882,7 @@ def employee_loan_create_page(request):
         allmodules = Fin_Modules_List.objects.get(company_id = com.id)
         employee = Employee.objects.filter(company_id=com.id)
         term=Fin_Loan_Term.objects.filter(company=com)
+        
         banks=Fin_Banking.objects.filter(company=com)
       
         
@@ -2014,6 +2015,9 @@ def employee_loan_save(request):
                     history.save()
                     trans = Fin_Employee_Loan_Transactions(company = companykey,login_details=employee,employee_loan =com,date = date.today(),particulars = 'LOAN ISSUED',employee=emp,balance=loan_amount)
                     trans.save()
+                    t = Fin_Employee_Loan_Transactions.objects.get(id=trans.id)
+                    trans2 = Fin_Employee_Loan_Transactions_History(company = companykey,login_details=employee,employee_loan =com,date = date.today(),action = 'Created',transaction=t)
+                    trans2.save()
         
         elif employee.User_Type == 'Staff':
                 staf = Fin_Staff_Details.objects.get(Login_Id = sid)
@@ -2029,6 +2033,9 @@ def employee_loan_save(request):
                 history.save()
                 trans = Fin_Employee_Loan_Transactions(company = staf.company_id,login_details=employee,employee_loan =com,date = date.today(),particulars = 'LOAN ISSUED',employee=emp,balance=loan_amount)
                 trans.save()
+                t = Fin_Employee_Loan_Transactions.objects.get(id=trans.id)
+                trans2 = Fin_Employee_Loan_Transactions_History(company = staf.company_id,login_details=employee,employee_loan =com,date = date.today(),action = 'Created',transaction=t)
+                trans2.save()
 
    
         return redirect(employee_loan_list)
@@ -2047,6 +2054,8 @@ def emploanoverview(request,pk):
         employee = Employee.objects.get(id=loan.employee.id)
         trans=Fin_Employee_Loan_Transactions.objects.filter(employee_loan=loan)
         latest_item_id=Fin_Employee_Loan_History.objects.filter(employee_loan=loan,company=com)
+        latest_date = Fin_Employee_Loan_History.objects.filter(employee_loan=loan,company=com).aggregate(latest_date=Max('date'))['latest_date']  
+        filtered_data = Fin_Employee_Loan_History.objects.get(date=latest_date, employee_loan=loan)
       
         
     elif login.User_Type == 'Staff' :
@@ -2059,7 +2068,7 @@ def emploanoverview(request,pk):
         latest_item_id=Fin_Employee_Loan_History.objects.filter(employee_loan=loan,company=staf.company_id)
       
 
-    return render(request,'company/employee_loan_overview.html',{'allmodules':allmodules,'loan':loan,'employee':employee,'trans':trans,'est_comments':est_comments,'latest_item_id':latest_item_id})    
+    return render(request,'company/employee_loan_overview.html',{'allmodules':allmodules,'loan':loan,'employee':employee,'trans':trans,'est_comments':est_comments,'latest_item_id':latest_item_id,'filtered_data':filtered_data})    
 
         
 def emploanedit(request, pk):                                                                #new by tinto mt
@@ -2100,9 +2109,24 @@ def emploanedit(request, pk):                                                   
         
 
             loan = Fin_Loan.objects.get(id=pk)
+            b=Fin_Employee_Loan_History.objects.get(employee_loan=pk)
             c=Fin_Employee_Loan_Transactions.objects.get(employee_loan=pk)
             c.balance=loan_amount=request.POST.get("loan_amount",None)
+            t=Fin_Employee_Loan_Transactions_History()
+
+            t.company=com
+            t.login_details=login
+            t.action="Edited"
+            t.date=date.today()
+            t.transaction=c.id
+            t.employee_loan=loan
+
+            t.save()
             c.save()
+            b.company=com
+            b.login_details=login
+            b.action="Edited"
+            b.date=date.today()
    
         
             loan.login_details=login
@@ -2147,6 +2171,8 @@ def emploanedit(request, pk):                                                   
             loan.attach_file = request.FILES.get('File', None)
             loan.save()
             t=Fin_Loan.objects.get(id=loan.id)
+            b.employee_loan=t
+            b.save()
       
             history=Fin_Employee_Loan_History(company = com,login_details=login,employee_loan = loan,date = date.today(),action = 'Edited')
             history.save()
@@ -2174,9 +2200,20 @@ def emploanedit(request, pk):                                                   
         if request.method=='POST':
             b=Fin_Employee_Loan_History.objects.get(employee_loan=pk)
             c=Fin_Employee_Loan_Transactions.objects.get(employee_loan=pk)
+            t=Fin_Employee_Loan_Transactions_History()
+            loan = Fin_Loan.objects.get(id=pk)
+
+            t.company=staf.company_id
+            t.login_details=login
+            t.action="Edited"
+            t.date=date.today()
+            t.transaction=c.id
+            t.employee_loan=loan
+
+            t.save()
             c.balance=loan_amount=request.POST.get("loan_amount",None)
             c.save()
-            loan = Fin_Loan.objects.get(id=pk)
+            
    
             b.company=staf.company_id
             b.login_details=login
@@ -2307,6 +2344,9 @@ def emploanrepaymentsave(request,pk):
                 # history.save()
                 trans = Fin_Employee_Loan_Transactions(company = companykey,login_details=employee,employee_loan =loan,date = payment_date,particulars = 'EMI PAID',employee=emp,repayment=com,balance=balance)
                 trans.save()
+                t = Fin_Employee_Loan_Transactions.objects.get(id=trans.id)
+                trans2 = Fin_Employee_Loan_Transactions_History(company = companykey,login_details=employee,repayment =com,date = payment_date,transaction=t,action='Created')
+                trans2.save()
         
     elif login.User_Type == 'Staff':
             staf = Fin_Staff_Details.objects.get(Login_Id = sid)
@@ -2365,6 +2405,9 @@ def emploanrepaymentsave(request,pk):
                     # history.save()
                     trans = Fin_Employee_Loan_Transactions(company = staf.company_id,login_details=employee,employee_loan =loan,date = payment_date,particulars = 'EMI PAID',employee=emp,repayment=com,balance=balance)
                     trans.save()
+                    t = Fin_Employee_Loan_Transactions.objects.get(id=trans.id)
+                    trans2 = Fin_Employee_Loan_Transactions_History(company = staf.company_id,login_details=employee,repayment =com,date = payment_date,transaction=t,action='Created')
+                    trans2.save()
 
    
     return redirect(emploanoverview,pk)
@@ -2408,6 +2451,17 @@ def emploanrepaymentedit(request, pk):                                          
             loan1 = Fin_Employee_Loan_Repayment.objects.get(id=pk)
             c=Fin_Employee_Loan_Transactions.objects.get(repayment=loan1)
             loan2 = Fin_Loan.objects.get(id=loan_re.employee_loan.id)
+            t=Fin_Employee_Loan_Transactions_History()
+
+            t.company=com
+            t.login_details=login
+            t.action="Edited"
+            t.date=date.today()
+            t.transaction=c
+            t.repayment=loan1
+            t.employee_loan=loan2
+
+            t.save()
             
    
        
@@ -2511,6 +2565,17 @@ def emploanrepaymentedit(request, pk):                                          
                 loan1 = Fin_Employee_Loan_Repayment.objects.get(id=pk)
                 c=Fin_Employee_Loan_Transactions.objects.get(repayment=loan1)
                 loan2 = Fin_Loan.objects.get(id=loan_re.employee_loan.id)
+                t=Fin_Employee_Loan_Transactions_History()
+
+                t.company=staf.company_id
+                t.login_details=login
+                t.action="Edited"
+                t.date=date.today()
+                t.transaction=c.id
+                t.repayment=loan1
+                t.employee_loan=loan2
+
+                t.save()
    
        
                 loan1.login_details=login
@@ -2672,6 +2737,9 @@ def emploanadditionalsave(request,pk):
                 com = Fin_Employee_Additional_Loan.objects.get(id=new.id)
                 trans = Fin_Employee_Loan_Transactions(company = companykey,login_details=employee,employee_loan =loan,date = payment_date,particulars = 'ADDITIONAL LOAN',employee=emp,additional=com,balance=total_loan)
                 trans.save()
+                t = Fin_Employee_Loan_Transactions.objects.get(id=trans.id)
+                trans2 = Fin_Employee_Loan_Transactions_History(company =companykey ,login_details=employee,additional =com,date = payment_date,transaction=t,action='Created')
+                trans2.save()
         
         elif employee.User_Type == 'Staff':
                 staf = Fin_Staff_Details.objects.get(Login_Id = sid)
@@ -2698,6 +2766,8 @@ def emploanadditionalsave(request,pk):
                 com = Fin_Employee_Additional_Loan.objects.get(id=new.id)
                 trans = Fin_Employee_Loan_Transactions(company = staf.company_id,login_details=employee,employee_loan =loan,date = payment_date,particulars = 'ADDITIONAL LOAN',employee=emp,additional=com,balance=total_loan)
                 trans.save()
+                trans2 = Fin_Employee_Loan_Transactions_History(company =staf.company_id ,login_details=employee,additional =com,date = payment_date,transaction=t,action='Created')
+                trans2.save()
 
    
         return redirect(emploanoverview,pk)
@@ -2740,6 +2810,17 @@ def emploanadditionedit(request, pk):                                           
      
             loan1 = Fin_Employee_Additional_Loan.objects.get(id=pk)
             c=Fin_Employee_Loan_Transactions.objects.get(additional=loan1)
+            t=Fin_Employee_Loan_Transactions_History()
+
+            t.company=com
+            t.login_details=login
+            t.action="Edited"
+            t.date=date.today()
+            t.transaction=c.id
+            t.additional=loan1
+      
+
+            t.save()
    
        
             loan1.login_details=login
@@ -2825,6 +2906,17 @@ def emploanadditionedit(request, pk):                                           
      
             loan1 = Fin_Employee_Additional_Loan.objects.get(id=pk)
             c=Fin_Employee_Loan_Transactions.objects.get(additional=loan1)
+            t=Fin_Employee_Loan_Transactions_History()
+
+            t.company=staf.company_id
+            t.login_details=login
+            t.action="Edited"
+            t.date=date.today()
+            t.transaction=c.id
+            t.additional=loan1
+      
+
+            t.save()
    
        
             loan1.login_details=login
@@ -3512,3 +3604,89 @@ def bankdata(request):
         data7 = {'acc': cust.account_number,'name':cust.bank_name}
         return JsonResponse(data7)
 
+
+
+
+# def get_repayment_data(request):
+#     # Assume you have a model named Repayment to represent repayment data
+#     try:
+#         id = request.GET.get('repaymentId2')
+#         print(id)
+#         print(1)
+#         repayment = Fin_Employee_Loan_Transactions_History.objects.filter(repayment=id)
+#         print(repayment)
+#         print(2)
+#         # Serialize repayment data to JSON (you might want to use Django Rest Framework serializers)
+#         data7 = {
+            
+#               'keyword': 'repayment',
+#             # 'amount_paid': repayment.amount_paid,
+#             # Add other fields as needed
+#         }
+#         print(3)
+#         return JsonResponse(data7)
+#     except Fin_Employee_Loan_Transactions_History.DoesNotExist:
+#         print(4)
+#         return JsonResponse({'error': 'Repayment not found'}, status=404)
+    
+
+def get_repayment_data(request):                                                                 #new by tinto mt (item)
+    sid = request.session['s_id']
+    login = Fin_Login_Details.objects.get(id=sid)
+    if login.User_Type == 'Company':
+            id = request.GET.get('repaymentId2')
+            # com = Fin_Company_Details.objects.get(Login_Id = sid)
+            options = {}
+            option_objects = Fin_Employee_Loan_Transactions_History.objects.filter(transaction=id)
+            print(1111)
+            for option in option_objects:
+                date=option.date
+                action=option.action
+                first_name=option.login_details.First_name
+                last_name=option.login_details.Last_name
+            options[option.id] = [date,action,first_name,last_name,f"{date}"]
+            return JsonResponse(options)
+    elif login.User_Type == 'Staff':
+            id = request.GET.get('repaymentId2')
+            # staf = Fin_Staff_Details.objects.get(Login_Id = sid)
+            options = {}
+            option_objects = Fin_Employee_Loan_Transactions_History.objects.filter(transaction=id)
+            print(1111)
+            for option in option_objects:
+                date=option.date
+                action=option.action
+                first_name=option.login_details.First_name
+                last_name=option.login_details.Last_name
+            options[option.id] = [date,action,first_name,last_name,f"{date}"]
+            return JsonResponse(options)
+            return JsonResponse(options)
+    
+def get_addition_data(request):                                                                 #new by tinto mt (item)
+    sid = request.session['s_id']
+    login = Fin_Login_Details.objects.get(id=sid)
+    if login.User_Type == 'Company':
+            id = request.GET.get('additionalId2')
+            # com = Fin_Company_Details.objects.get(Login_Id = sid)
+            options = {}
+            option_objects = Fin_Employee_Loan_Transactions_History.objects.filter(transaction=id)
+            print(1111)
+            for option in option_objects:
+                date=option.date
+                action=option.action
+                first_name=option.login_details.First_name
+                last_name=option.login_details.Last_name
+            options[option.id] = [date,action,first_name,last_name,f"{date}"]
+            return JsonResponse(options)
+    elif login.User_Type == 'Staff':
+            id = request.GET.get('additionalId2')
+            # staf = Fin_Staff_Details.objects.get(Login_Id = sid)
+            options = {}
+            option_objects = Fin_Employee_Loan_Transactions_History.objects.filter(transaction=id)
+            print(1111)
+            for option in option_objects:
+                date=option.date
+                action=option.action
+                first_name=option.login_details.First_name
+                last_name=option.login_details.Last_name
+            options[option.id] = [date,action,first_name,last_name,f"{date}"]
+            return JsonResponse(options)

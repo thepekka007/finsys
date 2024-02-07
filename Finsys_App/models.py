@@ -337,6 +337,15 @@ class Fin_Employee_Loan_Transactions(models.Model):
     repayment = models.ForeignKey(Fin_Employee_Loan_Repayment,on_delete=models.CASCADE,null=True,blank=True)
     additional = models.ForeignKey(Fin_Employee_Additional_Loan,on_delete=models.CASCADE,null=True,blank=True)
     balance= models.IntegerField(null=True,blank=True)
+class Fin_Employee_Loan_Transactions_History(models.Model):
+    company = models.ForeignKey(Fin_Company_Details,on_delete=models.CASCADE,null=True,blank=True)
+    login_details = models.ForeignKey(Fin_Login_Details,on_delete=models.CASCADE,null=True,blank=True)
+    employee_loan = models.ForeignKey(Fin_Loan,on_delete=models.CASCADE,blank=True,null=True)
+    repayment = models.ForeignKey(Fin_Employee_Loan_Repayment,on_delete=models.CASCADE,null=True,blank=True)
+    additional = models.ForeignKey(Fin_Employee_Additional_Loan,on_delete=models.CASCADE,null=True,blank=True)
+    date = models.DateField(null=True,blank=True)
+    action = models.CharField(max_length=255,null=True,blank=True)
+    transaction = models.ForeignKey(Fin_Employee_Loan_Transactions,on_delete=models.CASCADE,blank=True,null=True)
 
 class Fin_Employee_loan_comments(models.Model):                                         
     company=models.ForeignKey(Fin_Company_Details,on_delete=models.CASCADE)
