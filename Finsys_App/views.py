@@ -21,6 +21,7 @@ from xhtml2pdf import pisa
 from django.template.loader import get_template
 from bs4 import BeautifulSoup
 import io
+from django.utils import timezone
 from openpyxl import Workbook
 from openpyxl import load_workbook
 from django.http import HttpResponse,HttpResponseRedirect
@@ -29,6 +30,10 @@ from io import BytesIO
 # Create your views here.
 from datetime import date
 from django.db.models import Max
+
+
+from datetime import datetime
+
 
 from django.db.models import Q
 from django.http import JsonResponse
@@ -1996,11 +2001,11 @@ def employee_loan_save(request):
         emp=Employee.objects.get(id=employeename)
         
         if employee.User_Type == 'Company':
-                companykey =  Fin_Company_Details.objects.get(Login_Id_id=sid)
-                if Fin_Loan.objects.filter(employeeid=empid, company=companykey).exists():
-                    messages.error(request,'Already a loan  exsits for this employee !!!')
-                    return redirect('employee_loan_create_page')
-                else:
+                    companykey =  Fin_Company_Details.objects.get(Login_Id_id=sid)
+                # if Fin_Loan.objects.filter(employeeid=empid, company=companykey).exists():
+                #     messages.error(request,'Already a loan  exsits for this employee !!!')
+                #     return redirect('employee_loan_create_page')
+                # else:
                 
 
                     new = Fin_Loan(employee=emp,employeeid=empid,employee_email=empemail,salary=salary,join_date=join_date,loan_date=loan_Date,loan_amount=loan_amount,total_loan=loan_amount,
@@ -2029,7 +2034,7 @@ def employee_loan_save(request):
                 
                 new.save()
                 com = Fin_Loan.objects.get(id=new.id)
-                history = Fin_Employee_Loan_History(company = staf.company_id,login_details=employee,employee_loan = com,date = date.today(),action = 'Created')
+                history = Fin_Employee_Loan_History(company = staf.company_id,login_details=employee,employee_loan = com,date = timezone.now(),action = 'Created')
                 history.save()
                 trans = Fin_Employee_Loan_Transactions(company = staf.company_id,login_details=employee,employee_loan =com,date = date.today(),particulars = 'LOAN ISSUED',employee=emp,balance=loan_amount)
                 trans.save()
@@ -2109,7 +2114,7 @@ def emploanedit(request, pk):                                                   
         
 
             loan = Fin_Loan.objects.get(id=pk)
-            b=Fin_Employee_Loan_History.objects.get(employee_loan=pk)
+            b=Fin_Employee_Loan_History()
             c=Fin_Employee_Loan_Transactions.objects.get(employee_loan=pk)
             c.balance=loan_amount=request.POST.get("loan_amount",None)
             t=Fin_Employee_Loan_Transactions_History()
@@ -2118,7 +2123,7 @@ def emploanedit(request, pk):                                                   
             t.login_details=login
             t.action="Edited"
             t.date=date.today()
-            t.transaction=c.id
+            t.transaction=c
             t.employee_loan=loan
 
             t.save()
@@ -2297,7 +2302,11 @@ def emploanrepaymentsave(request,pk):
 
 
                 principle_amount = request.POST['principal']
-                interest_amount= request.POST['interest']
+                interest= request.POST['interest']
+                if interest == "":
+                    interest_amount=0
+                else:
+                    interest_amount=interest
                 principle_amount = request.POST['principal']
                 payment_date= request.POST['date2']
                 payment_method = request.POST['recieved']
@@ -2320,6 +2329,7 @@ def emploanrepaymentsave(request,pk):
 
                 # Perform the subtraction
                 balance = loan.balance - principle_amount_int
+                
                 
 
                 
@@ -2432,8 +2442,9 @@ def emploanrepaymentedit(request, pk):                                          
      
         com = Fin_Company_Details.objects.get(Login_Id = sid)
         allmodules = Fin_Modules_List.objects.get(company_id = com.id)
-        loan = Fin_Loan.objects.get(id=pk)
+        
         loan_re = Fin_Employee_Loan_Repayment.objects.get(id=pk)
+        loan = Fin_Loan.objects.get(id=loan_re.employee_loan.id)
         employee = Employee.objects.get(id=loan_re.employee.id)
         context = {
                     'allmodules':allmodules,
@@ -2479,25 +2490,47 @@ def emploanrepaymentedit(request, pk):                                          
             principle_amount_new=int(principle_amount)
             previousbalance=c.balance
             previousbalance=int(previousbalance)
+            loan_trans = Fin_Employee_Loan_Transactions.objects.filter(Q(employee_loan=c.employee_loan) & Q(id__gte=c.id))
+            print("s")
+            for i in loan_trans:
+                print(i.balance)
+                print("s1")
 
-
-            if previous_principle_amount == principle_amount_new:
-                newbalance=previousbalance
-                c.balance=newbalance
-                loan1.balance=newbalance
-                loan2.balance=newbalance
-            elif previous_principle_amount < principle_amount_new:
+            if previous_principle_amount<principle_amount_new:
                 newprincipleamount=principle_amount_new-previous_principle_amount
-                newbalance=previousbalance-newprincipleamount
-                c.balance=newbalance
-                loan1.balance=newbalance
-                loan2.balance=newbalance
-            elif previous_principle_amount > principle_amount_new:
-                newprincipleamount=previous_principle_amount-principle_amount_new
-                newbalance=previousbalance+newprincipleamount
-                c.balance=newbalance
-                loan1.balance=newbalance
-                loan2.balance=newbalance
+                print("newprin")
+                print(newprincipleamount)
+                for i in loan_trans:
+                    print(i.balance)
+                  
+                    i.balance=i.balance-newprincipleamount
+                    i.save()
+                    print(i.balance)
+                    print("s3")
+        
+
+
+
+
+
+            # if previous_principle_amount == principle_amount_new:
+            #     newbalance=previousbalance
+            #     c.balance=newbalance
+            #     loan1.balance=newbalance
+            #     loan2.balance=newbalance
+                
+            # elif previous_principle_amount < principle_amount_new:
+            #     newprincipleamount=principle_amount_new-previous_principle_amount
+            #     newbalance=previousbalance-newprincipleamount
+            #     c.balance=newbalance
+            #     loan1.balance=newbalance
+            #     loan2.balance=newbalance
+            # elif previous_principle_amount > principle_amount_new:
+            #     newprincipleamount=previous_principle_amount-principle_amount_new
+            #     newbalance=previousbalance+newprincipleamount
+            #     c.balance=newbalance
+            #     loan1.balance=newbalance
+            #     loan2.balance=newbalance
             
 
 
@@ -2816,7 +2849,7 @@ def emploanadditionedit(request, pk):                                           
             t.login_details=login
             t.action="Edited"
             t.date=date.today()
-            t.transaction=c.id
+            t.transaction=c
             t.additional=loan1
       
 

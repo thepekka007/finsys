@@ -1406,9 +1406,9 @@ $('.delete-item').click(function () {
                                
                                 <a class="btn btn-outline-info  text-grey mt-3"  onclick="exportToPDF3()" style="padding: 10px; cursor: pointer; " role="button" >&nbsp;&nbsp;PDF&nbsp;&nbsp;</a>
 
-                                <button class="btn btn-outline-info  text-grey mt-3 " style="padding: 10px; cursor: pointer; " onclick="printSelectedArea4()">Print Statement</button>
+                                <button class="btn btn-outline-info  text-grey mt-3 " style="padding: 10px; cursor: pointer; " ondblclick="printContent()" >Print Statement</button>
 
-                                <!-- <a data-toggle="modal"
+                                <!-- <a data-toggle="modal"onclick="printSelectedArea4()"
                                 class=" fa fa-download btn btn-outline-info rounded-pill text-grey mt-3 mb-3"
                                 data-target="#commentModal"> Download</a> -->
                                 
@@ -2226,6 +2226,56 @@ $.ajax({
   </div>
 
   <script>
+function printContent() {
+  var content = document.getElementById('pdf');
+
+  // Apply styles to h1 elements within the content
+  var h1Elements = content.getElementsByTagName('h1');
+  for (var i = 0; i < h1Elements.length; i++) {
+    h1Elements[i].style.color = 'black';
+  }
+
+  // Add CSS styles for printing
+  var style = document.createElement('style');
+  style.innerHTML = `
+    @media print {
+      body {
+        margin-top: -25%; /* Remove default margin */
+        margin-left: ;
+        margin-right: -15%;
+        padding: 0; /* Remove default padding */
+        width: 100%; /* Make sure content spans the full width of the page */
+      }
+      #pdf :first-child {
+        page-break-before: auto; /* Avoid page break before the first element */
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Open print dialog
+  window.print();
+}
+
+function shareOnWhatsApp() {
+  var url = window.location.href;
+  var text = url;
+  text = encodeURIComponent(text);
+  var whatsappUrl = "whatsapp://send?text=" + text;
+  window.location.href = whatsappUrl;
+}
+
+
+function shareOnWhatsApp() {
+  var url = window.location.href;
+  var text = url;
+  text = encodeURIComponent(text);
+  var whatsappUrl = "whatsapp://send?text=" + text;
+  window.location.href = whatsappUrl;
+}
+
+
+
      function exportToPDF3() {
   var content = document.getElementById('pdf');
   

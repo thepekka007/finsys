@@ -48,12 +48,20 @@
         <div class="col-md-2"></div>
         <div class="col-md-5 p-2">DATE</div>
     </div>
-
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          // Get the current date in the format "YYYY-MM-DD"
+          var currentDate = new Date().toISOString().split('T')[0];
+      
+          // Set the value of the date input to the current date
+          document.getElementById('dates').value = currentDate;
+        });
+      </script>
     <div class="row">
         <div class="col-md-5 p-2"> <input class="form-control" type="text" name="interest" id="interest" value="">
         </div>
         <div class="col-md-2"></div>
-        <div class="col-md-5 p-2"><input type="date" name="date2" class="form-control" value="" required></div>
+        <div class="col-md-5 p-2"><input type="date" name="date2" id="dates" class="form-control"  required></div>
     </div>
 
     <div class="row">

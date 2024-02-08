@@ -13,7 +13,7 @@
                 <form id="bankForm" method="post" action="{% url 'emploanadditionedit' loan_ad.id %}" style="margin-left: 10%;margin-right: 10%;">
                     <div class="col-md-12">
                         <center>
-                        <h2>Issue Additional Loan </h2>
+                        <h2>Edit Additional Loan </h2>
                         <br>     <hr><br>   <br>
                       
                      </center>
@@ -53,7 +53,7 @@
                             </div>
                             <div class="col-md-2 p-2"></div>
                             <div class="col-md-5 p-2">
-                                <input class="form-control" type="date" value="{{current_date}}" name="adjdate">
+                                <input class="form-control" type="date" value="{{loan_ad.new_date | date:'Y-m-d'}}" name="adjdate">
                             </div>
                         </div>
                         <div class="row">

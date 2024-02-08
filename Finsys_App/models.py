@@ -1,6 +1,6 @@
 from django.db import models
 
-
+from django.utils import timezone
 class Fin_Payment_Terms(models.Model):
     payment_terms_number = models.IntegerField(null=True,blank=True)  
     payment_terms_value = models.CharField(max_length=100,null=True,blank=True) 
@@ -294,7 +294,7 @@ class Fin_Employee_Loan_History(models.Model):
     company = models.ForeignKey(Fin_Company_Details,on_delete=models.CASCADE,null=True,blank=True)
     login_details = models.ForeignKey(Fin_Login_Details,on_delete=models.CASCADE,null=True,blank=True)
     employee_loan = models.ForeignKey(Fin_Loan,on_delete=models.CASCADE,blank=True,null=True)
-    date = models.DateField(null=True,blank=True)
+    date = models.DateTimeField(default=timezone.now, null=True, blank=True)
     action = models.CharField(max_length=255,null=True,blank=True)
 
 class Fin_Employee_Additional_Loan(models.Model):
