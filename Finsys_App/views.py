@@ -2116,7 +2116,7 @@ def emploanedit(request, pk):                                                   
             loan = Fin_Loan.objects.get(id=pk)
             b=Fin_Employee_Loan_History()
             c=Fin_Employee_Loan_Transactions.objects.get(employee_loan=pk)
-            c.balance=loan_amount=request.POST.get("loan_amount",None)
+            c.balance=request.POST.get("loan_amount",None)
             t=Fin_Employee_Loan_Transactions_History()
 
             t.company=com
@@ -2178,8 +2178,8 @@ def emploanedit(request, pk):                                                   
             t=Fin_Loan.objects.get(id=loan.id)
             b.employee_loan=t
             b.save()
-      
-            history=Fin_Employee_Loan_History(company = com,login_details=login,employee_loan = loan,date = date.today(),action = 'Edited')
+            current_utc_time = datetime.now(timezone.utc)
+            history=Fin_Employee_Loan_History(company = com,login_details=login,employee_loan = loan,date = current_utc_time,action = 'Edited')
             history.save()
             # Save the changes
         
