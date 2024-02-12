@@ -131,6 +131,9 @@ urlpatterns = [
 path('get_addition_data',views.get_addition_data,name='get_addition_data'),
 
 
+path('delete_loan_repayment/<int:pk>',views.delete_loan_repayment,name='delete_loan_repayment'),
+
+path('delete_loan_additional/<int:pk>',views.delete_loan_additional,name='delete_loan_additional'),
  #  ----------------------------- TINTO urls LOAN  END-----------------------------
              
              

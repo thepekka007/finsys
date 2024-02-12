@@ -621,7 +621,7 @@ footer p {
                             
     
                             <div class="col-md-3 mx-5" style="width: 50%; margin-top: 8px;">
-    <h5>LOAN AMOUNT: {{loan.total_loan}}</5>
+    <!-- <h5>LOAN AMOUNT: {{loan.total_loan}}</5> -->
                                 
                             </div>
     
@@ -701,19 +701,22 @@ footer p {
                                                         {% if i.particulars == 'LOAN ISSUED'%}
                                                             <a class="dropdown-item" href="{% url 'emploanedit' loan.id %}">Edit</a>
                                                             <a class="dropdown-item delete-item" data-toggle="modal" data-target="#history" data-toggle="tooltip">History</a>
+                                                          
                                                         {% elif i.particulars == 'EMI PAID' %}
                                                         <a class="dropdown-item" href="{% url 'emploanrepaymentedit' i.repayment.id %}">Edit</a>
                                                         <a class="dropdown-item delete-item" data-toggle="modal" data-target="#history2" data-repayment-id="{{ i.id }}" data-toggle="tooltip">History</a>
+                                                        <a class="dropdown-item delete-item" href="{% url 'delete_loan_repayment' i.id %}">Delete</a>
                                                         {% else %}
                                                             <a class="dropdown-item" href="{% url 'emploanadditionedit' i.additional.id %}">Edit</a>
                                                             <a class="dropdown-item delete-item" data-toggle="modal" data-target="#history3" data-additional-id="{{ i.id }}" data-toggle="tooltip">History</a>
-                                                        {% endif %}
+                                                            <a class="dropdown-item delete-item" href="{% url 'delete_loan_additional' i.id %}">Delete</a>
+                                                            {% endif %}
             
                                                         {% if a.bank_type == 'PROCESSING FEE' or a.bank_type == 'OPENING BAL' %}
                                                             <a class="dropdown-item" href="#" onclick="shoAlert('{{ a.bank_type }}')">Deleet</a>
                                                         {% else %}
                                                       
-                                                        <a class="dropdown-item delete-item" href="">Delete</a>
+                                       
                                                         {% endif %}
                                                         
                                                     </div>
@@ -998,7 +1001,7 @@ $('.delete-item').click(function () {
                             <div class="p-5">
 
                               
-                                    <h5 class="fw-bold mb-0 text-black">{{filtered_data.login_details.First_name}}&nbsp;{{filtered_data.login_details.Last_name}} &nbsp;{{filtered_data.date}}( {{filtered_data.action}} )</h5>
+                                    <h5 class="fw-bold mb-0 text-black">{{filtered_data.login_details.First_name}}&nbsp;{{filtered_data.login_details.Last_name}} &nbsp;{{filtered_data.date|date:'Y-m-d'}}( {{filtered_data.action}} )</h5>
                                                  
 
                                 <hr class="my-4">
