@@ -1759,17 +1759,17 @@ def employee_blood_group(request):
         if loginn.User_Type == 'Company' and bloodGroup not in invalid_group:
             com = Fin_Company_Details.objects.get(Login_Id=sid)
             allmodules = Fin_Modules_List.objects.get(company_id=com.id)
-            group = Employee_Blood_Group(blood_group=bloodGroup, company_id=com.id, login_id=sid)
+            group = Fin_Employee_Blood_Group(blood_group=bloodGroup, company_id=com.id, login_id=sid)
             group.save()
-            bloodgroup = Employee_Blood_Group.objects.filter(company_id=com.id,login_id=sid).values('blood_group').distinct()
+            bloodgroup = Fin_Employee_Blood_Group.objects.filter(company_id=com.id,login_id=sid).values('blood_group').distinct()
             return JsonResponse({'success': True,'bloodgroup': list(bloodgroup)})
 
         elif loginn.User_Type == 'Staff' and bloodGroup not in invalid_group:
             staf = Fin_Staff_Details.objects.get(Login_Id=sid)
             allmodules = Fin_Modules_List.objects.get(company_id=staf.company_id_id)
-            group = Employee_Blood_Group(blood_group=bloodGroup, company_id=staf.company_id_id, login_id=sid)
+            group = Fin_Employee_Blood_Group(blood_group=bloodGroup, company_id=staf.company_id_id, login_id=sid)
             group.save()
-            bloodgroup = Employee_Blood_Group.objects.filter(company_id=staf.company_id_id,login_id=sid).values('blood_group').distinct()
+            bloodgroup = Fin_Employee_Blood_Group.objects.filter(company_id=staf.company_id_id,login_id=sid).values('blood_group').distinct()
             return JsonResponse({'success': True,'bloodgroup': list(bloodgroup)})
 
     return JsonResponse({'success': False, 'error': 'Invalid blood group or user type'})
@@ -1791,6 +1791,7 @@ def employee_loan_list(request):
         loan = Fin_Loan.objects.filter(company_id=com.id)
     elif login.User_Type == 'Staff' :
         staf = Fin_Staff_Details.objects.get(Login_Id = sid)
+        com=staf.company_id
         allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id_id)
         
         employee = Employee.objects.filter(company_id=staf.company_id_id)
@@ -1798,7 +1799,7 @@ def employee_loan_list(request):
     else:
         distributor = Fin_Distributors_Details.objects.get(Login_Id = sid)
 
-    return render(request,'company/Employee_loan_list.html',{'employee':employee,'allmodules':allmodules,'loan':loan})
+    return render(request,'company/Employee_loan_list.html',{'employee':employee,'allmodules':allmodules,'loan':loan,'com':com})
 
 def employee_loan_sort_by_balance(request):
     sid = request.session['s_id']
@@ -1807,18 +1808,19 @@ def employee_loan_sort_by_balance(request):
         com = Fin_Company_Details.objects.get(Login_Id = sid)
         allmodules = Fin_Modules_List.objects.get(company_id = com.id)
         employee = Employee.objects.filter(company_id=com.id)
-        loan = Loan.objects.filter(company_id=com.id).order_by('-balance')
+        loan = Fin_Loan.objects.filter(company_id=com.id).order_by('-balance')
 
     elif login.User_Type == 'Staff' :
         staf = Fin_Staff_Details.objects.get(Login_Id = sid)
+        com=staf.company_id
         allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id_id)
         employee = Employee.objects.filter(company_id=staf.company_id_id)
-        loan = Loan.objects.filter(company_id=com.id).order_by('-balance')
+        loan = Fin_Loan.objects.filter(company_id=com.id).order_by('-balance')
 
     else:
         distributor = Fin_Distributors_Details.objects.get(Login_Id = sid)
 
-    return render(request,'company/Employee_loan_list.html',{'employee':employee,'allmodules':allmodules,'loan':loan})
+    return render(request,'company/Employee_loan_list.html',{'employee':employee,'allmodules':allmodules,'loan':loan,'com':com})
 
 
 def employee_loan_sort_by_employeename(request):
@@ -1828,18 +1830,19 @@ def employee_loan_sort_by_employeename(request):
         com = Fin_Company_Details.objects.get(Login_Id = sid)
         allmodules = Fin_Modules_List.objects.get(company_id = com.id)
         employee = Employee.objects.filter(company_id=com.id)
-        loan = Loan.objects.filter(company_id=com.id).order_by('-employee_name')
+        loan = Fin_Loan.objects.filter(company_id=com.id).order_by('-employee_name')
 
     elif login.User_Type == 'Staff' :
         staf = Fin_Staff_Details.objects.get(Login_Id = sid)
+        com=staf.company_id
         allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id_id)
         employee = Employee.objects.filter(company_id=staf.company_id_id)
-        loan = Loan.objects.filter(company_id=com.id).order_by('-employee_name')
+        loan = Fin_Loan.objects.filter(company_id=com.id).order_by('-employee_name')
 
     else:
         distributor = Fin_Distributors_Details.objects.get(Login_Id = sid)
 
-    return render(request,'company/Employee_loan_list.html',{'employee':employee,'allmodules':allmodules,'loan':loan})
+    return render(request,'company/Employee_loan_list.html',{'employee':employee,'allmodules':allmodules,'loan':loan,'com':com})
 
 def employee_loan_filter_by_active(request):
     sid = request.session['s_id']
@@ -1852,6 +1855,7 @@ def employee_loan_filter_by_active(request):
 
     elif login.User_Type == 'Staff' :
         staf = Fin_Staff_Details.objects.get(Login_Id = sid)
+        com=staf.company_id
         allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id_id)
         employee = Employee.objects.filter(company_id=staf.company_id_id)
         loan = Fin_Loan.objects.filter(company_id=staf.company_id_id,status='Active')
@@ -1859,7 +1863,7 @@ def employee_loan_filter_by_active(request):
     else:
         distributor = Fin_Distributors_Details.objects.get(Login_Id = sid)
 
-    return render(request,'company/Employee_loan_list.html',{'employee':employee,'allmodules':allmodules,'loan':loan})
+    return render(request,'company/Employee_loan_list.html',{'employee':employee,'allmodules':allmodules,'loan':loan,'com':com})
 
 def employee_loan_filter_by_inactive(request):
     sid = request.session['s_id']
@@ -1872,6 +1876,7 @@ def employee_loan_filter_by_inactive(request):
 
     elif login.User_Type == 'Staff' :
         staf = Fin_Staff_Details.objects.get(Login_Id = sid)
+        com=staf.company_id
         allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id_id)
         employee = Employee.objects.filter(company_id=staf.company_id_id)
         loan = Fin_Loan.objects.filter(company_id=staf.company_id_id,status='Inactive')
@@ -1879,7 +1884,7 @@ def employee_loan_filter_by_inactive(request):
     else:
         distributor = Fin_Distributors_Details.objects.get(Login_Id = sid)
 
-    return render(request,'company/Employee_loan_list.html',{'employee':employee,'allmodules':allmodules,'loan':loan})
+    return render(request,'company/Employee_loan_list.html',{'employee':employee,'allmodules':allmodules,'loan':loan,'com':com})
 
 def employee_loan_create_page(request):
     sid = request.session['s_id']
@@ -1896,13 +1901,14 @@ def employee_loan_create_page(request):
         
     elif login.User_Type == 'Staff' :
         staf = Fin_Staff_Details.objects.get(Login_Id = sid)
+        com=staf.company_id
         allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id_id)
         employee = Employee.objects.filter(company_id=staf.company_id_id)
         term=Fin_Loan_Term.objects.filter(company=staf.company_id)
         banks=Fin_Banking.objects.filter(company=staf.company_id)
       
 
-    return render(request,'company/Employee_loan_create.html',{'allmodules':allmodules,'employee':employee,'term':term,'banks':banks})    
+    return render(request,'company/Employee_loan_create.html',{'allmodules':allmodules,'employee':employee,'term':term,'banks':banks,'com':com})    
 
 def employeedata(request):
     sid = request.session['s_id']
@@ -1980,7 +1986,12 @@ def employee_loan_save(request):
         upi_id = request.POST['upi_id']
         acc_no = request.POST['acc_no']
         cutingamount = request.POST['cutingamount']
-        cuttingPercentage = request.POST['cuttingPercentage']
+        cp = request.POST['cuttingPercentage']
+        if cp != '':
+            cuttingPercentage=cp
+        elif cp == '':
+            cuttingPercentage=0
+
         amount1 = request.POST['pamount']
         amount2 = request.POST['amount5']
         if amount1 != '':
@@ -2070,13 +2081,16 @@ def emploanoverview(request,pk):
         staf = Fin_Staff_Details.objects.get(Login_Id = sid)
         allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id_id)
         employee = Employee.objects.filter(company_id=staf.company_id_id)
+        com=staf.company_id
         loan = Fin_Loan.objects.get(id=pk)
         est_comments = Fin_Employee_loan_comments.objects.filter(employee_loan=loan)
         trans=Fin_Employee_Loan_Transactions.objects.filter(employee_loan=loan)
         latest_item_id=Fin_Employee_Loan_History.objects.filter(employee_loan=loan,company=staf.company_id)
+        latest_date = Fin_Employee_Loan_History.objects.filter(employee_loan=loan,company=staf.company_id).aggregate(latest_date=Max('date'))['latest_date']  
+        filtered_data = Fin_Employee_Loan_History.objects.get(date=latest_date, employee_loan=loan)
       
 
-    return render(request,'company/employee_loan_overview.html',{'allmodules':allmodules,'loan':loan,'employee':employee,'trans':trans,'est_comments':est_comments,'latest_item_id':latest_item_id,'filtered_data':filtered_data})    
+    return render(request,'company/employee_loan_overview.html',{'allmodules':allmodules,'loan':loan,'employee':employee,'trans':trans,'est_comments':est_comments,'latest_item_id':latest_item_id,'filtered_data':filtered_data,'com':com})    
 
         
 def emploanedit(request, pk):                                                                #new by tinto mt
@@ -2106,7 +2120,8 @@ def emploanedit(request, pk):                                                   
                     'loan':loan,
                     'employee':employee,
                     'term':term,
-                    'banks':banks
+                    'banks':banks,
+                    'com':com
             }
        
     
@@ -2194,6 +2209,7 @@ def emploanedit(request, pk):                                                   
         staf = Fin_Staff_Details.objects.get(Login_Id = sid)
         allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id_id)
         loan = Fin_Loan.objects.get(id=pk)
+        com=staf.company_id
         employee = Employee.objects.filter(company=staf.company_id)
         term=Fin_Loan_Term.objects.filter(company=staf.company_id)
         banks=Fin_Banking.objects.filter(company=staf.company_id)
@@ -2202,37 +2218,47 @@ def emploanedit(request, pk):                                                   
                     'loan':loan,
                     'employee':employee,
                     'term':term,
-                    'banks':banks
+                    'banks':banks,
+                    'com':com
             }
  
         if request.method=='POST':
-            b=Fin_Employee_Loan_History.objects.get(employee_loan=pk)
-            c=Fin_Employee_Loan_Transactions.objects.get(employee_loan=pk)
-            t=Fin_Employee_Loan_Transactions_History()
+        
+    
+        
+
             loan = Fin_Loan.objects.get(id=pk)
+            b=Fin_Employee_Loan_History()
+            c=Fin_Employee_Loan_Transactions.objects.get(id=pk)
+            c.balance=request.POST.get("loan_amount",None)
+            t=Fin_Employee_Loan_Transactions_History()
 
             t.company=staf.company_id
             t.login_details=login
             t.action="Edited"
             t.date=date.today()
-            t.transaction=c.id
+            t.transaction=c
             t.employee_loan=loan
 
             t.save()
-            c.balance=loan_amount=request.POST.get("loan_amount",None)
             c.save()
-            
-   
             b.company=staf.company_id
             b.login_details=login
             b.action="Edited"
             b.date=date.today()
+   
+        
             loan.login_details=login
             loan.company=staf.company_id
             emp=request.POST["employee"]
             emp1=Employee.objects.get(id=emp)
             employee_name1 =emp1.title +" " + emp1.first_name + " " + emp1.last_name
             loan.employee_name = employee_name1
+            
+            
+            loanduration=request.POST.get("loanduration",None)
+            term=Fin_Loan_Term.objects.get(id=loanduration)
+            loan.loan_duration=term
             loan.employeeid = request.POST.get("empid",None)
             loan.employee_email = request.POST.get("empemail",None)
             loan.salary=request.POST.get("salary",None)
@@ -2266,7 +2292,12 @@ def emploanedit(request, pk):                                                   
             t=Fin_Loan.objects.get(id=loan.id)
             b.employee_loan=t
             b.save()
-
+            current_utc_time = datetime.now(timezone.utc)
+            history=Fin_Employee_Loan_History(company = staf.company_id,login_details=login,employee_loan = loan,date = current_utc_time,action = 'Edited')
+            history.save()
+            # Save the changes
+        
+            # Redirect to another page after successful update
             return redirect('employee_loan_list')
         return render(request, 'company/Employee_loan_edit.html',context)
 
@@ -2286,13 +2317,14 @@ def emploanrepayment(request,pk):
         
     elif login.User_Type == 'Staff' :
         staf = Fin_Staff_Details.objects.get(Login_Id = sid)
+        com=staf.company_id
         loan = Fin_Loan.objects.get(id=pk)
         allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id_id)
         employee = Employee.objects.get(id=loan.employee.id)
         trans=Fin_Employee_Loan_Transactions.objects.filter(employee=loan.employee)
       
 
-    return render(request,'company/Employee_loan_repayment.html',{'allmodules':allmodules,'loan':loan,'employee':employee,'trans':trans})    
+    return render(request,'company/Employee_loan_repayment.html',{'allmodules':allmodules,'loan':loan,'employee':employee,'trans':trans,'com':com})    
 
 
 
@@ -2365,6 +2397,7 @@ def emploanrepaymentsave(request,pk):
             staf = Fin_Staff_Details.objects.get(Login_Id = sid)
             allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id_id)
             employee = Employee.objects.filter(company_id=staf.company_id_id)
+            com=staf.company_id
                 
 
             if request.method == 'POST':
@@ -2390,7 +2423,7 @@ def emploanrepaymentsave(request,pk):
                 
                 sid = request.session['s_id']
                 employee = Fin_Login_Details.objects.get(id=sid)
-                companykey =  Fin_Company_Details.objects.get(Login_Id=sid)
+              
                 loan=Fin_Loan.objects.get(id=pk)
                 emp=Employee.objects.get(id=loan.employee.id)
                 # Assuming principle_amount is a string, convert it to an integer
@@ -2458,7 +2491,8 @@ def emploanrepaymentedit(request, pk):                                          
                     'allmodules':allmodules,
                     'loan':loan,
                     'employee':employee,
-                    'loan_re':loan_re
+                    'loan_re':loan_re,
+                    'com':com
             }
        
     
@@ -2553,6 +2587,7 @@ def emploanrepaymentedit(request, pk):                                          
         return render(request, 'company/Employee_loan_repayment_edit.html',context)
     if login.User_Type == 'Staff':
             staf = Fin_Staff_Details.objects.get(Login_Id = sid)
+            com=staf.company_id
             allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id_id)
             # employee = Employee.objects.filter(company_id=staf.company_id_id)
             allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id_id)
@@ -2563,15 +2598,18 @@ def emploanrepaymentedit(request, pk):                                          
                         'allmodules':allmodules,
                         # 'loan':loan,
                         'employee':employee,
-                        'loan_re':loan_re
+                        'loan_re':loan_re,
+                        'com':com
                 }
         
         
             
-            if request.method=='POST':
+
         
-    
-     
+            if request.method=='POST':
+            
+        
+        
                 loan1 = Fin_Employee_Loan_Repayment.objects.get(id=pk)
                 c=Fin_Employee_Loan_Transactions.objects.get(repayment=loan1)
                 loan2 = Fin_Loan.objects.get(id=loan_re.employee_loan.id)
@@ -2651,7 +2689,7 @@ def emploanrepaymentedit(request, pk):                                          
                 loan2.save()
                 loan1.save()
                 c.save()
-                trans2 = Fin_Employee_Loan_Transactions_History(company =staf.company_id ,login_details=login,repayment=loan1,date = date.today(),transaction=c,action='Edited')
+                trans2 = Fin_Employee_Loan_Transactions_History(company =com ,login_details=login,repayment=loan1,date = date.today(),transaction=c,action='Edited')
                 trans2.save()
 
                 return redirect('emploanoverview',loan2.id)
@@ -2672,13 +2710,14 @@ def emploanaddtional(request,pk):
         
     elif login.User_Type == 'Staff' :
         staf = Fin_Staff_Details.objects.get(Login_Id = sid)
+        com=staf.company_id
         allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id_id)
         loan = Fin_Loan.objects.get(id=pk)
         employee = Employee.objects.filter(company_id=staf.company_id_id)
         trans=Fin_Employee_Loan_Transactions.objects.filter(employee_loan=loan)
       
 
-    return render(request,'company/Employee_loan_addtional.html',{'allmodules':allmodules,'loan':loan,'employee':employee,'trans':trans})    
+    return render(request,'company/Employee_loan_addtional.html',{'allmodules':allmodules,'loan':loan,'employee':employee,'trans':trans,'com':com})    
 
 
 
@@ -2772,6 +2811,7 @@ def emploanadditionalsave(request,pk):
                 com = Fin_Employee_Additional_Loan.objects.get(id=new.id)
                 trans = Fin_Employee_Loan_Transactions(company = staf.company_id,login_details=employee,employee_loan =loan,date = payment_date,particulars = 'ADDITIONAL LOAN',employee=emp,additional=com,balance=total_loan)
                 trans.save()
+                t = Fin_Employee_Loan_Transactions.objects.get(id=trans.id)
                 trans2 = Fin_Employee_Loan_Transactions_History(company =staf.company_id ,login_details=employee,additional =com,date = payment_date,transaction=t,action='Created')
                 trans2.save()
 
@@ -2805,7 +2845,8 @@ def emploanadditionedit(request, pk):                                           
                     'allmodules':allmodules,
                     'loan':loan,
                     # 'employee':employee,
-                    'loan_ad':loan_ad
+                    'loan_ad':loan_ad,
+                    'com':com
             }
        
     
@@ -2926,6 +2967,7 @@ def emploanadditionedit(request, pk):                                           
     if login.User_Type == 'Staff':
 
         staf = Fin_Staff_Details.objects.get(Login_Id = sid)
+        com=staf.company_id
         allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id)
         
         loan_ad = Fin_Employee_Additional_Loan.objects.get(id=pk)
@@ -2935,7 +2977,8 @@ def emploanadditionedit(request, pk):                                           
                     'allmodules':allmodules,
                     'loan':loan,
                     # 'employee':employee,
-                    'loan_ad':loan_ad
+                    'loan_ad':loan_ad,
+                    'com':com
             }
        
     

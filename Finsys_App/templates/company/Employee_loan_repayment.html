@@ -19,6 +19,9 @@
     </div>
 </div> -->
 <div class="page-content" onmouseover="updateTotal()">
+
+  <a href="{% url 'employee_loan_list' %}">
+    <i class="fa fa-times-circle text-white" style="font-size: 1.2rem;margin-left: 100%;"></i></a>
 <div class="card radius-15 p-5 ">
 <form id="bankForm" method="post" action="{% url 'emploanrepaymentsave' loan.id %}" style="margin-left: 10%;margin-right: 10%;">
     <div class="col-md-12">
