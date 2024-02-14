@@ -81,7 +81,7 @@
                     <tbody>
                         {% for d in loan %}
                         <tr>
-                            <td  style="text-align: center;">{{d.id}}</td>
+                            <td  style="text-align: center;">{{forloop.counter}}</td>
                             <td style="text-align: center;"><a href="{% url 'emploanoverview' d.id %}"> {{d.loan_date}}</a></td>
                             <td  style="text-align: center;"><a href="{% url 'emploanoverview' d.id %}">{{d.employee_name}}</a></td>
                             <td  style="text-align: center;"><a href="{% url 'emploanoverview' d.id %}">{{d.employeeid}}</a></td>

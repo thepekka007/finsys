@@ -288,6 +288,7 @@ class Fin_Loan(models.Model):
     
     status = models.CharField(max_length=255,null=True,blank=True,default='Active')
     balance = models.IntegerField(null=True,blank=True)
+    transaction_count = models.IntegerField(null=True,blank=True,default=0)
 
 
 class Fin_Employee_Loan_History(models.Model):

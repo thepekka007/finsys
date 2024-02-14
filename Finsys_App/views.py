@@ -2364,6 +2364,11 @@ def emploanrepaymentsave(request,pk):
 
                 # Perform the subtraction
                 balance = loan.balance - principle_amount_int
+
+
+                #transaction count 
+
+                loan.transaction_count=loan.transaction_count+1
                 
                 
 
@@ -2433,7 +2438,9 @@ def emploanrepaymentsave(request,pk):
                 balance = loan.balance - principle_amount_int
                 
                 
+                #transaction count 
 
+                loan.transaction_count=loan.transaction_count+1
                 
                 loan.balance=balance
                 loan.save()
@@ -2761,6 +2768,10 @@ def emploanadditionalsave(request,pk):
                 # loan.total_loan= int(new_loan)
                 emp=Employee.objects.get(id=loan.employee.id)
 
+                #transaction count 
+
+                loan.transaction_count=loan.transaction_count+1
+
                 # loan.balance=total_loan
                 # print(loan.balance)
                 # loan_amount=int(loan.total_loan)
@@ -2799,6 +2810,10 @@ def emploanadditionalsave(request,pk):
                 print(new)
                 loan.total_loan=loan_amount+new
                 print(loan.total_loan)
+
+                #transaction count 
+
+                loan.transaction_count=loan.transaction_count+1
                 loan.save()
                 
 
@@ -3795,6 +3810,10 @@ def delete_loan_repayment(request,pk):                                          
     princ=acc.principle_amount
     loan_trans = Fin_Employee_Loan_Transactions.objects.filter(Q(employee_loan=c.employee_loan) & Q(id__gte=c.id))
     cd=Fin_Loan.objects.get(id=c.employee_loan.id)
+
+    #transaction count --
+
+    cd.transaction_count=cd.transaction_count-1
     bal=c.balance
     cd.balance=bal+princ
     cd.save()
@@ -3820,6 +3839,9 @@ def delete_loan_additional(request,pk):                                         
     loanadded=acc.new_loan
     loan_trans = Fin_Employee_Loan_Transactions.objects.filter(Q(employee_loan=c.employee_loan) & Q(id__gte=c.id))
     cd=Fin_Loan.objects.get(id=c.employee_loan.id)
+    #transaction count --
+
+    cd.transaction_count=cd.transaction_count-1
     bal=c.balance
     cd.balance=bal-loanadded
     cd.save()
