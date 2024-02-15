@@ -68,8 +68,143 @@
 </script>
                             </div>
                         </div>
-                        
+                        <br>
                         <div class="row">
+                            <div class="col-md-5">
+                        <div class="form-group" >
+                            <td><Label>Payment Type </Label></td>
+                            <td>  <select name="select_payment" id="select_payment" onclick="show_fields()"  class="form-control "  >
+                                <option value="no_option" style="background-color: #294f76;">select</option>
+                                <option value="Cash" style="background-color: #294f76;">Cash</option>
+                                <option value="Cheque" style="background-color: #294f76;">Cheque</option>
+                                <option value="UPI" style="background-color: #294f76;">UPI</option>
+                             {% for i in banks %}
+<option value="{{ i.id }}" style="background-color: #294f76;">
+{{ i.bank_name }} ( ********  {{ "*"|stringformat:"<"|rjust:12 }}{{ i.account_number|slice:"-4:" }})
+</option>
+{% endfor %}
+
+                            </select> </td>
+                    </div>
+                </tr>
+            </div>
+            <div class="col">
+                <tr>
+                    
+                    <div class="form-group" >
+                 </div>
+                </tr>
+                <tr >
+                    <div class="form-group"  >
+               
+                </div>
+           
+                <div  style="margin-left: 30%;">
+                    <div class="col-md-20">
+                    <div class="form-group" > 
+                        <td><Label id="cheque_no_label" style="display: none;">Cheque Number</Label></td>
+                        <td>
+                            <td><input placeholder="Cheque Number"  style="display: none;" name="cheque_no" id="cheque_no" type="text" class="form-control"></td>
+                      
+                        </td>
+                    </div>
+                    <div class="form-group" > 
+                        <td><Label id="upi_id_label" style="display: none;">UPI ID</Label></td>
+                        <td>
+                            <td><input placeholder=" upi_id_label"  style="display: none;" name="upi_id" id="upi_id" type="text" class="form-control"></td>
+                      
+                        </td>
+                    </div>
+                    <div class="form-group" > 
+                        <td><Label id="acc_no_label" style="display: none;">Ac/Number</Label></td>
+                        <td>
+
+                            <td><input placeholder=" upi_id_label"  style="display: none;" name="acc_no" id="acc_no" type="text" class="form-control"></td>
+                      
+                        </td>
+                    </div>
+                </tr>
+            </div>
+        </div>
+     
+
+        <script>
+            function show_fields()
+        {
+            var option=document.getElementById('select_payment').value;
+            if(option == 'Cash'){
+                document.getElementById('acc_no_label').style.display='none';
+                document.getElementById('acc_no').style.display='none';
+                document.getElementById('cheque_no_label').style.display='none';
+                document.getElementById('cheque_no').style.display='none';
+                document.getElementById('upi_id_label').style.display='none';
+                document.getElementById('upi_id').style.display='none';
+            }
+            else if(option == 'Cheque'){
+                document.getElementById('acc_no_label').style.display='none';
+                document.getElementById('acc_no').style.display='none';
+                document.getElementById('cheque_no_label').style.display='block';
+                document.getElementById('cheque_no').style.display='block';
+                document.getElementById('upi_id_label').style.display='none';
+                document.getElementById('upi_id').style.display='none';
+      
+            }
+            else if(option == 'UPI'){
+                document.getElementById('acc_no_label').style.display='none';
+                document.getElementById('acc_no').style.display='none';
+                document.getElementById('cheque_no_label').style.display='none';
+                document.getElementById('cheque_no').style.display='none';
+                document.getElementById('upi_id_label').style.display='block';
+                document.getElementById('upi_id').style.display='block';
+            }
+            else if(option == 'no_option'){
+                document.getElementById('acc_no_label').style.display='none';
+                document.getElementById('acc_no').style.display='none';
+                document.getElementById('cheque_no_label').style.display='none';
+                document.getElementById('cheque_no').style.display='none';
+                document.getElementById('upi_id_label').style.display='none';
+                document.getElementById('upi_id').style.display='none';
+            }
+            else
+            {
+                
+                document.getElementById('acc_no_label').style.display='block';
+                document.getElementById('acc_no').style.display='block';
+                document.getElementById('cheque_no_label').style.display='none';
+                document.getElementById('cheque_no').style.display='none';
+                document.getElementById('upi_id_label').style.display='none';
+                document.getElementById('upi_id').style.display='none';
+      
+               
+                          var customer = $('#select_payment').val();
+                  
+      
+                          $.ajax({
+                          type: "GET",
+                          url: "{% url 'bankdata' %}",
+                          data: {
+                          id: customer
+                          },
+                          success: function (response) {
+                          // Assuming response.days is a valid number
+                          var acc = response.acc;
+                          var name = response.name;
+      
+                          console.log(acc);
+      
+                          // Display the formatted expiry date in the expdateid field
+                          $("#acc_no").val(acc);
+                       
+                          }
+                          });
+                          }
+            }
+      
+      
+      
+         
+      </script>
+                        <!-- <div class="row">
                             <div class="col-md-5">
                                 <label class="col-form-label">Payment Type</label>
                                 <select class="form-control my-select" id="pay_method" name="payment_method" style="background-color: #43596c;" required>
@@ -95,7 +230,10 @@
                                 <label class="col-form-label" >Bank Account</label>
                                 <input type="text" class="form-control" name="bnk_id" id="bnk_id" style="background-color: #43596c;" readonly>
                             </div>
-                        </div>
+                        </div> -->
+
+
+<br><br><br>
                         <div class="row mb-5">
                             <div class="col-md-8 mt-3"></div>
                             <div class="col-md-2 mt-3">

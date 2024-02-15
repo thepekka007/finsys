@@ -731,14 +731,24 @@ $('.delete-item').click(function () {
     $.ajax({
         url: "{% url 'get_repayment_data' %}",
         data: {
-            repaymentId2: repaymentId
+            repaymentId2: repaymentId,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+            
         },
         type: "GET",
         dataType: "json",
-        csrfmiddlewaretoken: '{{ csrf_token }}',
+       
 
         success: function (data) {
             console.log("success2");
+
+            var dropdown = $('#employeeid');
+    
+    $.each(data, function(key, value) {
+ 
+      dropdown.append($('<option></option>').attr('value', key).text(value[0] + " " + value[1] + " " + value[2]));
+
+    });
 
             // Clear existing table rows
             $('#repay1 tbody').empty();
@@ -752,9 +762,12 @@ $('.delete-item').click(function () {
                     "<td>" + value[2] + "</td>" +
                     "</tr>";
 
-                $('#repay1 tbody').append(newRow);
+                $('#repay1-body').append(newRow);
             });
         },
+          error: function (xhr, status, error) {
+            console.error("Error:", error);
+        }
     });
 });
 
@@ -2365,6 +2378,10 @@ function shareOnWhatsApp() {
                 </button>
             </div>
             <div class="modal-body">
+                <!-- <select  class="form-control" name="employee" id="employeeid" style="width: 93%;">
+                    <option value="">--select Employee--</option>
+               
+            </select>     -->
                <table class="table text-light table-borderless " id="repay1" style="margin:3px;width: 100%;">
                   <thead>
                     <tr>
@@ -2380,20 +2397,10 @@ function shareOnWhatsApp() {
                       </th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="repay1-body">
+                 
+                </tbody>
                 
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                       
-                      </tr>    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                       
-                      </tr>
-                  </tbody>
                 </table>
           
             </div>
