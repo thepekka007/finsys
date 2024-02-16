@@ -635,6 +635,7 @@ footer p {
                         <div class="row">
                             <div class="col"><h5> {{loan.account_number}}</h5></div>
                             <div class="col ml-2"></div>
+                            
                             <div class="col"><h5 class="ml-5">BALANCE : {{loan.balance}}</h5></div>
 
                         </div>
@@ -2228,7 +2229,7 @@ $.ajax({
               {% for i in latest_item_id %}
               <tr>
                 <td>{{forloop.counter}}</td>
-                <td>{{i.date}}</td>
+                <td>{{i.date|date:'Y-m-d'}}</td>
                 <td>{{i.action}}</td>
                 <td>{{ i.login_details.title }}&nbsp;{{ i.login_details.First_name }}&nbsp;{{ i.login_details.Last_name }}</td>
               </tr>
@@ -2355,6 +2356,10 @@ function shareOnWhatsApp() {
                 <label for="item_unitname"  style="color: #ffffff;">Message(optional)</label>
                 <textarea name="email_message"  style="color: #ffffff;" id="email_message" class="text-white form-control" cols=""
                   rows="4" placeholder="This message will be sent along with Bill details."></textarea>
+                <!-- Add these hidden input fields inside the modal form -->
+<input type="date" name="fdate_modal" id="fdate_modal" hidden />
+<input type="date" name="ldate_modal" id="ldate_modal" hidden/>
+
               </div>
        
           </div>
@@ -2368,6 +2373,30 @@ function shareOnWhatsApp() {
       </div>
     </div>
   </div>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+  <script>
+    // Update the date input fields in the modal when the dates outside the modal are changed
+    $('#fdate, #ldate').on('change', function() {
+      var fromDate = $('#fdate').val();
+      var toDate = $('#ldate').val();
+  
+      // Update the date input fields inside the modal
+      $('#fdate_modal').val(fromDate);
+      $('#ldate_modal').val(toDate);
+    });
+  
+    // Example using the existing JavaScript code for setting the date range
+    document.getElementById('fdate').addEventListener('change', function() {
+      document.getElementById('fdate_modal').value = this.value;
+    });
+  
+    document.getElementById('ldate').addEventListener('change', function() {
+      document.getElementById('ldate_modal').value = this.value;
+    });
+  </script>
+  
+  
   <div class="modal" id="history2" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

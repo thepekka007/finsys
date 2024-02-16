@@ -8,6 +8,13 @@
 <link href="{% static 'assets/fontawesome/css/solid.css' %}" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Include Bootstrap CSS and JS -->
+<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
 <style>         /* SEARCH STYLE */
     /* Style the Select2 search input */
     .select2-search__field {
@@ -79,7 +86,7 @@
                         <tr >
                             <div class="form-group" >
                                     <td><Label>Employee ID</Label></td>
-                                    <td><input placeholder="Employee id" required name="empid" id="empiid" type="number" class="form-control"></td>
+                                    <td><input placeholder="Employee id" required name="empid" id="empiid" type="text" class="form-control"></td>
                             </div>
                         </tr>
                     </div>
@@ -662,7 +669,24 @@
                                 <tr>
                                     <div class="form-group col" >
                                         <td><Label>Blood Group</Label></td>
-                                        <td>
+                                        <div style="display: flex;">
+                                            <select name="Blood" id="bloodGroupSelect" style="width: 85%;" class="form-control col-11" fdprocessedid="9ywxh">
+                                                <option value="">--select--</option>
+                                                <option value="A+">A+</option>
+                                                <option value="A-">A-</option>
+                                                <option value="B+">B+</option>
+                                                <option value="B-">O+</option>
+                                                {% for i in bloodgroup %}
+                                                <option value="{{i.blood_group}}">{{i.blood_group}}</option>
+                                                {% endfor %}
+                                                
+                                                
+                                                <!-- <option value="H">H</option> -->
+                                                
+                                            </select>      
+                                            <button onclick="handleBloodSelection()" class="btn btn-outline-secondary text-grey mb-2 ml-1" fdprocessedid="7q79gc">+</button>   
+                                        </div>
+                                        <!-- <td>
                                             <select name="Blood" id="bloodGroupSelect" class="form-control" onchange="handleBloodSelection(this.value)">
                                                 <option value="">--select--</option>
                                                 <option value="A+">A+</option>
@@ -678,13 +702,14 @@
                                                 
                                             </select>
                                             
-                                        </td>
+                                        </td> -->
                                     </div>
+                                   
                                     <script>
                                         function handleBloodSelection(value) {
-                                            if (value === 'add') {
+                                           
                                                 $('#bloodGroupModal').modal('show');
-                                            }
+                                            
                                         }
                                     </script>
                                     
@@ -1616,12 +1641,18 @@ $(document).on("click", "#UnitSave2", function(event) {
           csrfmiddlewaretoken: '{{ csrf_token }}'
         },
         success: function(response) {
-          if (response.message === 'success') {
+            if (response.message) {
+        // Display the modal with the error message
+        $('#errorModalBody').text(response.message);
+        $('#errorModal').modal('show');
+      } else {
+        //   if (response.message === 'success') {
             document.getElementById("emploandata").reset();
             console.log("success1")
             reloadEnit();
-          } else {
-            $("#error-message-container").text("Unit with the same name exists");
+        //   } else {
+        //     window.location.reload();
+        //     $("#error-message-container").text("Unit with the same name exists");
           }
         },
       });
@@ -1901,10 +1932,10 @@ $(document).on("click", "#UnitSave2", function(event) {
                 }
         
                 // Add the "Add Blood Group" option
-                bloodGroupSelect.append($('<option>', {
-                    value: 'add',
-                    text: 'Add Blood Group'
-                }));
+                // bloodGroupSelect.append($('<option>', {
+                //     value: 'add',
+                //     text: 'Add Blood Group'
+                // }));
                 
                 $('#bloodGroupModal').modal('hide');
             }
@@ -2193,4 +2224,29 @@ $(document).on("click", "#UnitSave2", function(event) {
         // 
         
         </script>   
+<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="errorModalLabel">Error</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="reloadPage()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="errorModalBody">
+          <!-- Error message will be displayed here -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="reloadPage()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function reloadPage() {
+      location.reload();
+    }
+  </script>
+        
 {% endblock %}
