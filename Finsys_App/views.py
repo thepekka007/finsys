@@ -1899,6 +1899,7 @@ def employee_loan_create_page(request):
         term=Fin_Loan_Term.objects.filter(company=com)
         
         banks=Fin_Banking.objects.filter(company=com)
+        bloodgroup = Fin_Employee_Blood_Group.objects.filter(company_id=com.id,login_id=sid).values('blood_group').distinct()
       
         
     elif login.User_Type == 'Staff' :
@@ -1908,9 +1909,10 @@ def employee_loan_create_page(request):
         employee = Employee.objects.filter(company_id=staf.company_id_id,employee_status='Active')
         term=Fin_Loan_Term.objects.filter(company=staf.company_id)
         banks=Fin_Banking.objects.filter(company=staf.company_id)
+        bloodgroup = Fin_Employee_Blood_Group.objects.filter(company_id=com.id,login_id=sid).values('blood_group').distinct()
       
 
-    return render(request,'company/Employee_loan_create.html',{'allmodules':allmodules,'employee':employee,'term':term,'banks':banks,'com':com})    
+    return render(request,'company/Employee_loan_create.html',{'allmodules':allmodules,'employee':employee,'term':term,'banks':banks,'com':com,'bloodgroup':bloodgroup})    
 
 def employeedata(request):
     sid = request.session['s_id']
@@ -2635,6 +2637,7 @@ def emploanrepaymentedit(request, pk):                                          
                 print("newprin")
                 print(newprincipleamount)
                 c.balance=c.balance-newprincipleamount
+                loan2.balance=loan2.balance-newprincipleamount
                 for i in loan_trans:
                     print(i.balance)
                   
@@ -2647,6 +2650,7 @@ def emploanrepaymentedit(request, pk):                                          
                 print("newprin")
                 print(newprincipleamount)
                 c.balance=c.balance+newprincipleamount
+                loan2.balance=loan2.balance+newprincipleamount
                 for i in loan_trans:
                     print(i.balance)
                   
@@ -2746,6 +2750,7 @@ def emploanrepaymentedit(request, pk):                                          
                     print("newprin")
                     print(newprincipleamount)
                     c.balance=c.balance-newprincipleamount
+                    loan2.balance=loan2.balance-newprincipleamount
                     for i in loan_trans:
                         print(i.balance)
                     
@@ -2757,6 +2762,7 @@ def emploanrepaymentedit(request, pk):                                          
                     newprincipleamount=previous_principle_amount-principle_amount_new
                     print("newprin")
                     print(newprincipleamount)
+                    loan2.balance=loan2.balance+newprincipleamount
                     c.balance=c.balance+newprincipleamount
                     for i in loan_trans:
                         print(i.balance)
@@ -4352,3 +4358,247 @@ def emploanedit(request, pk):                                                   
                 # Redirect to another page after successful update
                 return redirect('emploanoverview',loan.id)
         return render(request, 'company/Employee_loan_edit.html',context)
+
+
+
+
+# to update
+    
+
+def emploanrepaymentedit(request, pk):                                                                #new by tinto mt
+  
+    sid = request.session['s_id']
+    login = Fin_Login_Details.objects.get(id=sid)
+
+    
+    # Retrieve the chart of accounts entry
+    # loan = get_object_or_404(Loan, id=pk)
+    
+
+    # Check if 'company_id' is in the session
+
+   
+    if login.User_Type == 'Company':
+      
+     
+        com = Fin_Company_Details.objects.get(Login_Id = sid)
+        allmodules = Fin_Modules_List.objects.get(company_id = com.id)
+        
+        loan_re = Fin_Employee_Loan_Repayment.objects.get(id=pk)
+        loan = Fin_Loan.objects.get(id=loan_re.employee_loan.id)
+        employee = Employee.objects.get(id=loan_re.employee.id)
+        banks=Fin_Banking.objects.filter(company=com)
+        context = {
+                    'allmodules':allmodules,
+                    'loan':loan,
+                    'employee':employee,
+                    'loan_re':loan_re,
+                    'com':com,
+                    'banks':banks
+            }
+       
+    
+        
+        if request.method=='POST':
+        
+    
+     
+            loan1 = Fin_Employee_Loan_Repayment.objects.get(id=pk)
+            c=Fin_Employee_Loan_Transactions.objects.get(repayment=loan1)
+            loan2 = Fin_Loan.objects.get(id=loan_re.employee_loan.id)
+            # t=Fin_Employee_Loan_Transactions_History()
+
+            # t.company=com
+            # t.login_details=login
+            # t.action="Edited"
+            # t.date=date.today()
+            # t.transaction=c
+            # t.repayment=loan1
+            # t.employee_loan=loan2
+
+            # t.save()
+            
+   
+       
+            loan1.login_details=login
+            loan1.company=com
+         
+    
+           
+            
+
+            previous_principle_amount=loan1.principle_amount
+            previous_principle_amount=int(previous_principle_amount) #5000
+
+            principle_amount=request.POST.get("principal",None)
+            principle_amount_new=int(principle_amount)
+            previousbalance=c.balance
+            previousbalance=int(previousbalance)
+            loan_trans = Fin_Employee_Loan_Transactions.objects.filter(Q(employee_loan=c.employee_loan) & Q(id__gte=c.id))
+            print("s")
+            for i in loan_trans:
+                print(i.balance)
+                print("s1")
+
+            if previous_principle_amount<principle_amount_new:
+                newprincipleamount=principle_amount_new-previous_principle_amount
+                print("newprin")
+                print(newprincipleamount)
+                c.balance=c.balance-newprincipleamount
+                loan2.balance=loan2.balance-newprincipleamount
+                for i in loan_trans:
+                    print(i.balance)
+                  
+                    i.balance=i.balance-newprincipleamount
+                    i.save()
+                    print(i.balance)
+                    print("s3")
+            if previous_principle_amount>principle_amount_new:
+                newprincipleamount=previous_principle_amount-principle_amount_new
+                print("newprin")
+                print(newprincipleamount)
+                c.balance=c.balance+newprincipleamount
+                loan2.balance=loan2.balance+newprincipleamount
+                for i in loan_trans:
+                    print(i.balance)
+                  
+                    i.balance=i.balance+newprincipleamount
+                    i.save()
+                    print(i.balance)
+                    print("s3")
+        
+
+
+
+
+            loan1.principle_amount=request.POST.get("principal",None)
+            loan1.interest_amount=request.POST.get("interest",None)
+            loan1.payment_date=request.POST.get("date",None)
+            loan1.total_amount=request.POST.get("total",None)
+            loan1.principle_amount=request.POST.get("principal",None)
+
+            loan1.payment_method=request.POST.get("recieved",None)
+            loan1.cheque_number=request.POST.get("paid_cheque_id",None)
+            loan1.upi_id=request.POST.get("paid_upi_id",None)
+            loan1.bank_account=request.POST.get("paid_bnk_id",None)
+            loan2.save()
+            loan1.save()
+            c.save()
+            trans2 = Fin_Employee_Loan_Transactions_History(company =com ,login_details=login,repayment=loan1,date = date.today(),transaction=c,action='Edited')
+            trans2.save()
+
+            return redirect('emploanoverview',loan2.id)
+        return render(request, 'company/Employee_loan_repayment_edit.html',context)
+    if login.User_Type == 'Staff':
+            staf = Fin_Staff_Details.objects.get(Login_Id = sid)
+            com=staf.company_id
+            allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id_id)
+            # employee = Employee.objects.filter(company_id=staf.company_id_id)
+            allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id_id)
+            # loan = Loan.objects.get(id=pk)
+            loan_re = Fin_Employee_Loan_Repayment.objects.get(id=pk)
+            employee = Employee.objects.get(id=loan_re.employee.id)
+            banks=Fin_Banking.objects.filter(company=com)
+            context = {
+                        'allmodules':allmodules,
+                        # 'loan':loan,
+                        'employee':employee,
+                        'loan_re':loan_re,
+                        'com':com,
+                        'banks':banks
+                }
+        
+        
+            
+
+        
+            if request.method=='POST':
+            
+        
+        
+                loan1 = Fin_Employee_Loan_Repayment.objects.get(id=pk)
+                c=Fin_Employee_Loan_Transactions.objects.get(repayment=loan1)
+                loan2 = Fin_Loan.objects.get(id=loan_re.employee_loan.id)
+                # t=Fin_Employee_Loan_Transactions_History()
+
+                # t.company=com
+                # t.login_details=login
+                # t.action="Edited"
+                # t.date=date.today()
+                # t.transaction=c
+                # t.repayment=loan1
+                # t.employee_loan=loan2
+
+                # t.save()
+                
+    
+        
+                loan1.login_details=login
+                loan1.company=com
+            
+        
+            
+                
+
+                previous_principle_amount=loan1.principle_amount
+                previous_principle_amount=int(previous_principle_amount) #5000
+
+                principle_amount=request.POST.get("principal",None)
+                principle_amount_new=int(principle_amount)
+                previousbalance=c.balance
+                previousbalance=int(previousbalance)
+                loan_trans = Fin_Employee_Loan_Transactions.objects.filter(Q(employee_loan=c.employee_loan) & Q(id__gte=c.id))
+                print("s")
+                for i in loan_trans:
+                    print(i.balance)
+                    print("s1")
+
+                if previous_principle_amount<principle_amount_new:
+                    newprincipleamount=principle_amount_new-previous_principle_amount
+                    print("newprin")
+                    print(newprincipleamount)
+                    c.balance=c.balance-newprincipleamount
+                    loan2.balance=loan2.balance-newprincipleamount
+                    for i in loan_trans:
+                        print(i.balance)
+                    
+                        i.balance=i.balance-newprincipleamount
+                        i.save()
+                        print(i.balance)
+                        print("s3")
+                if previous_principle_amount>principle_amount_new:
+                    newprincipleamount=previous_principle_amount-principle_amount_new
+                    print("newprin")
+                    print(newprincipleamount)
+                    loan2.balance=loan2.balance+newprincipleamount
+                    c.balance=c.balance+newprincipleamount
+                    for i in loan_trans:
+                        print(i.balance)
+                    
+                        i.balance=i.balance+newprincipleamount
+                        i.save()
+                        print(i.balance)
+                        print("s3")
+            
+
+
+
+
+                loan1.principle_amount=request.POST.get("principal",None)
+                loan1.interest_amount=request.POST.get("interest",None)
+                loan1.payment_date=request.POST.get("date",None)
+                loan1.total_amount=request.POST.get("total",None)
+                loan1.principle_amount=request.POST.get("principal",None)
+
+                loan1.payment_method=request.POST.get("recieved",None)
+                loan1.cheque_number=request.POST.get("paid_cheque_id",None)
+                loan1.upi_id=request.POST.get("paid_upi_id",None)
+                loan1.bank_account=request.POST.get("paid_bnk_id",None)
+                loan2.save()
+                loan1.save()
+                c.save()
+                trans2 = Fin_Employee_Loan_Transactions_History(company =com ,login_details=login,repayment=loan1,date = date.today(),transaction=c,action='Edited')
+                trans2.save()
+
+                return redirect('emploanoverview',loan2.id)
+            return render(request, 'company/Employee_loan_repayment_edit.html',context)

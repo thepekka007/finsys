@@ -13,7 +13,7 @@
 
 <!-- Include Bootstrap CSS and JS -->
 <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
 
 <style>         /* SEARCH STYLE */
     /* Style the Select2 search input */
@@ -1641,15 +1641,17 @@ $(document).on("click", "#UnitSave2", function(event) {
           csrfmiddlewaretoken: '{{ csrf_token }}'
         },
         success: function(response) {
-            if (response.message) {
+            if (response.message === 'success') {
         // Display the modal with the error message
-        $('#errorModalBody').text(response.message);
-        $('#errorModal').modal('show');
-      } else {
-        //   if (response.message === 'success') {
-            document.getElementById("emploandata").reset();
+        document.getElementById("emploandata").reset();
             console.log("success1")
             reloadEnit();
+      } else {
+        //   if (response.message === 'success') {
+          
+
+            $('#errorModalBody').text(response.message);
+        $('#errorModal').modal('show');
         //   } else {
         //     window.location.reload();
         //     $("#error-message-container").text("Unit with the same name exists");
