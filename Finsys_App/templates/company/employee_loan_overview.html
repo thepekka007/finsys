@@ -752,7 +752,7 @@ $('.delete-item').click(function () {
     });
 
             // Clear existing table rows
-            $('#repay1 tbody').empty();
+            $('#repay2 tbody').empty();
 
             // Update the table with the received data
             $.each(data, function (index, value) {
@@ -763,7 +763,7 @@ $('.delete-item').click(function () {
                     "<td>" + value[2] + "</td>" +
                     "</tr>";
 
-                $('#repay1-body').append(newRow);
+                $('#repay2-body').append(newRow);
             });
         },
           error: function (xhr, status, error) {
@@ -1629,8 +1629,9 @@ $('.delete-item').click(function () {
                                 <thead>
                                 <tr style="color: #000000;" > 
                                    <!-- Inside the <thead> section of your table -->
-                                    <th style="color: #000000;"><h6><b style="color: #000000;">DATE</b></h6></th>
+                                  
                                     <th ><h6><b style="color: #000000;"> PARTICULARS </b></h6></th>
+                                    <th style="color: #000000;"><h6><b style="color: #000000;">DATE</b></h6></th>
                                     <th style="color: #000000;"><h6><b style="color: #000000;">AMOUNT</b></h6></th>
                                     <th style="color: #000000;"><h6><b style="color: #000000;">INTEREST</b></h6></th>
                                     <th style="color: #000000;"><h6><b style="color: #000000;">TOTAL AMOUNT</b></h6></th>
@@ -1642,15 +1643,18 @@ $('.delete-item').click(function () {
                                 <tbody>
                      
                                     {% for i in trans %}
-                            <tr >   <td style="color: #000000;">{{i.date}}</td> 
+                            <tr >  
                                           
                                 <td style="color: #000000;">{{ i.particulars }}</td>
                                 {% if i.particulars == 'LOAN ISSUED' %}
+                                             <td style="color: #000000;">{{i.employee_loan.loan_date}}</td> 
                                             <td style="color: #000000;">{{ i.employee_loan.loan_amount }}</td>
                                             {% elif i.particulars == 'EMI PAID' %}
+                                            <td style="color: #000000;">{{i.repayment.payment_date}}</td> 
                                             <td style="color: #000000;">{{ i.repayment.principle_amount }}</td>
                                         
                                             {% elif i.particulars == 'ADDITIONAL LOAN' %}
+                                            <td style="color: #000000;">{{i.additional.new_date}}</td> 
                                             <td style="color: #000000;">{{ i.additional.new_loan }}</td>
 
                                             {% endif %}
@@ -2411,7 +2415,7 @@ function shareOnWhatsApp() {
                     <option value="">--select Employee--</option>
                
             </select>     -->
-               <table class="table text-light table-borderless " id="repay1" style="margin:3px;width: 100%;">
+               <table class="table text-light table-borderless " id="repay2" style="margin:3px;width: 100%;">
                   <thead>
                     <tr>
                    
@@ -2426,7 +2430,7 @@ function shareOnWhatsApp() {
                       </th>
                     </tr>
                   </thead>
-                  <tbody id="repay1-body">
+                  <tbody id="repay2-body">
                  
                 </tbody>
                 

@@ -1,0 +1,381 @@
+def addemp(request):                                                                #new by tinto mt (item)
+    sid = request.session['s_id']
+    login = Fin_Login_Details.objects.get(id=sid)
+
+    
+    # Retrieve the chart of accounts entry
+    # loan = get_object_or_404(Loan, id=pk)
+    
+
+    # Check if 'company_id' is in the session
+
+   
+    if login.User_Type == 'Company':
+        if request.method == 'POST':
+                com = Fin_Company_Details.objects.get(Login_Id = sid)
+                allmodules = Fin_Modules_List.objects.get(company_id = com.id)
+                title = request.POST['Title']
+                firstname = request.POST['First_Name'].capitalize()
+                lastname = request.POST['Last_Name'].capitalize()
+                # alias = request.POST['Alias']
+                joiningdate = request.POST['Joining_Date']
+                salarydate = request.POST['Salary_Date']
+                salaryamount = request.POST['Salary_Amount']
+
+                if request.POST['Salary_Amount'] == '':
+                    salaryamount = None
+                else:
+                    salaryamount = request.POST['Salary_Amount']
+
+                amountperhour = request.POST['perhour']
+                if amountperhour == '' or amountperhour == '0':
+                    amountperhour = 0
+                else:
+                    amountperhour = request.POST['perhour']
+
+                workinghour = request.POST['workhour']
+                if workinghour == '' or workinghour == '0':
+                    workinghour = 0
+                else:
+                    workinghour = request.POST['workhour']
+
+                salary_type = request.POST['Salary_Type']
+                
+                employeenumber = request.POST['Employee_Number']
+                designation = request.POST['Designation']
+                location = request.POST['Location']
+                gender = request.POST['Gender']
+                image = request.FILES.get('Image', None)
+                if image:
+                    image = request.FILES['Image']
+                else:
+                    if gender == 'Male':
+                        image = 'media/male_default.png'
+                    elif gender == 'Female':
+                        image = 'media/female_default.png'
+                    else:
+                        image = 'media/male_default.png'
+
+                dob = request.POST['DOB']
+                blood = request.POST['Blood']
+                parent = request.POST['Parent'].capitalize()
+                spouse = request.POST['Spouse'].capitalize()
+                street = request.POST['street']
+                city = request.POST['city']
+                state = request.POST['state']
+                pincode = request.POST['pincode']
+                country = request.POST['country']
+                # tempStreet = request.POST['tempStreet']
+                # tempCity = request.POST['tempCity']
+                # tempState = request.POST['tempState']
+                # tempPincode = request.POST['tempPincode']
+                # tempCountry = request.POST['tempCountry']
+                
+                
+                contact = request.POST['Contact_Number']
+                emergencycontact = request.POST['Emergency_Contact']
+                email = request.POST['Email']
+                # file = request.FILES.get('File', None)
+                # if file:
+                #     file = request.FILES['File']
+                # else:
+                #     file=''
+                bankdetails = request.POST['Bank_Details']
+                accoutnumber = request.POST['Account_Number']
+                ifsc = request.POST['IFSC']
+                bankname = request.POST['BankName']
+                branchname = request.POST['BranchName']
+                transactiontype = request.POST['Transaction_Type']
+
+                
+
+                if request.POST['tds_applicable'] == 'Yes':
+                    tdsapplicable = request.POST['tds_applicable']
+                    tdstype = request.POST['TDS_Type']
+                    
+                    if tdstype == 'Amount':
+                        tdsvalue = request.POST['TDS_Amount']
+                    elif tdstype == 'Percentage':
+                        tdsvalue = request.POST['TDS_Percentage']
+                    else:
+                        tdsvalue = 0
+                elif request.POST['tds_applicable'] == 'No':
+                    tdsvalue = 0
+                    tdstype = ''
+                    tdsapplicable = request.POST['tds_applicable']
+                else:
+                    tdsvalue = 0
+                    tdstype = ''
+                    tdsapplicable = ''
+
+                
+                
+                incometax = request.POST['Income_Tax']
+                # aadhar = request.POST['Aadhar']
+                uan = request.POST['UAN']
+                pf = request.POST['PF']
+                pan = request.POST['PAN']
+                pr = request.POST['PR']
+
+                if dob == '':
+                    age = 2
+                else:
+                    dob2 = date.fromisoformat(dob)
+                    today = date.today()
+                    age = int(today.year - dob2.year - ((today.month, today.day) < (dob2.month, dob2.day)))
+                
+
+
+                # if Employee.objects.filter(employee_mail=email,mobile = contact,employee_number=employeenumber,company_id = com.id).exists():
+                #     messages.error(request,'user exist')
+                #     print('user')
+                #     return JsonResponse({"message": "user exist"})
+                #     return redirect('employee_loan_create_page')
+                
+                if Employee.objects.filter(mobile = contact,company_id = com.id).exists():
+                    messages.error(request,'phone number exist')
+                    print('phone')
+                    return JsonResponse({"message": "phone number exist"})
+
+                    return redirect('employee_loan_create_page')
+                
+                elif Employee.objects.filter(employee_mail=email,company_id = com.id).exists():
+                    messages.error(request,'email exist')
+                    print('email')
+                    return redirect('employee_loan_create_page')
+                
+                elif Employee.objects.filter(employee_number=employeenumber,company_id = com.id).exists():
+                    messages.error(request,'employee id exist')
+                    print('id')
+                    return JsonResponse({"message": "employee id exist"})
+
+                    return redirect('employee_loan_create_page')
+                
+                # if Employee.objects.filter(first_name=firstname, company=com).exists():
+                #     return JsonResponse({"message": "error"})
+                # else:
+                    
+                # if Employee.objects.filter(employeenumber=employeenumber,company=com,employee_mail=email).exists():
+                #         messages.error(request,'Already a Employee  exsits with this details !!!')
+                #         return redirect('employee_loan_create_page')
+                else:
+                    new = Employee(first_name = firstname,last_name = lastname,upload_image=image,title = title,date_of_joining = joiningdate,gender = gender ,
+                                        amount_per_hour = amountperhour ,total_working_hours = workinghour,salary_amount = salaryamount ,employee_salary_type =salary_type,salary_effective_from=salarydate,
+                                        employee_mail = email,
+                                        employee_number = employeenumber,employee_designation = designation,
+                                        employee_current_location = location,
+                                        mobile = contact,
+                                        # temporary_street=tempStreet,temporary_state=tempState,temporary_pincode=tempPincode,temporary_country=tempCountry,
+                                        city=city,street=street,state=state,country=country,pincode=pincode,
+                                        # temporary_city=tempCity,
+                                        employee_status = 'Active' ,company_id = com.id,login_id=sid,date_of_birth = dob ,
+                                        age = age,
+                                        blood_group = blood,
+                                        fathers_name_mothers_name = parent,spouse_name = spouse,
+                                        emergency_contact = emergencycontact,
+                                        provide_bank_details = bankdetails,account_number = accoutnumber,
+                                        ifsc = ifsc,name_of_bank = bankname,branch_name = branchname,bank_transaction_type = transactiontype,
+                                        tds_applicable = tdsapplicable, tds_type = tdstype,percentage_amount = tdsvalue,
+                                        pan_number = pan,
+                                        income_tax_number = incometax,
+                                        # aadhar_number = aadhar,
+                                        universal_account_number = uan,pf_account_number = pf,
+                                        pr_account_number = pr,
+                                        # upload_file = file
+                                        
+                                    )
+                                    #   
+                                #
+                        
+                    new.save()
+
+                    history = Employee_History(company_id = com.id,login_id=sid,employee_id = new.id,date = date.today(),action = 'Created')
+                    history.save()
+                    return JsonResponse({"message": "success"})
+
+    elif login.User_Type == 'Staff':
+       
+          
+        if request.method == 'POST':
+                staf = Fin_Staff_Details.objects.get(Login_Id = sid)
+                allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id.id)
+                title = request.POST['Title']
+                firstname = request.POST['First_Name'].capitalize()
+                lastname = request.POST['Last_Name'].capitalize()
+                # alias = request.POST['Alias']
+                joiningdate = request.POST['Joining_Date']
+                salarydate = request.POST['Salary_Date']
+                salaryamount = request.POST['Salary_Amount']
+
+                if request.POST['Salary_Amount'] == '':
+                    salaryamount = None
+                else:
+                    salaryamount = request.POST['Salary_Amount']
+
+                amountperhour = request.POST['perhour']
+                if amountperhour == '' or amountperhour == '0':
+                    amountperhour = 0
+                else:
+                    amountperhour = request.POST['perhour']
+
+                workinghour = request.POST['workhour']
+                if workinghour == '' or workinghour == '0':
+                    workinghour = 0
+                else:
+                    workinghour = request.POST['workhour']
+
+                salary_type = request.POST['Salary_Type']
+                
+                employeenumber = request.POST['Employee_Number']
+                designation = request.POST['Designation']
+                location = request.POST['Location']
+                gender = request.POST['Gender']
+                image = request.FILES.get('Image', None)
+                if image:
+                    image = request.FILES['Image']
+                else:
+                    if gender == 'Male':
+                        image = 'media/male_default.png'
+                    elif gender == 'Female':
+                        image = 'media/female_default.png'
+                    else:
+                        image = 'media/male_default.png'
+
+                dob = request.POST['DOB']
+                blood = request.POST['Blood']
+                parent = request.POST['Parent'].capitalize()
+                spouse = request.POST['Spouse'].capitalize()
+                street = request.POST['street']
+                city = request.POST['city']
+                state = request.POST['state']
+                pincode = request.POST['pincode']
+                country = request.POST['country']
+                # tempStreet = request.POST['tempStreet']
+                # tempCity = request.POST['tempCity']
+                # tempState = request.POST['tempState']
+                # tempPincode = request.POST['tempPincode']
+                # tempCountry = request.POST['tempCountry']
+                
+                
+                contact = request.POST['Contact_Number']
+                emergencycontact = request.POST['Emergency_Contact']
+                email = request.POST['Email']
+                # file = request.FILES.get('File', None)
+                # if file:
+                #     file = request.FILES['File']
+                # else:
+                #     file=''
+                bankdetails = request.POST['Bank_Details']
+                accoutnumber = request.POST['Account_Number']
+                ifsc = request.POST['IFSC']
+                bankname = request.POST['BankName']
+                branchname = request.POST['BranchName']
+                transactiontype = request.POST['Transaction_Type']
+
+                
+
+                if request.POST['tds_applicable'] == 'Yes':
+                    tdsapplicable = request.POST['tds_applicable']
+                    tdstype = request.POST['TDS_Type']
+                    
+                    if tdstype == 'Amount':
+                        tdsvalue = request.POST['TDS_Amount']
+                    elif tdstype == 'Percentage':
+                        tdsvalue = request.POST['TDS_Percentage']
+                    else:
+                        tdsvalue = 0
+                elif request.POST['tds_applicable'] == 'No':
+                    tdsvalue = 0
+                    tdstype = ''
+                    tdsapplicable = request.POST['tds_applicable']
+                else:
+                    tdsvalue = 0
+                    tdstype = ''
+                    tdsapplicable = ''
+
+                
+                
+                incometax = request.POST['Income_Tax']
+                # aadhar = request.POST['Aadhar']
+                uan = request.POST['UAN']
+                pf = request.POST['PF']
+                pan = request.POST['PAN']
+                pr = request.POST['PR']
+
+                if dob == '':
+                    age = 2
+                else:
+                    dob2 = date.fromisoformat(dob)
+                    today = date.today()
+                    age = int(today.year - dob2.year - ((today.month, today.day) < (dob2.month, dob2.day)))
+                
+
+
+                # if Employee.objects.filter(employee_mail=email,mobile = contact,employee_number=employeenumber,company_id = staf.company_id.id).exists():
+                #     messages.error(request,'user exist')
+                #     print('user')
+                #     return JsonResponse({"message": "user exist"})
+                #     return redirect('employee_loan_create_page')
+                
+                if Employee.objects.filter(mobile = contact,company_id = staf.company_id.id).exists():
+                    messages.error(request,'phone number exist')
+                    print('phone')
+                    return JsonResponse({"message": "phone number exist"})
+
+                    return redirect('employee_loan_create_page')
+                
+                elif Employee.objects.filter(employee_mail=email,company_id = staf.company_id.id).exists():
+                    messages.error(request,'email exist')
+                    print('email')
+                    return redirect('employee_loan_create_page')
+                
+                elif Employee.objects.filter(employee_number=employeenumber,company_id = staf.company_id.id).exists():
+                    messages.error(request,'employee id exist')
+                    print('id')
+                    return JsonResponse({"message": "employee id exist"})
+
+                    return redirect('employee_loan_create_page')
+                
+                # if Employee.objects.filter(first_name=firstname, company=com).exists():
+                #     return JsonResponse({"message": "error"})
+                # else:
+                    
+                # if Employee.objects.filter(employeenumber=employeenumber,company=com,employee_mail=email).exists():
+                #         messages.error(request,'Already a Employee  exsits with this details !!!')
+                #         return redirect('employee_loan_create_page')
+                else:
+                    new = Employee(first_name = firstname,last_name = lastname,upload_image=image,title = title,date_of_joining = joiningdate,gender = gender ,
+                                        amount_per_hour = amountperhour ,total_working_hours = workinghour,salary_amount = salaryamount ,employee_salary_type =salary_type,salary_effective_from=salarydate,
+                                        employee_mail = email,
+                                        employee_number = employeenumber,employee_designation = designation,
+                                        employee_current_location = location,
+                                        mobile = contact,
+                                        # temporary_street=tempStreet,temporary_state=tempState,temporary_pincode=tempPincode,temporary_country=tempCountry,
+                                        city=city,street=street,state=state,country=country,pincode=pincode,
+                                        # temporary_city=tempCity,
+                                        employee_status = 'Active' ,company_id = staf.company_id.id,login_id=sid,date_of_birth = dob ,
+                                        age = age,
+                                        blood_group = blood,
+                                        fathers_name_mothers_name = parent,spouse_name = spouse,
+                                        emergency_contact = emergencycontact,
+                                        provide_bank_details = bankdetails,account_number = accoutnumber,
+                                        ifsc = ifsc,name_of_bank = bankname,branch_name = branchname,bank_transaction_type = transactiontype,
+                                        tds_applicable = tdsapplicable, tds_type = tdstype,percentage_amount = tdsvalue,
+                                        pan_number = pan,
+                                        income_tax_number = incometax,
+                                        # aadhar_number = aadhar,
+                                        universal_account_number = uan,pf_account_number = pf,
+                                        pr_account_number = pr,
+                                        # upload_file = file
+                                        
+                                    )
+                                    #   
+                                #
+                        
+                    new.save()
+
+                    history = Employee_History(company_id = staf.company_id.id,login_id=sid,employee_id = new.id,date = date.today(),action = 'Created')
+                    history.save()
+                    return JsonResponse({"message": "success"})
+
+ 

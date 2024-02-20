@@ -3212,6 +3212,322 @@ def emploanadditionedit(request, pk):                                           
 
 
 
+# def addemp(request):                                                                #new by tinto mt (item)
+#     sid = request.session['s_id']
+#     login = Fin_Login_Details.objects.get(id=sid)
+
+    
+#     # Retrieve the chart of accounts entry
+#     # loan = get_object_or_404(Loan, id=pk)
+    
+
+#     # Check if 'company_id' is in the session
+
+   
+#     if login.User_Type == 'Company':
+#         if request.method == 'POST':
+#                 com = Fin_Company_Details.objects.get(Login_Id = sid)
+#                 allmodules = Fin_Modules_List.objects.get(company_id = com.id)
+#                 title = request.POST['Title']
+#                 firstname = request.POST['First_Name'].capitalize()
+#                 lastname = request.POST['Last_Name'].capitalize()
+#                 # alias = request.POST['Alias']
+#                 joiningdate = request.POST['Joining_Date']
+#                 salarydate = request.POST['Salary_Date']
+#                 salaryamount = request.POST['Salary_Amount']
+
+#                 if request.POST['Salary_Amount'] == '':
+#                     salaryamount = None
+#                 else:
+#                     salaryamount = request.POST['Salary_Amount']
+
+#                 amountperhour = request.POST['perhour']
+#                 if amountperhour == '' or amountperhour == '0':
+#                     amountperhour = 0
+#                 else:
+#                     amountperhour = request.POST['perhour']
+
+#                 workinghour = request.POST['workhour']
+#                 if workinghour == '' or workinghour == '0':
+#                     workinghour = 0
+#                 else:
+#                     workinghour = request.POST['workhour']
+
+#                 salary_type = request.POST['Salary_Type']
+                
+#                 employeenumber = request.POST['Employee_Number']
+#                 designation = request.POST['Designation']
+#                 location = request.POST['Location']
+#                 gender = request.POST['Gender']
+#                 image = request.FILES.get('Image', None)
+#                 if image:
+#                     image = request.FILES['Image']
+#                 else:
+#                     if gender == 'Male':
+#                         image = 'media/male_default.png'
+#                     elif gender == 'Female':
+#                         image = 'media/female_default.png'
+#                     else:
+#                         image = 'media/male_default.png'
+
+#                 dob = request.POST['DOB']
+#                 blood = request.POST['Blood']
+#                 parent = request.POST['Parent'].capitalize()
+#                 spouse = request.POST['Spouse'].capitalize()
+#                 street = request.POST['street']
+#                 city = request.POST['city']
+#                 state = request.POST['state']
+#                 pincode = request.POST['pincode']
+#                 country = request.POST['country']
+#                 # tempStreet = request.POST['tempStreet']
+#                 # tempCity = request.POST['tempCity']
+#                 # tempState = request.POST['tempState']
+#                 # tempPincode = request.POST['tempPincode']
+#                 # tempCountry = request.POST['tempCountry']
+                
+                
+#                 contact = request.POST['Contact_Number']
+#                 emergencycontact = request.POST['Emergency_Contact']
+#                 email = request.POST['Email']
+#                 # file = request.FILES.get('File', None)
+#                 # if file:
+#                 #     file = request.FILES['File']
+#                 # else:
+#                 #     file=''
+#                 bankdetails = request.POST['Bank_Details']
+#                 accoutnumber = request.POST['Account_Number']
+#                 ifsc = request.POST['IFSC']
+#                 bankname = request.POST['BankName']
+#                 branchname = request.POST['BranchName']
+#                 transactiontype = request.POST['Transaction_Type']
+
+                
+
+#                 if request.POST['tds_applicable'] == 'Yes':
+#                     tdsapplicable = request.POST['tds_applicable']
+#                     tdstype = request.POST['TDS_Type']
+                    
+#                     if tdstype == 'Amount':
+#                         tdsvalue = request.POST['TDS_Amount']
+#                     elif tdstype == 'Percentage':
+#                         tdsvalue = request.POST['TDS_Percentage']
+#                     else:
+#                         tdsvalue = 0
+#                 elif request.POST['tds_applicable'] == 'No':
+#                     tdsvalue = 0
+#                     tdstype = ''
+#                     tdsapplicable = request.POST['tds_applicable']
+#                 else:
+#                     tdsvalue = 0
+#                     tdstype = ''
+#                     tdsapplicable = ''
+
+                
+                
+#                 incometax = request.POST['Income_Tax']
+#                 # aadhar = request.POST['Aadhar']
+#                 uan = request.POST['UAN']
+#                 pf = request.POST['PF']
+#                 pan = request.POST['PAN']
+#                 pr = request.POST['PR']
+
+#                 if dob == '':
+#                     age = 2
+#                 else:
+#                     dob2 = date.fromisoformat(dob)
+#                     today = date.today()
+#                     age = int(today.year - dob2.year - ((today.month, today.day) < (dob2.month, dob2.day)))
+                
+
+
+                
+#                     new = Employee(first_name = firstname,last_name = lastname,upload_image=image,title = title,date_of_joining = joiningdate,gender = gender ,
+#                                         amount_per_hour = amountperhour ,total_working_hours = workinghour,salary_amount = salaryamount ,employee_salary_type =salary_type,salary_effective_from=salarydate,
+#                                         employee_mail = email,
+#                                         employee_number = employeenumber,employee_designation = designation,
+#                                         employee_current_location = location,
+#                                         mobile = contact,
+#                                         # temporary_street=tempStreet,temporary_state=tempState,temporary_pincode=tempPincode,temporary_country=tempCountry,
+#                                         city=city,street=street,state=state,country=country,pincode=pincode,
+#                                         # temporary_city=tempCity,
+#                                         employee_status = 'Active' ,company_id = com.id,login_id=sid,date_of_birth = dob ,
+#                                         age = age,
+#                                         blood_group = blood,
+#                                         fathers_name_mothers_name = parent,spouse_name = spouse,
+#                                         emergency_contact = emergencycontact,
+#                                         provide_bank_details = bankdetails,account_number = accoutnumber,
+#                                         ifsc = ifsc,name_of_bank = bankname,branch_name = branchname,bank_transaction_type = transactiontype,
+#                                         tds_applicable = tdsapplicable, tds_type = tdstype,percentage_amount = tdsvalue,
+#                                         pan_number = pan,
+#                                         income_tax_number = incometax,
+#                                         # aadhar_number = aadhar,
+#                                         universal_account_number = uan,pf_account_number = pf,
+#                                         pr_account_number = pr,
+#                                         # upload_file = file
+                                        
+#                                     )
+#                                     #   
+#                                 #
+                        
+#                     new.save()
+
+#                     history = Fin_Employee_History(company_id = com.id,login_id=sid,employee_id = new.id,date = date.today(),action = 'Created')
+#                     history.save()
+#                     return JsonResponse({"message": "success"})
+
+#     elif login.User_Type == 'Staff':
+       
+          
+#         if request.method == 'POST':
+#                 staf = Fin_Staff_Details.objects.get(Login_Id = sid)
+#                 allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id.id)
+#                 title = request.POST['Title']
+#                 firstname = request.POST['First_Name'].capitalize()
+#                 lastname = request.POST['Last_Name'].capitalize()
+#                 # alias = request.POST['Alias']
+#                 joiningdate = request.POST['Joining_Date']
+#                 salarydate = request.POST['Salary_Date']
+#                 salaryamount = request.POST['Salary_Amount']
+
+#                 if request.POST['Salary_Amount'] == '':
+#                     salaryamount = None
+#                 else:
+#                     salaryamount = request.POST['Salary_Amount']
+
+#                 amountperhour = request.POST['perhour']
+#                 if amountperhour == '' or amountperhour == '0':
+#                     amountperhour = 0
+#                 else:
+#                     amountperhour = request.POST['perhour']
+
+#                 workinghour = request.POST['workhour']
+#                 if workinghour == '' or workinghour == '0':
+#                     workinghour = 0
+#                 else:
+#                     workinghour = request.POST['workhour']
+
+#                 salary_type = request.POST['Salary_Type']
+                
+#                 employeenumber = request.POST['Employee_Number']
+#                 designation = request.POST['Designation']
+#                 location = request.POST['Location']
+#                 gender = request.POST['Gender']
+#                 image = request.FILES.get('Image', None)
+#                 if image:
+#                     image = request.FILES['Image']
+#                 else:
+#                     if gender == 'Male':
+#                         image = 'media/male_default.png'
+#                     elif gender == 'Female':
+#                         image = 'media/female_default.png'
+#                     else:
+#                         image = 'media/male_default.png'
+
+#                 dob = request.POST['DOB']
+#                 blood = request.POST['Blood']
+#                 parent = request.POST['Parent'].capitalize()
+#                 spouse = request.POST['Spouse'].capitalize()
+#                 street = request.POST['street']
+#                 city = request.POST['city']
+#                 state = request.POST['state']
+#                 pincode = request.POST['pincode']
+#                 country = request.POST['country']
+#                 # tempStreet = request.POST['tempStreet']
+#                 # tempCity = request.POST['tempCity']
+#                 # tempState = request.POST['tempState']
+#                 # tempPincode = request.POST['tempPincode']
+#                 # tempCountry = request.POST['tempCountry']
+                
+                
+#                 contact = request.POST['Contact_Number']
+#                 emergencycontact = request.POST['Emergency_Contact']
+#                 email = request.POST['Email']
+#                 # file = request.FILES.get('File', None)
+#                 # if file:
+#                 #     file = request.FILES['File']
+#                 # else:
+#                 #     file=''
+#                 bankdetails = request.POST['Bank_Details']
+#                 accoutnumber = request.POST['Account_Number']
+#                 ifsc = request.POST['IFSC']
+#                 bankname = request.POST['BankName']
+#                 branchname = request.POST['BranchName']
+#                 transactiontype = request.POST['Transaction_Type']
+
+                
+
+#                 if request.POST['tds_applicable'] == 'Yes':
+#                     tdsapplicable = request.POST['tds_applicable']
+#                     tdstype = request.POST['TDS_Type']
+                    
+#                     if tdstype == 'Amount':
+#                         tdsvalue = request.POST['TDS_Amount']
+#                     elif tdstype == 'Percentage':
+#                         tdsvalue = request.POST['TDS_Percentage']
+#                     else:
+#                         tdsvalue = 0
+#                 elif request.POST['tds_applicable'] == 'No':
+#                     tdsvalue = 0
+#                     tdstype = ''
+#                     tdsapplicable = request.POST['tds_applicable']
+#                 else:
+#                     tdsvalue = 0
+#                     tdstype = ''
+#                     tdsapplicable = ''
+
+                
+                
+#                 incometax = request.POST['Income_Tax']
+#                 # aadhar = request.POST['Aadhar']
+#                 uan = request.POST['UAN']
+#                 pf = request.POST['PF']
+#                 pan = request.POST['PAN']
+#                 pr = request.POST['PR']
+
+#                 if dob == '':
+#                     age = 2
+#                 else:
+#                     dob2 = date.fromisoformat(dob)
+#                     today = date.today()
+#                     age = int(today.year - dob2.year - ((today.month, today.day) < (dob2.month, dob2.day)))
+                
+
+
+                
+#                     new = Employee(first_name = firstname,last_name = lastname,upload_image=image,title = title,date_of_joining = joiningdate,gender = gender ,
+#                                         amount_per_hour = amountperhour ,total_working_hours = workinghour,salary_amount = salaryamount ,employee_salary_type =salary_type,salary_effective_from=salarydate,
+#                                         employee_mail = email,
+#                                         employee_number = employeenumber,employee_designation = designation,
+#                                         employee_current_location = location,
+#                                         mobile = contact,
+#                                         # temporary_street=tempStreet,temporary_state=tempState,temporary_pincode=tempPincode,temporary_country=tempCountry,
+#                                         city=city,street=street,state=state,country=country,pincode=pincode,
+#                                         # temporary_city=tempCity,
+#                                         employee_status = 'Active' ,company_id = staf.company_id.id,login_id=sid,date_of_birth = dob ,
+#                                         age = age,
+#                                         blood_group = blood,
+#                                         fathers_name_mothers_name = parent,spouse_name = spouse,
+#                                         emergency_contact = emergencycontact,
+#                                         provide_bank_details = bankdetails,account_number = accoutnumber,
+#                                         ifsc = ifsc,name_of_bank = bankname,branch_name = branchname,bank_transaction_type = transactiontype,
+#                                         tds_applicable = tdsapplicable, tds_type = tdstype,percentage_amount = tdsvalue,
+#                                         pan_number = pan,
+#                                         income_tax_number = incometax,
+#                                         # aadhar_number = aadhar,
+#                                         universal_account_number = uan,pf_account_number = pf,
+#                                         pr_account_number = pr,
+#                                         # upload_file = file
+                                        
+#                                     )
+#                                     #   
+#                                 #
+                        
+#                     new.save()
+
+#                     history = Fin_Employee_History(company_id = staf.company_id.id,login_id=sid,employee_id = new.id,date = date.today(),action = 'Created')
+#                     history.save()
+#                     return JsonResponse({"message": "success"})
+
 def addemp(request):                                                                #new by tinto mt (item)
     sid = request.session['s_id']
     login = Fin_Login_Details.objects.get(id=sid)
@@ -3340,13 +3656,13 @@ def addemp(request):                                                            
                 
 
 
-                if Employee.objects.filter(employee_mail=email,mobile = contact,employee_number=employeenumber,company_id = com.id).exists():
-                    messages.error(request,'user exist')
-                    print('user')
-                    return JsonResponse({"message": "user exist"})
-                    return redirect('employee_loan_create_page')
+                # if Employee.objects.filter(employee_mail=email,mobile = contact,employee_number=employeenumber,company_id = com.id).exists():
+                #     messages.error(request,'user exist')
+                #     print('user')
+                #     return JsonResponse({"message": "user exist"})
+                #     return redirect('employee_loan_create_page')
                 
-                elif Employee.objects.filter(mobile = contact,company_id = com.id).exists():
+                if Employee.objects.filter(mobile = contact,company_id = com.id).exists():
                     messages.error(request,'phone number exist')
                     print('phone')
                     return JsonResponse({"message": "phone number exist"})
@@ -3403,7 +3719,7 @@ def addemp(request):                                                            
                         
                     new.save()
 
-                    history = Fin_Employee_History(company_id = com.id,login_id=sid,employee_id = new.id,date = date.today(),action = 'Created')
+                    history = Employee_History(company_id = com.id,login_id=sid,employee_id = new.id,date = date.today(),action = 'Created')
                     history.save()
                     return JsonResponse({"message": "success"})
 
@@ -3411,141 +3727,139 @@ def addemp(request):                                                            
        
           
         if request.method == 'POST':
-            staf = Fin_Staff_Details.objects.get(Login_Id = sid)
-            allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id_id)
-            title = request.POST['Title']
-            firstname = request.POST['First_Name'].capitalize()
-            lastname = request.POST['Last_Name'].capitalize()
-            # alias = request.POST['Alias']
-            joiningdate = request.POST['Joining_Date']
-            salarydate = request.POST['Salary_Date']
-            salaryamount = request.POST['Salary_Amount']
-
-            if request.POST['Salary_Amount'] == '':
-                salaryamount = None
-            else:
+                staf = Fin_Staff_Details.objects.get(Login_Id = sid)
+                allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id.id)
+                title = request.POST['Title']
+                firstname = request.POST['First_Name'].capitalize()
+                lastname = request.POST['Last_Name'].capitalize()
+                # alias = request.POST['Alias']
+                joiningdate = request.POST['Joining_Date']
+                salarydate = request.POST['Salary_Date']
                 salaryamount = request.POST['Salary_Amount']
 
-            amountperhour = request.POST['perhour']
-            if amountperhour == '' or amountperhour == '0':
-                amountperhour = 0
-            else:
-                amountperhour = request.POST['perhour']
-
-            workinghour = request.POST['workhour']
-            if workinghour == '' or workinghour == '0':
-                workinghour = 0
-            else:
-                workinghour = request.POST['workhour']
-
-            salary_type = request.POST['Salary_Type']
-            
-            employeenumber = request.POST['Employee_Number']
-            designation = request.POST['Designation']
-            location = request.POST['Location']
-            gender = request.POST['Gender']
-            image = request.FILES.get('Image', None)
-            if image:
-                image = request.FILES['Image']
-            else:
-                if gender == 'Male':
-                    image = 'media/male_default.png'
-                elif gender == 'Female':
-                    image = 'media/female_default.png'
+                if request.POST['Salary_Amount'] == '':
+                    salaryamount = None
                 else:
-                    image = 'media/male_default.png'
+                    salaryamount = request.POST['Salary_Amount']
 
-            dob = request.POST['DOB']
-            blood = request.POST['Blood']
-            parent = request.POST['Parent'].capitalize()
-            spouse = request.POST['Spouse'].capitalize()
-            street = request.POST['street']
-            city = request.POST['city']
-            state = request.POST['state']
-            pincode = request.POST['pincode']
-            country = request.POST['country']
-            # tempStreet = request.POST['tempStreet']
-            # tempCity = request.POST['tempCity']
-            # tempState = request.POST['tempState']
-            # tempPincode = request.POST['tempPincode']
-            # tempCountry = request.POST['tempCountry']
-            
-            
-            contact = request.POST['Contact_Number']
-            emergencycontact = request.POST['Emergency_Contact']
-            email = request.POST['Email']
-            # file = request.FILES.get('File', None)
-            # if file:
-            #     file = request.FILES['File']
-            # else:
-            #     file=''
-            bankdetails = request.POST['Bank_Details']
-            accoutnumber = request.POST['Account_Number']
-            ifsc = request.POST['IFSC']
-            bankname = request.POST['BankName']
-            branchname = request.POST['BranchName']
-            transactiontype = request.POST['Transaction_Type']
+                amountperhour = request.POST['perhour']
+                if amountperhour == '' or amountperhour == '0':
+                    amountperhour = 0
+                else:
+                    amountperhour = request.POST['perhour']
 
-            
+                workinghour = request.POST['workhour']
+                if workinghour == '' or workinghour == '0':
+                    workinghour = 0
+                else:
+                    workinghour = request.POST['workhour']
 
-            if request.POST['tds_applicable'] == 'Yes':
-                tdsapplicable = request.POST['tds_applicable']
-                tdstype = request.POST['TDS_Type']
+                salary_type = request.POST['Salary_Type']
                 
-                if tdstype == 'Amount':
-                    tdsvalue = request.POST['TDS_Amount']
-                elif tdstype == 'Percentage':
-                    tdsvalue = request.POST['TDS_Percentage']
+                employeenumber = request.POST['Employee_Number']
+                designation = request.POST['Designation']
+                location = request.POST['Location']
+                gender = request.POST['Gender']
+                image = request.FILES.get('Image', None)
+                if image:
+                    image = request.FILES['Image']
+                else:
+                    if gender == 'Male':
+                        image = 'media/male_default.png'
+                    elif gender == 'Female':
+                        image = 'media/female_default.png'
+                    else:
+                        image = 'media/male_default.png'
+
+                dob = request.POST['DOB']
+                blood = request.POST['Blood']
+                parent = request.POST['Parent'].capitalize()
+                spouse = request.POST['Spouse'].capitalize()
+                street = request.POST['street']
+                city = request.POST['city']
+                state = request.POST['state']
+                pincode = request.POST['pincode']
+                country = request.POST['country']
+                # tempStreet = request.POST['tempStreet']
+                # tempCity = request.POST['tempCity']
+                # tempState = request.POST['tempState']
+                # tempPincode = request.POST['tempPincode']
+                # tempCountry = request.POST['tempCountry']
+                
+                
+                contact = request.POST['Contact_Number']
+                emergencycontact = request.POST['Emergency_Contact']
+                email = request.POST['Email']
+                # file = request.FILES.get('File', None)
+                # if file:
+                #     file = request.FILES['File']
+                # else:
+                #     file=''
+                bankdetails = request.POST['Bank_Details']
+                accoutnumber = request.POST['Account_Number']
+                ifsc = request.POST['IFSC']
+                bankname = request.POST['BankName']
+                branchname = request.POST['BranchName']
+                transactiontype = request.POST['Transaction_Type']
+
+                
+
+                if request.POST['tds_applicable'] == 'Yes':
+                    tdsapplicable = request.POST['tds_applicable']
+                    tdstype = request.POST['TDS_Type']
+                    
+                    if tdstype == 'Amount':
+                        tdsvalue = request.POST['TDS_Amount']
+                    elif tdstype == 'Percentage':
+                        tdsvalue = request.POST['TDS_Percentage']
+                    else:
+                        tdsvalue = 0
+                elif request.POST['tds_applicable'] == 'No':
+                    tdsvalue = 0
+                    tdstype = ''
+                    tdsapplicable = request.POST['tds_applicable']
                 else:
                     tdsvalue = 0
-            elif request.POST['tds_applicable'] == 'No':
-                tdsvalue = 0
-                tdstype = ''
-                tdsapplicable = request.POST['tds_applicable']
-            else:
-                tdsvalue = 0
-                tdstype = ''
-                tdsapplicable = ''
+                    tdstype = ''
+                    tdsapplicable = ''
 
-            
-            
-            incometax = request.POST['Income_Tax']
-            # aadhar = request.POST['Aadhar']
-            uan = request.POST['UAN']
-            pf = request.POST['PF']
-            pan = request.POST['PAN']
-            pr = request.POST['PR']
+                
+                
+                incometax = request.POST['Income_Tax']
+                # aadhar = request.POST['Aadhar']
+                uan = request.POST['UAN']
+                pf = request.POST['PF']
+                pan = request.POST['PAN']
+                pr = request.POST['PR']
 
-            if dob == '':
-                age = 2
-            else:
-                dob2 = date.fromisoformat(dob)
-                today = date.today()
-                age = int(today.year - dob2.year - ((today.month, today.day) < (dob2.month, dob2.day)))
-            
-            # if Employee.objects.filter(first_name=firstname, company=com).exists():
-            #     return JsonResponse({"message": "error"})
-            # else:
+                if dob == '':
+                    age = 2
+                else:
+                    dob2 = date.fromisoformat(dob)
+                    today = date.today()
+                    age = int(today.year - dob2.year - ((today.month, today.day) < (dob2.month, dob2.day)))
                 
-            if Employee.objects.filter(employee_mail=email,mobile = contact,employee_number=employeenumber,company_id = staf.company_id.id).exists():
-                    messages.error(request,'user exist')
-                    print('user')
-                    return JsonResponse({"message": "user exist"})
-                    return redirect('employee_loan_create_page')
+
+
+                # if Employee.objects.filter(employee_mail=email,mobile = contact,employee_number=employeenumber,company_id = staf.company_id.id).exists():
+                #     messages.error(request,'user exist')
+                #     print('user')
+                #     return JsonResponse({"message": "user exist"})
+                #     return redirect('employee_loan_create_page')
                 
-            elif Employee.objects.filter(mobile = contact,company_id = staf.company_id.id).exists():
+                if Employee.objects.filter(mobile = contact,company_id = staf.company_id.id).exists():
                     messages.error(request,'phone number exist')
                     print('phone')
                     return JsonResponse({"message": "phone number exist"})
 
                     return redirect('employee_loan_create_page')
                 
-            elif Employee.objects.filter(employee_mail=email,company_id = staf.company_id.id).exists():
+                elif Employee.objects.filter(employee_mail=email,company_id = staf.company_id.id).exists():
                     messages.error(request,'email exist')
                     print('email')
                     return redirect('employee_loan_create_page')
                 
-            elif Employee.objects.filter(employee_number=employeenumber,company_id = staf.company_id.id).exists():
+                elif Employee.objects.filter(employee_number=employeenumber,company_id = staf.company_id.id).exists():
                     messages.error(request,'employee id exist')
                     print('id')
                     return JsonResponse({"message": "employee id exist"})
@@ -3559,44 +3873,40 @@ def addemp(request):                                                            
                 # if Employee.objects.filter(employeenumber=employeenumber,company=com,employee_mail=email).exists():
                 #         messages.error(request,'Already a Employee  exsits with this details !!!')
                 #         return redirect('employee_loan_create_page')
-            else:
-            
-            
-                        new = Employee(first_name = firstname,last_name = lastname,upload_image=image,title = title,date_of_joining = joiningdate,gender = gender ,
-                                    amount_per_hour = amountperhour ,total_working_hours = workinghour,salary_amount = salaryamount ,employee_salary_type =salary_type,salary_effective_from=salarydate,
-                                    employee_mail = email,
-                                    employee_number = employeenumber,employee_designation = designation,
-                                    employee_current_location = location,
-                                    mobile = contact,
-                                    # temporary_street=tempStreet,temporary_state=tempState,temporary_pincode=tempPincode,temporary_country=tempCountry,
-                                    city=city,street=street,state=state,country=country,pincode=pincode,
-                                    # temporary_city=tempCity,
-                                    employee_status = 'Active' ,company = staf.company_id,login_id=sid,date_of_birth = dob ,
-                                    age = age,
-                                    blood_group = blood,
-                                    fathers_name_mothers_name = parent,spouse_name = spouse,
-                                    emergency_contact = emergencycontact,
-                                    provide_bank_details = bankdetails,account_number = accoutnumber,
-                                    ifsc = ifsc,name_of_bank = bankname,branch_name = branchname,bank_transaction_type = transactiontype,
-                                    tds_applicable = tdsapplicable, tds_type = tdstype,percentage_amount = tdsvalue,
-                                    pan_number = pan,
-                                    income_tax_number = incometax,
-                                    # aadhar_number = aadhar,
-                                    universal_account_number = uan,pf_account_number = pf,
-                                    pr_account_number = pr,
-                                    # upload_file = file
-                                    
-                                )
-                                #   
-                            #
-                    
-                        new.save()
+                else:
+                    new = Employee(first_name = firstname,last_name = lastname,upload_image=image,title = title,date_of_joining = joiningdate,gender = gender ,
+                                        amount_per_hour = amountperhour ,total_working_hours = workinghour,salary_amount = salaryamount ,employee_salary_type =salary_type,salary_effective_from=salarydate,
+                                        employee_mail = email,
+                                        employee_number = employeenumber,employee_designation = designation,
+                                        employee_current_location = location,
+                                        mobile = contact,
+                                        # temporary_street=tempStreet,temporary_state=tempState,temporary_pincode=tempPincode,temporary_country=tempCountry,
+                                        city=city,street=street,state=state,country=country,pincode=pincode,
+                                        # temporary_city=tempCity,
+                                        employee_status = 'Active' ,company_id = staf.company_id.id,login_id=sid,date_of_birth = dob ,
+                                        age = age,
+                                        blood_group = blood,
+                                        fathers_name_mothers_name = parent,spouse_name = spouse,
+                                        emergency_contact = emergencycontact,
+                                        provide_bank_details = bankdetails,account_number = accoutnumber,
+                                        ifsc = ifsc,name_of_bank = bankname,branch_name = branchname,bank_transaction_type = transactiontype,
+                                        tds_applicable = tdsapplicable, tds_type = tdstype,percentage_amount = tdsvalue,
+                                        pan_number = pan,
+                                        income_tax_number = incometax,
+                                        # aadhar_number = aadhar,
+                                        universal_account_number = uan,pf_account_number = pf,
+                                        pr_account_number = pr,
+                                        # upload_file = file
+                                        
+                                    )
+                                    #   
+                                #
+                        
+                    new.save()
 
-                        history = Fin_Employee_History(company_id = staf.company_id,login_id=sid,employee_id = new.id,date = date.today(),action = 'Created')
-                        history.save()
-        return JsonResponse({"message": "success"})
-
- 
+                    history = Employee_History(company_id = staf.company_id.id,login_id=sid,employee_id = new.id,date = date.today(),action = 'Created')
+                    history.save()
+                    return JsonResponse({"message": "success"})
 
 
 def add_term(request):                                                                #new by tinto mt (item)
@@ -4085,7 +4395,7 @@ def emploanedit(request, pk):                                                   
       
      
         com = Fin_Company_Details.objects.get(Login_Id = sid)
-        allmodules = Fin_Modules_List.objects.get(company_id = com.id)
+        allmodules = Fin_Modules_List.objects.get(company_id = com)
         loan = Fin_Loan.objects.get(id=pk)
         employee = Employee.objects.filter(company=com)
         term=Fin_Loan_Term.objects.filter(company=com)
@@ -4226,9 +4536,9 @@ def emploanedit(request, pk):                                                   
     if login.User_Type == 'Staff':
         # com = Fin_Company_Details.objects.get(Login_Id = sid)
         staf = Fin_Staff_Details.objects.get(Login_Id = sid)
-        allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id_id)
+        com = staf.company_id
+        allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id.id)
         loan = Fin_Loan.objects.get(id=pk)
-        com=staf.company_id
         employee = Employee.objects.filter(company=staf.company_id)
         term=Fin_Loan_Term.objects.filter(company=staf.company_id)
         banks=Fin_Banking.objects.filter(company=staf.company_id)
@@ -4240,7 +4550,9 @@ def emploanedit(request, pk):                                                   
                     'banks':banks,
                     'com':com
             }
- 
+       
+    
+        
         if request.method=='POST':
         
     
@@ -4252,10 +4564,10 @@ def emploanedit(request, pk):                                                   
             if int(newloan)>int(d.balance):
                 bal=int(newloan)-int(d.balance)
                 # d.balance=d.balance+bal
-                loan.balance=loan.balance+bal
                 d.save()
                 loan_trans = Fin_Employee_Loan_Transactions.objects.filter(Q(employee_loan=d.employee_loan) & Q(id__gte=d.id))
                 print("s")
+                loan.balance=loan.balance+bal
                 for i in loan_trans:
                         print(i.balance)
                     
@@ -4265,18 +4577,19 @@ def emploanedit(request, pk):                                                   
                         print(i.balance)
 
                         print("s3")
+                        print(loan.balance)
     #             if last_balance is not None:
     #                 loans= Fin_Loan.objects.get(id=pk)
     # # Assuming you have an object where you want to save the last balance, let's call it 'loan_object'
     #                 loans.balance = last_balance
-                    
+                
             if int(newloan)<int(d.balance):
                 bal=int(d.balance)-int(newloan)
                 # d.balance=d.balance-bal
+                loan.balance=loan.balance-bal
                 d.save()
                 loan_trans = Fin_Employee_Loan_Transactions.objects.filter(Q(employee_loan=d.employee_loan) & Q(id__gte=d.id))
                 print("s")
-                loan.balance=loan.balance-bal
                 for i in loan_trans:
                         print(i.balance)
                     
@@ -4289,75 +4602,80 @@ def emploanedit(request, pk):                                                   
     #                 loans= Fin_Loan.objects.get(id=pk)
     # # Assuming you have an object where you want to save the last balance, let's call it 'loan_object'
     #                 loans.balance = last_balance
-                t=Fin_Employee_Loan_Transactions_History()
 
-                t.company=staf.company_id
-                t.login_details=login
-                t.action="Edited"
-                t.date=date.today()
-              
-                t.employee_loan=loan
+            b=Fin_Employee_Loan_History()
+            # c=Fin_Employee_Loan_Transactions.objects.get(employee_loan=pk)
+            # c.balance=request.POST.get("loan_amount",None)
+            t=Fin_Employee_Loan_Transactions_History()
 
-                t.save()
+            t.company=com
+            t.login_details=login
+            t.action="Edited"
+            t.date=date.today()
+            t.transaction=d
+            t.employee_loan=loan
+
+            t.save()
+            # c.save()
+            b.company=com
+            b.login_details=login
+            b.action="Edited"
+            b.date=date.today()
+   
+        
+            loan.login_details=login
+            loan.company=com
+            emp=request.POST["employee"]
+            emp1=Employee.objects.get(id=emp)
+            employee_name1 =emp1.title +" " + emp1.first_name + " " + emp1.last_name
+            loan.employee_name = employee_name1
             
-                b.company=staf.company_id
-                b.login_details=login
-                b.action="Edited"
-                b.date=date.today()
-    
             
-                loan.login_details=login
-                loan.company=staf.company_id
-                emp=request.POST["employee"]
-                emp1=Employee.objects.get(id=emp)
-                employee_name1 =emp1.title +" " + emp1.first_name + " " + emp1.last_name
-                loan.employee_name = employee_name1
-                
-                
-                loanduration=request.POST.get("loanduration",None)
-                term=Fin_Loan_Term.objects.get(id=loanduration)
-                loan.loan_duration=term
-                loan.employeeid = request.POST.get("empid",None)
-                loan.employee_email = request.POST.get("empemail",None)
-                loan.salary=request.POST.get("salary",None)
-                loan.join_date=request.POST.get("join_date",None)
-                loan.loan_date=request.POST.get("loan_date",None)
-                loan.loan_amount=request.POST.get("loan_amount",None)
-                loan.expiry_date=request.POST.get("expdate",None)
-                loan.payment_method=request.POST.get("select_payment",None)
-                loan.cheque_number=request.POST.get("cheque_no",None)
-                loan.upi_id=request.POST.get("upi_id",None)
-                loan.bank_account=request.POST.get("acc_no",None)
-                loan.monthly_cutting=request.POST.get("cutingamount",None)
-                if request.POST.get("cutingamount",None) == 'Yes':
-                    loan.monthly_cutting_percentage = 0
-                else:
-                    loan.monthly_cutting_percentage=request.POST.get("cuttingPercentage",None)
-                loan.monthly_cutting_amount=request.POST.get("monthly_cutting_amount",None)
-                loan.bank_account=request.POST.get("acc_no",None)
-                loan.monthly_cutting=request.POST.get("cutingamount",None)
+            loanduration=request.POST.get("loanduration",None)
+            term=Fin_Loan_Term.objects.get(id=loanduration)
+            loan.loan_duration=term
+            loan.employeeid = request.POST.get("empid",None)
+            loan.employee_email = request.POST.get("empemail",None)
+            loan.salary=request.POST.get("salary",None)
+            loan.join_date=request.POST.get("join_date",None)
+            loan.loan_date=request.POST.get("loan_date",None)
+            loan.loan_amount=request.POST.get("loan_amount",None)
+            loan.expiry_date=request.POST.get("expdate",None)
+            loan.payment_method=request.POST.get("select_payment",None)
+            loan.cheque_number=request.POST.get("cheque_no",None)
+            loan.upi_id=request.POST.get("upi_id",None)
+            loan.bank_account=request.POST.get("acc_no",None)
+            loan.monthly_cutting=request.POST.get("cutingamount",None)
+            if request.POST.get("cutingamount",None) == 'Yes':
+                loan.monthly_cutting_percentage = 0
+            else:
                 loan.monthly_cutting_percentage=request.POST.get("cuttingPercentage",None)
-                amount1 = request.POST['pamount']
-                amount2 = request.POST['amount5']
-                if amount1 != '':
-                    loan.monthly_cutting_amount=amount1
-                elif amount2 != '':
-                    loan.monthly_cutting_amount=amount2
-                
-                loan.note=request.POST.get('Note')
-                loan.attach_file = request.FILES.get('File', None)
-                loan.save()
-                t=Fin_Loan.objects.get(id=loan.id)
-                b.employee_loan=t
-                b.save()
-                current_utc_time = datetime.now(timezone.utc)
-                history=Fin_Employee_Loan_History(company = staf.company_id,login_details=login,employee_loan = loan,date = current_utc_time,action = 'Edited')
-                history.save()
-                # Save the changes
+            loan.monthly_cutting_amount=request.POST.get("monthly_cutting_amount",None)
+            loan.bank_account=request.POST.get("acc_no",None)
+            loan.monthly_cutting=request.POST.get("cutingamount",None)
+            loan.monthly_cutting_percentage=request.POST.get("cuttingPercentage",None)
+            amount1 = request.POST['pamount']
+            amount2 = request.POST['amount5']
+            if amount1 != '':
+                loan.monthly_cutting_amount=amount1
+            elif amount2 != '':
+                loan.monthly_cutting_amount=amount2
             
-                # Redirect to another page after successful update
-                return redirect('emploanoverview',loan.id)
+            loan.note=request.POST.get('Note')
+            loan.attach_file = request.FILES.get('File', None)
+            loan.save()
+            t=Fin_Loan.objects.get(id=loan.id)
+            b.employee_loan=t
+            b.save()
+            current_utc_time = datetime.now(timezone.utc)
+            history=Fin_Employee_Loan_History(company = staf.company_id,login_details=login,employee_loan = loan,date = current_utc_time,action = 'Edited')
+            history.save()
+            # Save the changes
+        
+            # Redirect to another page after successful update
+            return redirect('emploanoverview',loan.id)
         return render(request, 'company/Employee_loan_edit.html',context)
+ 
 
 
 
@@ -4477,10 +4795,10 @@ def emploanrepaymentedit(request, pk):                                          
             loan1.total_amount=request.POST.get("total",None)
             loan1.principle_amount=request.POST.get("principal",None)
 
-            loan1.payment_method=request.POST.get("recieved",None)
-            loan1.cheque_number=request.POST.get("paid_cheque_id",None)
-            loan1.upi_id=request.POST.get("paid_upi_id",None)
-            loan1.bank_account=request.POST.get("paid_bnk_id",None)
+            loan1.payment_method=request.POST.get("select_payment",None)
+            loan1.cheque_number=request.POST.get("cheque_no",None)
+            loan1.upi_id=request.POST.get("upi_id",None)
+            loan1.bank_account=request.POST.get("acc_no",None)
             loan2.save()
             loan1.save()
             c.save()
@@ -4590,10 +4908,10 @@ def emploanrepaymentedit(request, pk):                                          
                 loan1.total_amount=request.POST.get("total",None)
                 loan1.principle_amount=request.POST.get("principal",None)
 
-                loan1.payment_method=request.POST.get("recieved",None)
-                loan1.cheque_number=request.POST.get("paid_cheque_id",None)
-                loan1.upi_id=request.POST.get("paid_upi_id",None)
-                loan1.bank_account=request.POST.get("paid_bnk_id",None)
+                loan1.payment_method=request.POST.get("select_payment",None)
+                loan1.cheque_number=request.POST.get("cheque_no",None)
+                loan1.upi_id=request.POST.get("upi_id",None)
+                loan1.bank_account=request.POST.get("acc_no",None)
                 loan2.save()
                 loan1.save()
                 c.save()
@@ -4602,3 +4920,284 @@ def emploanrepaymentedit(request, pk):                                          
 
                 return redirect('emploanoverview',loan2.id)
             return render(request, 'company/Employee_loan_repayment_edit.html',context)
+
+
+def emploanadditionedit(request, pk):                                                                #new by tinto mt
+  
+    sid = request.session['s_id']
+    login = Fin_Login_Details.objects.get(id=sid)
+
+    
+    # Retrieve the chart of accounts entry
+    # loan = get_object_or_404(Loan, id=pk)
+    
+
+    # Check if 'company_id' is in the session
+
+   
+    if login.User_Type == 'Company':
+      
+     
+        com = Fin_Company_Details.objects.get(Login_Id = sid)
+        allmodules = Fin_Modules_List.objects.get(company_id = com.id)
+        
+        loan_ad = Fin_Employee_Additional_Loan.objects.get(id=pk)
+        loan = Fin_Loan.objects.get(id=loan_ad.employee_loan.id)
+        banks=Fin_Banking.objects.filter(company=com)
+        # employee = Employee.objects.get(id=loan_ad.employee.id)
+        context = {
+                    'allmodules':allmodules,
+                    'loan':loan,
+                    # 'employee':employee,
+                    'loan_ad':loan_ad,
+                    'com':com,
+                    'banks':banks
+            }
+       
+    
+        
+        if request.method=='POST':
+        
+    
+     
+            loan1 = Fin_Employee_Additional_Loan.objects.get(id=pk)
+            c=Fin_Employee_Loan_Transactions.objects.get(additional=loan1)
+            # t=Fin_Employee_Loan_Transactions_History()
+
+            # t.company=com
+            # t.login_details=login
+            # t.action="Edited"
+            # t.date=date.today()
+            # t.transaction=c
+            # t.additional=loan1
+      
+
+            # t.save()
+   
+       
+            loan1.login_details=login
+            loan1.company=com
+            loan1.employee_loan=loan
+            new_loan_amount=request.POST.get("new",None)
+            new_loan_amount=int(new_loan_amount)
+        # Assuming principle_amount is a string, convert it to an integer
+            prevbalance=loan1.balance_loan
+            print(prevbalance)
+            # Assuming prevbalance, loan1.total_amount, and loan1.interest_amount are strings
+            prevbalance = int(prevbalance)
+        
+            print(prevbalance)
+        
+            prevnewloan=loan1.new_loan
+            prevnewloan=int(prevnewloan)
+            previousbalance=c.balance
+            previousbalance=int(previousbalance)
+            loan_trans = Fin_Employee_Loan_Transactions.objects.filter(Q(employee_loan=c.employee_loan) & Q(id__gte=c.id))
+            print("s")
+            for i in loan_trans:
+                print(i.balance)
+                print("s1")
+
+            if prevnewloan<new_loan_amount:
+                extraloan=new_loan_amount-prevnewloan
+                loan3 = Fin_Loan.objects.get(id=loan_ad.employee_loan.id)
+                a=loan3.balance
+                print(a)
+                d=a+extraloan
+                print(d)
+                loan3.balance=d
+      
+                loan3.save()
+                e=loan3.balance
+                print(e)
+                print("extraloan")
+                print(extraloan)
+                c.balance=c.balance+extraloan
+                for i in loan_trans:
+                    print(i.balance)
+                  
+                    i.balance=i.balance+extraloan
+                    i.save()
+                    print(i.balance)
+                    print("s3")
+            if prevnewloan>new_loan_amount:
+                lessloan=prevnewloan-new_loan_amount
+                loan3 = Fin_Loan.objects.get(id=loan_ad.employee_loan.id)
+                a=loan3.balance
+                print(a)
+                d=a-lessloan
+                print(d)
+                loan3.balance=d
+      
+                loan3.save()
+                e=loan3.balance
+                print(e)
+             
+             
+                c.balance=c.balance-lessloan
+                for i in loan_trans:
+                    print(i.balance)
+                  
+                    i.balance=i.balance-lessloan
+                    i.save()
+                    print(i.balance)
+                    print("s3")
+
+
+
+
+            loan1.balance_loan=request.POST.get("remain_loan",None)
+            loan1.new_loan=request.POST.get("new",None)
+            loan1.total_loan=request.POST.get("amount",None)
+            loan1.payment_method=request.POST.get("select_payment",None)
+           
+
+            loan1.new_date=request.POST.get("adjdate",None)
+            loan1.cheque_number=request.POST.get("cheque_no",None)
+            loan1.upi_id=request.POST.get("upi_id",None)
+            loan1.bank_account=request.POST.get("acc_no",None)
+            loan3 = Fin_Loan.objects.get(id=loan_ad.employee_loan.id)
+            loan3.save()
+            
+
+            loan1.save()
+            c.save()
+            trans2 = Fin_Employee_Loan_Transactions_History(company =com ,login_details=login,additional=loan1,date = date.today(),transaction=c,action='Edited')
+            trans2.save()
+            
+            # loan2.save()
+        
+            return redirect('emploanoverview',loan3.id)
+        return render(request, 'company/Employee_loan_additional_edit.html',context)
+    if login.User_Type == 'Staff':
+
+        staf = Fin_Staff_Details.objects.get(Login_Id = sid)
+        com=staf.company_id
+        allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id)
+        
+        loan_ad = Fin_Employee_Additional_Loan.objects.get(id=pk)
+        loan = Fin_Loan.objects.get(id=loan_ad.employee_loan.id)
+        banks=Fin_Banking.objects.filter(company=com)
+        # employee = Employee.objects.get(id=loan_ad.employee.id)
+        context = {
+                    'allmodules':allmodules,
+                    'loan':loan,
+                    # 'employee':employee,
+                    'loan_ad':loan_ad,
+                    'com':com,
+                    'banks':banks
+            }
+       
+    
+        
+        if request.method=='POST':
+        
+    
+     
+            loan1 = Fin_Employee_Additional_Loan.objects.get(id=pk)
+            c=Fin_Employee_Loan_Transactions.objects.get(additional=loan1)
+            # t=Fin_Employee_Loan_Transactions_History()
+
+            # t.company=com
+            # t.login_details=login
+            # t.action="Edited"
+            # t.date=date.today()
+            # t.transaction=c
+            # t.additional=loan1
+      
+
+            # t.save()
+   
+       
+            loan1.login_details=login
+            loan1.company=com
+            loan1.employee_loan=loan
+            new_loan_amount=request.POST.get("new",None)
+            new_loan_amount=int(new_loan_amount)
+        # Assuming principle_amount is a string, convert it to an integer
+            prevbalance=loan1.balance_loan
+            print(prevbalance)
+            # Assuming prevbalance, loan1.total_amount, and loan1.interest_amount are strings
+            prevbalance = int(prevbalance)
+        
+            print(prevbalance)
+        
+            prevnewloan=loan1.new_loan
+            prevnewloan=int(prevnewloan)
+            previousbalance=c.balance
+            previousbalance=int(previousbalance)
+            loan_trans = Fin_Employee_Loan_Transactions.objects.filter(Q(employee_loan=c.employee_loan) & Q(id__gte=c.id))
+            print("s")
+            for i in loan_trans:
+                print(i.balance)
+                print("s1")
+
+            if prevnewloan<new_loan_amount:
+                extraloan=new_loan_amount-prevnewloan
+                loan3 = Fin_Loan.objects.get(id=loan_ad.employee_loan.id)
+                a=loan3.balance
+                print(a)
+                d=a+extraloan
+                print(d)
+                loan3.balance=d
+      
+                loan3.save()
+                e=loan3.balance
+                print(e)
+                print("extraloan")
+                print(extraloan)
+                c.balance=c.balance+extraloan
+                for i in loan_trans:
+                    print(i.balance)
+                  
+                    i.balance=i.balance+extraloan
+                    i.save()
+                    print(i.balance)
+                    print("s3")
+            if prevnewloan>new_loan_amount:
+                lessloan=prevnewloan-new_loan_amount
+                loan3 = Fin_Loan.objects.get(id=loan_ad.employee_loan.id)
+                a=loan3.balance
+                print(a)
+                d=a-lessloan
+                print(d)
+                loan3.balance=d
+      
+                loan3.save()
+                e=loan3.balance
+                print(e)
+                print("extraloan")
+                print(extraloan)
+                c.balance=c.balance-lessloan
+                for i in loan_trans:
+                    print(i.balance)
+                  
+                    i.balance=i.balance-lessloan
+                    i.save()
+                    print(i.balance)
+                    print("s3")
+
+
+
+
+            loan1.balance_loan=request.POST.get("remain_loan",None)
+            loan1.new_loan=request.POST.get("new",None)
+            loan1.total_loan=request.POST.get("amount",None)
+            loan1.payment_method=request.POST.get("select_payment",None)
+           
+
+            loan1.new_date=request.POST.get("adjdate",None)
+            loan1.cheque_number=request.POST.get("cheque_no",None)
+            loan1.upi_id=request.POST.get("upi_id",None)
+            loan1.bank_account=request.POST.get("acc_no",None)
+            loan3 = Fin_Loan.objects.get(id=loan_ad.employee_loan.id)
+            loan3.save()
+            
+
+            loan1.save()
+            c.save()
+            trans2 = Fin_Employee_Loan_Transactions_History(company =staf.company_id ,login_details=login,additional=loan1,date = date.today(),transaction=c,action='Edited')
+            trans2.save()
+        
+            return redirect('emploanoverview',loan3.id)
+        return render(request, 'company/Employee_loan_additional_edit.html',context)

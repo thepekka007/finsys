@@ -1677,7 +1677,7 @@ $(document).on("click", "#UnitSave2", function(event) {
           $.each(data, function(key, value) {
        
             dropdown.append($('<option></option>').attr('value', key).text(value[0] + " " + value[1] + " " + value[2]));
-    
+            console.log("emp load")
           });
     
         },
