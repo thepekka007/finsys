@@ -1,0 +1,87 @@
+def addemp(request):                                                                #new by tinto mt (item)
+    sid = request.session['s_id']
+    login = Fin_Login_Details.objects.get(id=sid)
+
+    
+    # Retrieve the chart of accounts entry
+    # loan = get_object_or_404(Loan, id=pk)
+    
+
+    # Check if 'company_id' is in the session
+
+   
+    if login.User_Type == 'Company':
+        if request.method == 'POST':
+                com = Fin_Company_Details.objects.get(Login_Id = sid)
+                allmodules = Fin_Modules_List.objects.get(company_id = com.id)
+                title = request.POST['Title']
+                firstname = request.POST['First_Name'].capitalize()
+                lastname = request.POST['Last_Name'].capitalize()
+                # alias = request.POST['Alias']
+                
+
+                
+                employeenumber = request.POST['Employee_Number']
+              
+                
+                contact = request.POST['Contact_Number']
+            
+                email = request.POST['Email']
+   
+
+
+                new = Employee(first_name = firstname,last_name = lastname,title = title,
+                                        employee_mail = email,
+                                        employee_number = employeenumber,
+                                        mobile = contact,
+                                        company_id = com.id,login_id=sid,employee_status = 'Active'
+                                     
+                                      
+                                    )
+                                    #   
+                                #
+                        
+                new.save()
+
+         
+
+                return JsonResponse({"message": "success"})
+
+    elif login.User_Type == 'Staff':
+       
+          
+        if request.method == 'POST':
+                staf = Fin_Staff_Details.objects.get(Login_Id = sid)
+                allmodules = Fin_Modules_List.objects.get(company_id = staf.company_id.id)
+                title = request.POST['Title']
+                firstname = request.POST['First_Name'].capitalize()
+                lastname = request.POST['Last_Name'].capitalize()
+                # alias = request.POST['Alias']
+                
+
+                
+                employeenumber = request.POST['Employee_Number']
+              
+                
+                contact = request.POST['Contact_Number']
+            
+                email = request.POST['Email']
+   
+
+
+                new = Employee(first_name = firstname,last_name = lastname,title = title,
+                                        employee_mail = email,
+                                        employee_number = employeenumber,
+                                        mobile = contact,
+                                        company_id = staf.company_id.id,login_id=sid,employee_status = 'Active'
+                                      
+                                      
+                                    )
+                                    #   
+                                #
+                        
+                new.save()
+
+            
+
+                return JsonResponse({"message": "success"})
