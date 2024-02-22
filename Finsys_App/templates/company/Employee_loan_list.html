@@ -255,11 +255,11 @@ document.getElementById("drop1").addEventListener("click", function () {
 // excel
 
 document.getElementById('exportButton').addEventListener('click', function () {
-        exportToExcel('employList');
+        exportToExcel('loanTable');
     });
 
-    function exportToExcel(tableId) {
-        var table = document.getElementById(tableId);
+    function exportToExcel(loanTable) {
+        var table = document.getElementById(loanTable);
         var wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
         var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'binary' });
 
